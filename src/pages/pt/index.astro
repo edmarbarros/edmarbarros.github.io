@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getUIStrings } from '../../i18n';
+
+const lang = 'pt' as const;
+const t = getUIStrings(lang);
+---
+
+<BaseLayout title={t.siteName} lang={lang} description={t.tagline}>
+  <section class="max-w-prose space-y-6">
+    <h1 class="font-serif text-4xl md:text-5xl">Edmar Barros</h1>
+    <p class="text-muted">{t.tagline}</p>
+    <p>Olá — este site está em construção. Volte em breve.</p>
+  </section>
+</BaseLayout>
