@@ -1,0 +1,21 @@
+---
+import { getUIStrings, localizePath, otherLocale, type Locale } from '../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getUIStrings(lang);
+const target = otherLocale(lang);
+const href = localizePath(Astro.url.pathname, target);
+---
+
+<a
+  href={href}
+  class="text-sm text-muted hover:text-accent transition-colors no-underline"
+  lang={target}
+  hreflang={target}
+>
+  {t.lang.switchTo}
+</a>
