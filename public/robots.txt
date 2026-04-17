@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://edmarbarros.com/sitemap-index.xml
