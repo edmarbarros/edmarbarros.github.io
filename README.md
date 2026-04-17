@@ -18,6 +18,10 @@ pnpm build
 pnpm preview
 ```
 
+## Structure
+
+See [docs/superpowers/specs/2026-04-17-personal-website-design.md](docs/superpowers/specs/2026-04-17-personal-website-design.md) for the full design.
+
 ## License
 
 Code: MIT (see `LICENSE`).
