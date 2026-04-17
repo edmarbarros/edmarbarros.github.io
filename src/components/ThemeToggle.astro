@@ -1,0 +1,54 @@
+---
+import { getUIStrings, type Locale } from '../i18n';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getUIStrings(lang);
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="inline-flex items-center justify-center w-9 h-9 rounded border border-border hover:border-accent transition-colors"
+  data-label-light={t.theme.toggleLight}
+  data-label-dark={t.theme.toggleDark}
+  aria-label={t.theme.toggleDark}
+>
+  <svg class="w-4 h-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="5"></circle>
+    <line x1="12" y1="1" x2="12" y2="3"></line>
+    <line x1="12" y1="21" x2="12" y2="23"></line>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+    <line x1="1" y1="12" x2="3" y2="12"></line>
+    <line x1="21" y1="12" x2="23" y2="12"></line>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  </svg>
+  <svg class="w-4 h-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+</button>
+
+<script>
+  const btn = document.getElementById('theme-toggle') as HTMLButtonElement | null;
+  if (btn) {
+    const apply = (theme: 'light' | 'dark') => {
+      document.documentElement.setAttribute('data-theme', theme);
+      const label = theme === 'dark' ? btn.dataset.labelLight : btn.dataset.labelDark;
+      if (label) btn.setAttribute('aria-label', label);
+    };
+    const current = (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light';
+    apply(current);
+    btn.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      apply(next);
+      try {
+        localStorage.setItem('theme', next);
+      } catch {}
+    });
+  }
+</script>
