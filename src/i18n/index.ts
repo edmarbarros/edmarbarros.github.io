@@ -18,7 +18,7 @@ export function getLocaleFromPath(pathname: string): Locale {
 export function localizePath(path: string, targetLang: Locale): string {
   const clean = path.replace(/^\/pt(?=\/|$)/, '') || '/';
   if (targetLang === 'en') return clean;
-  return clean === '/' ? '/pt/' : `/pt${clean}`;
+  return clean === '/' ? '/pt' : `/pt${clean}`;
 }
 
 export function otherLocale(lang: Locale): Locale {
