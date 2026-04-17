@@ -1,0 +1,28 @@
+{
+  "siteName": "Edmar Barros",
+  "tagline": "Staff Backend Engineer",
+  "nav": {
+    "home": "Início",
+    "cv": "Currículo",
+    "projects": "Projetos",
+    "blog": "Blog",
+    "contact": "Contato"
+  },
+  "footer": {
+    "bio": "Staff Backend Engineer — sistemas distribuídos, infraestrutura, dados.",
+    "builtWith": "Feito com Astro",
+    "rights": "Todos os direitos reservados."
+  },
+  "theme": {
+    "toggleLight": "Mudar para tema claro",
+    "toggleDark": "Mudar para tema escuro"
+  },
+  "lang": {
+    "switchTo": "English"
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "body": "Essa página não existe. Voltar para a página inicial?",
+    "back": "Voltar ao início"
+  }
+}
