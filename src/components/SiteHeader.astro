@@ -1,0 +1,53 @@
+---
+import { getUIStrings, localizePath, type Locale } from '../i18n';
+import ThemeToggle from './ThemeToggle.astro';
+import LanguageSwitch from './LanguageSwitch.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = getUIStrings(lang);
+
+const navItems = [
+  { key: 'home', href: localizePath('/', lang) },
+  { key: 'cv', href: localizePath('/cv', lang) },
+  { key: 'projects', href: localizePath('/projects', lang) },
+  { key: 'blog', href: localizePath('/blog', lang) },
+  { key: 'contact', href: localizePath('/contact', lang) },
+] as const;
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+function isActive(href: string) {
+  const h = href.replace(/\/$/, '') || '/';
+  if (h === '/' || h === '/pt') return current === '/' || current === '/pt';
+  return current === h || current.startsWith(h + '/');
+}
+---
+
+<header class="border-b border-border">
+  <div class="max-w-content mx-auto px-6 py-5 flex items-center justify-between gap-6 flex-wrap">
+    <a href={localizePath('/', lang)} class="font-serif text-lg font-semibold no-underline text-text hover:text-accent transition-colors">
+      {t.siteName}
+    </a>
+    <nav class="flex items-center gap-5 text-sm">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'no-underline transition-colors',
+            isActive(item.href) ? 'text-accent' : 'text-text hover:text-accent',
+          ]}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+        >
+          {t.nav[item.key]}
+        </a>
+      ))}
+    </nav>
+    <div class="flex items-center gap-4">
+      <LanguageSwitch lang={lang} />
+      <ThemeToggle lang={lang} />
+    </div>
+  </div>
+</header>
