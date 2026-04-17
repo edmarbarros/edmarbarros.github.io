@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/jetbrains-mono";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --color-bg: var(--bg);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-serif: "Fraunces Variable", Georgia, serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+
+  --container-prose: 42rem;
+  --container-content: 60rem;
+}
+
+:root {
+  --bg: #fafaf7;
+  --text: #1a1a1a;
+  --muted: #6b6b6b;
+  --border: #e8e6df;
+  --accent: #b4472e;
+}
+
+:root[data-theme="dark"] {
+  --bg: #121212;
+  --text: #ececec;
+  --muted: #8a8a8a;
+  --border: #2a2a2a;
+  --accent: #e06c4e;
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--bg);
+  }
+}
