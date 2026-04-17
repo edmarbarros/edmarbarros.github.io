@@ -1,0 +1,25 @@
+docs/*
+
+# Build
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Worker
+workers/*/node_modules/
+workers/*/.wrangler/
+workers/*/dist/
