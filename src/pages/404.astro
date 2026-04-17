@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLocaleFromPath, getUIStrings, localizePath } from '../i18n';
+
+const lang = getLocaleFromPath(Astro.url.pathname);
+const t = getUIStrings(lang);
+---
+
+<BaseLayout title={t.notFound.title} lang={lang}>
+  <section class="max-w-prose space-y-4 py-16">
+    <h1 class="font-serif text-4xl">{t.notFound.title}</h1>
+    <p>{t.notFound.body}</p>
+    <p><a href={localizePath('/', lang)}>{t.notFound.back}</a></p>
+  </section>
+</BaseLayout>
