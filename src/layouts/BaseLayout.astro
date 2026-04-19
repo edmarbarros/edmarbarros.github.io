@@ -1,5 +1,7 @@
 ---
 import '../styles/theme.css';
+import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import frauncesLatinWoff2 from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import Analytics from '../components/Analytics.astro';
@@ -55,6 +57,8 @@ const resolvedOgImage = ogImage
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="preload" href={interLatinWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={frauncesLatinWoff2} as="font" type="font/woff2" crossorigin />
     <title>{siteTitle}</title>
     {description && <meta name="description" content={description} />}
     <meta name="author" content={cv.identity.name} />
