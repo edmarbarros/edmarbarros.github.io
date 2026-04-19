@@ -13,7 +13,6 @@ const t = getUIStrings(lang);
 const navItems = [
   { key: 'home', href: localizePath('/', lang) },
   { key: 'cv', href: localizePath('/cv', lang) },
-  { key: 'projects', href: localizePath('/projects', lang) },
   { key: 'blog', href: localizePath('/blog', lang) },
   { key: 'contact', href: localizePath('/contact', lang) },
 ] as const;
@@ -24,14 +23,22 @@ function isActive(href: string) {
   if (h === '/' || h === '/pt') return current === '/' || current === '/pt';
   return current === h || current.startsWith(h + '/');
 }
+
+const menuLabelOpen = lang === 'en' ? 'Open menu' : 'Abrir menu';
+const menuLabelClose = lang === 'en' ? 'Close menu' : 'Fechar menu';
+const navAriaLabel = lang === 'en' ? 'Menu' : 'Menu';
 ---
 
-<header class="border-b border-border">
-  <div class="max-w-content mx-auto px-6 py-5 flex items-center justify-between gap-6 flex-wrap">
-    <a href={localizePath('/', lang)} class="font-serif text-lg font-semibold no-underline text-text hover:text-accent transition-colors">
+<header class="border-b border-border relative">
+  <div class="max-w-content mx-auto px-6 py-5 flex items-center justify-between gap-4">
+    <a
+      href={localizePath('/', lang)}
+      class="font-serif text-lg font-semibold no-underline text-text hover:text-accent transition-colors"
+    >
       {t.siteName}
     </a>
-    <nav class="flex items-center gap-5 text-sm">
+
+    <nav class="hidden md:flex items-center gap-5 text-sm" aria-label={navAriaLabel}>
       {navItems.map((item) => (
         <a
           href={item.href}
@@ -45,9 +52,110 @@ function isActive(href: string) {
         </a>
       ))}
     </nav>
-    <div class="flex items-center gap-4">
+
+    <div class="flex items-center gap-3">
       <LanguageSwitch lang={lang} />
       <ThemeToggle lang={lang} />
+      <button
+        id="nav-toggle"
+        type="button"
+        class="md:hidden inline-flex items-center justify-center w-9 h-9 rounded border border-border hover:border-accent transition-colors"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+        aria-label={menuLabelOpen}
+        data-label-open={menuLabelOpen}
+        data-label-close={menuLabelClose}
+      >
+        <svg
+          class="w-4 h-4 burger-open"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg
+          class="w-4 h-4 burger-close hidden"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+          <line x1="6" y1="18" x2="18" y2="6"></line>
+        </svg>
+      </button>
     </div>
   </div>
+
+  <nav
+    id="mobile-nav"
+    class="hidden md:hidden flex-col border-t border-border"
+    aria-label={navAriaLabel}
+  >
+    <ul class="flex flex-col">
+      {navItems.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={[
+              'block px-6 py-3 no-underline border-b border-border last:border-b-0 transition-colors',
+              isActive(item.href) ? 'text-accent' : 'text-text hover:text-accent',
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {t.nav[item.key]}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
 </header>
+
+<script>
+  const btn = document.getElementById('nav-toggle') as HTMLButtonElement | null;
+  const nav = document.getElementById('mobile-nav') as HTMLElement | null;
+  if (btn && nav) {
+    const openIcon = btn.querySelector<SVGElement>('.burger-open');
+    const closeIcon = btn.querySelector<SVGElement>('.burger-close');
+
+    const setOpen = (open: boolean) => {
+      if (open) {
+        nav.classList.remove('hidden');
+        nav.classList.add('flex');
+      } else {
+        nav.classList.add('hidden');
+        nav.classList.remove('flex');
+      }
+      btn.setAttribute('aria-expanded', String(open));
+      const newLabel = open ? btn.dataset.labelClose : btn.dataset.labelOpen;
+      if (newLabel) btn.setAttribute('aria-label', newLabel);
+      openIcon?.classList.toggle('hidden', open);
+      closeIcon?.classList.toggle('hidden', !open);
+    };
+
+    btn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setOpen(btn.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (btn.getAttribute('aria-expanded') !== 'true') return;
+      const target = event.target as Node;
+      if (!nav.contains(target) && !btn.contains(target)) setOpen(false);
+    });
+  }
+</script>

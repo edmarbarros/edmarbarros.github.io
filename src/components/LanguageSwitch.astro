@@ -14,8 +14,8 @@ const href = localizePath(Astro.url.pathname, target);
 <a
   href={href}
   class="text-sm text-muted hover:text-accent transition-colors no-underline"
-  lang={target}
+  lang={lang}
   hreflang={target}
 >
-  {t.lang.switchTo}
+  {t.lang.current}
 </a>

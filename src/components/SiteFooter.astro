@@ -11,13 +11,21 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="border-t border-border mt-24">
-  <div class="max-w-content mx-auto px-6 py-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between text-sm text-muted">
-    <p class="max-w-prose">{t.footer.bio}</p>
+  <div class="max-w-content mx-auto px-6 py-10 flex flex-col gap-6 md:flex-row md:items-start md:justify-between text-sm text-muted">
+    <div class="max-w-prose">
+      <p class="text-text">{t.footer.role}</p>
+      <p>{t.footer.domains}</p>
+    </div>
     <div class="flex items-center gap-5">
       <a href="mailto:hello@edmarbarros.com" class="no-underline hover:text-accent">hello@edmarbarros.com</a>
       <a href="https://github.com/edmarbarros" rel="me noopener" class="no-underline hover:text-accent">GitHub</a>
       <a href="https://linkedin.com/in/edmarbarros/" rel="me noopener" class="no-underline hover:text-accent">LinkedIn</a>
     </div>
-    <p>© {year} Edmar Barros · <a href="https://astro.build" rel="nofollow" class="no-underline hover:text-accent">{t.footer.builtWith}</a></p>
+    <div class="md:text-right">
+      <p class="text-text">© {year} Edmar Barros</p>
+      <p>
+        <a href="https://astro.build" rel="nofollow" class="no-underline hover:text-accent">{t.footer.builtWith}</a>
+      </p>
+    </div>
   </div>
 </footer>
