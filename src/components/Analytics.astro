@@ -1,0 +1,18 @@
+---
+import { SITE_CONFIG } from '../config';
+
+const enabled = import.meta.env.PROD;
+const gaId = SITE_CONFIG.gaMeasurementId;
+---
+
+{enabled && gaId && (
+  <>
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>
+  </>
+)}

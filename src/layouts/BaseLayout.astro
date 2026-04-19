@@ -2,6 +2,7 @@
 import '../styles/theme.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import Analytics from '../components/Analytics.astro';
 import { getUIStrings, otherLocale, localizePath, type Locale } from '../i18n';
 import { cv } from '../data/cv';
 
@@ -109,6 +110,9 @@ const resolvedOgImage = ogImage
     </script>
     <link rel="alternate" type="application/rss+xml" title="Edmar Barros — Blog (EN)" href="/rss.xml" />
     <link rel="alternate" type="application/rss+xml" title="Edmar Barros — Blog (PT)" href="/pt/rss.xml" hreflang="pt" />
+
+    <Analytics />
+
     <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col">
