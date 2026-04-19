@@ -1,0 +1,39 @@
+---
+---
+<div class="prose-wrapper max-w-prose space-y-6 leading-relaxed">
+  <slot />
+</div>
+
+<style is:global>
+  @reference "../styles/theme.css";
+  .prose-wrapper h2 {
+    @apply font-serif text-2xl mt-10 mb-2;
+  }
+  .prose-wrapper h3 {
+    @apply font-serif text-xl mt-6 mb-2;
+  }
+  .prose-wrapper p {
+    @apply leading-relaxed;
+  }
+  .prose-wrapper ul {
+    @apply list-disc list-outside ml-5 space-y-1;
+  }
+  .prose-wrapper ol {
+    @apply list-decimal list-outside ml-5 space-y-1;
+  }
+  .prose-wrapper blockquote {
+    @apply border-l-2 border-border pl-4 italic text-muted;
+  }
+  .prose-wrapper code {
+    @apply font-mono text-sm bg-border/40 px-1 rounded;
+  }
+  .prose-wrapper pre {
+    @apply font-mono text-sm p-4 rounded border border-border overflow-x-auto bg-border/20;
+  }
+  .prose-wrapper pre code {
+    @apply bg-transparent p-0;
+  }
+  .prose-wrapper img {
+    @apply max-w-full h-auto rounded border border-border;
+  }
+</style>
