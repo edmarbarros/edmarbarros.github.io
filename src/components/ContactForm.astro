@@ -16,6 +16,7 @@ const labels = {
     submit: 'Send',
     sending: 'Sending…',
     verifying: 'Verifying…',
+    successTitle: 'Message sent',
     success: 'Thanks — I\u2019ll reply soon.',
     failed: 'Send failed — email hello@edmarbarros.com directly.',
   },
@@ -26,6 +27,7 @@ const labels = {
     submit: 'Enviar',
     sending: 'Enviando…',
     verifying: 'Verificando…',
+    successTitle: 'Mensagem enviada',
     success: 'Obrigado — respondo em breve.',
     failed: 'Falha no envio — escreva para hello@edmarbarros.com.',
   },
@@ -40,7 +42,6 @@ const labels = {
   data-label-sending={labels.sending}
   data-label-verifying={labels.verifying}
   data-label-submit={labels.submit}
-  data-label-success={labels.success}
   data-label-failed={labels.failed}
 >
   <label class="block space-y-1">
@@ -103,6 +104,36 @@ const labels = {
   <p id="contact-status" class="text-sm min-h-[1.5em]" role="status" aria-live="polite"></p>
 </form>
 
+<div
+  id="contact-success"
+  class="max-w-prose border border-border p-6"
+  role="status"
+  aria-live="polite"
+  hidden
+>
+  <div class="flex items-start gap-3">
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="text-accent shrink-0 mt-1"
+      aria-hidden="true"
+    >
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <div class="space-y-1">
+      <h2 class="font-serif text-xl">{labels.successTitle}</h2>
+      <p class="text-muted">{labels.success}</p>
+    </div>
+  </div>
+</div>
+
 <script>
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const status = document.getElementById('contact-status') as HTMLParagraphElement | null;
@@ -114,8 +145,8 @@ const labels = {
     const LSending = form.dataset.labelSending!;
     const LVerifying = form.dataset.labelVerifying!;
     const LSubmit = form.dataset.labelSubmit!;
-    const LSuccess = form.dataset.labelSuccess!;
     const LFailed = form.dataset.labelFailed!;
+    const successPanel = document.getElementById('contact-success');
 
     const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
     let turnstileInjected = false;
@@ -177,11 +208,8 @@ const labels = {
           body: JSON.stringify(payload),
         });
         if (res.status === 204) {
-          status.textContent = LSuccess;
-          form.reset();
-          if (tsInput) tsInput.value = String(Date.now());
-          const w = (window as unknown as { turnstile?: { reset: () => void } }).turnstile;
-          if (w?.reset) w.reset();
+          form.hidden = true;
+          if (successPanel) successPanel.hidden = false;
         } else {
           status.textContent = LFailed;
         }
