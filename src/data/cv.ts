@@ -52,6 +52,7 @@ export interface CV {
     email: string;
     linkedin: string;
     github: string;
+    twitter?: string;
     photo: string;
   };
   summary: Bilingual;

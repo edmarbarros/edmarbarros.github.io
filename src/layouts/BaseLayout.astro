@@ -2,7 +2,8 @@
 import '../styles/theme.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { getUIStrings, type Locale } from '../i18n';
+import { getUIStrings, otherLocale, localizePath, type Locale } from '../i18n';
+import { cv } from '../data/cv';
 
 interface Props {
   title: string;
@@ -10,12 +11,42 @@ interface Props {
   lang?: Locale;
   ogImage?: string;
   altLangHref?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  publishedTime?: string;
+  modifiedTime?: string;
+  articleTags?: string[];
 }
 
-const { title, description, lang = 'en', ogImage, altLangHref } = Astro.props;
+const {
+  title,
+  description,
+  lang = 'en',
+  ogImage,
+  altLangHref,
+  ogType = 'website',
+  noindex = false,
+  publishedTime,
+  modifiedTime,
+  articleTags = [],
+} = Astro.props;
+
 const t = getUIStrings(lang);
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const siteTitle = title === t.siteName ? t.siteName : `${title} — ${t.siteName}`;
+
+const target = otherLocale(lang);
+const altUrl = altLangHref
+  ? new URL(altLangHref, Astro.site).toString()
+  : new URL(localizePath(Astro.url.pathname, target), Astro.site).toString();
+const enHref = lang === 'en' ? canonical : altUrl;
+const ptHref = lang === 'pt' ? canonical : altUrl;
+
+const ogLocale = lang === 'en' ? 'en_US' : 'pt_BR';
+const altLocale = lang === 'en' ? 'pt_BR' : 'en_US';
+const resolvedOgImage = ogImage
+  ? new URL(ogImage, Astro.site).toString()
+  : new URL('/og/default.png', Astro.site).toString();
 ---
 
 <!doctype html>
@@ -25,16 +56,46 @@ const siteTitle = title === t.siteName ? t.siteName : `${title} — ${t.siteName
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{siteTitle}</title>
     {description && <meta name="description" content={description} />}
+    <meta name="author" content={cv.identity.name} />
+    <meta name="theme-color" content="#b4472e" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
+
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="pt" href={ptHref} />
+    <link rel="alternate" hreflang="x-default" href={enHref} />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
+    <meta property="og:site_name" content={t.siteName} />
+    <meta property="og:type" content={ogType} />
     <meta property="og:title" content={siteTitle} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonical} />
-    <meta property="og:type" content="website" />
-    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />}
+    <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={altLocale} />
+
+    {ogType === 'article' && publishedTime && (
+      <meta property="article:published_time" content={publishedTime} />
+    )}
+    {ogType === 'article' && modifiedTime && (
+      <meta property="article:modified_time" content={modifiedTime} />
+    )}
+    {ogType === 'article' && <meta property="article:author" content={cv.identity.name} />}
+    {articleTags.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={resolvedOgImage} />
+    {cv.identity.twitter && <meta name="twitter:site" content={cv.identity.twitter} />}
+    {cv.identity.twitter && <meta name="twitter:creator" content={cv.identity.twitter} />}
 
     <script is:inline>
       (function () {
@@ -48,6 +109,7 @@ const siteTitle = title === t.siteName ? t.siteName : `${title} — ${t.siteName
     </script>
     <link rel="alternate" type="application/rss+xml" title="Edmar Barros — Blog (EN)" href="/rss.xml" />
     <link rel="alternate" type="application/rss+xml" title="Edmar Barros — Blog (PT)" href="/pt/rss.xml" hreflang="pt" />
+    <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col">
     <SiteHeader lang={lang} altLangHref={altLangHref} />
