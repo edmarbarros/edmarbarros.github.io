@@ -1,0 +1,170 @@
+---
+import type { Locale } from '../i18n';
+import { cv } from '../data/cv';
+import { formatPeriod, formatDuration, companyRange } from '../data/duration';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const downloadLabel = lang === 'en' ? 'Download PDF' : 'Baixar PDF';
+const headings = {
+  experience: lang === 'en' ? 'Experience' : 'Experiência',
+  education: lang === 'en' ? 'Education' : 'Formação',
+  languages: lang === 'en' ? 'Languages' : 'Idiomas',
+  skills: lang === 'en' ? 'Technical skills' : 'Habilidades técnicas',
+  socialSkills: lang === 'en' ? 'Social skills' : 'Habilidades interpessoais',
+  interests: lang === 'en' ? 'Interests' : 'Interesses',
+};
+---
+
+<article class="space-y-12">
+  <header class="flex flex-col md:flex-row items-start gap-6">
+    <img
+      src={cv.identity.photo}
+      alt={cv.identity.name}
+      width="120"
+      height="120"
+      class="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border border-border"
+      loading="eager"
+    />
+    <div class="space-y-3 flex-1">
+      <h1 class="font-serif text-4xl md:text-5xl">{cv.identity.name}</h1>
+      <p class="text-lg text-muted">{cv.identity.title[lang]}</p>
+      <p class="text-sm text-muted flex flex-wrap gap-x-4 gap-y-1">
+        <span>{cv.identity.location[lang]}</span>
+        <a href={`mailto:${cv.identity.email}`} class="no-underline hover:text-accent">{cv.identity.email}</a>
+        <a href={cv.identity.linkedin} rel="me noopener" class="no-underline hover:text-accent">LinkedIn</a>
+        <a href={cv.identity.github} rel="me noopener" class="no-underline hover:text-accent">GitHub</a>
+      </p>
+      <p>
+        <a
+          href={cv.pdf[lang]}
+          download
+          class="inline-flex items-center gap-2 border border-border px-3 py-2 text-sm no-underline hover:border-accent hover:text-accent transition-colors"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          {downloadLabel}
+        </a>
+      </p>
+    </div>
+  </header>
+
+  <section class="max-w-prose space-y-4">
+    <p class="leading-relaxed">{cv.summary[lang]}</p>
+    <blockquote class="border-l-2 border-border pl-4 italic text-muted">
+      <p>&ldquo;{cv.quote[lang]}&rdquo;</p>
+      <footer class="text-sm mt-1 not-italic">— {cv.quoteAuthor}</footer>
+    </blockquote>
+  </section>
+
+  <section class="space-y-10">
+    <h2 class="font-serif text-2xl border-b border-border pb-2">{headings.experience}</h2>
+    {cv.experience.map((company) => {
+      const range = companyRange(company.roles);
+      const total = formatDuration(range.start, range.end, lang);
+      return (
+        <div class="space-y-5">
+          <header class="space-y-1">
+            <h3 class="font-serif text-xl">
+              {company.url ? (
+                <a href={company.url} rel="noopener" class="no-underline text-text hover:text-accent">{company.company}</a>
+              ) : (
+                <span>{company.company}</span>
+              )}
+            </h3>
+            <p class="text-sm text-muted max-w-prose">{company.blurb[lang]}</p>
+            <p class="text-sm text-muted">{total} · {company.location}</p>
+          </header>
+          <ol class="space-y-6 border-l border-border pl-6 ml-1">
+            {company.roles.map((role) => (
+              <li class="space-y-3">
+                <header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                  <h4 class="font-serif text-lg">{role.role[lang]}</h4>
+                  <p class="text-sm text-muted">
+                    {formatPeriod(role.startMonth, role.endMonth, lang)} · {formatDuration(role.startMonth, role.endMonth, lang)}
+                  </p>
+                </header>
+                <ul class="list-disc list-outside ml-5 space-y-2 max-w-prose leading-relaxed">
+                  {role.bullets[lang].map((b) => <li>{b}</li>)}
+                </ul>
+                {role.stack.length > 0 && (
+                  <ul class="flex flex-wrap gap-2 pt-1">
+                    {role.stack.map((s) => (
+                      <li class="font-mono text-xs border border-border px-2 py-0.5 rounded">{s}</li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+      );
+    })}
+  </section>
+
+  <section class="space-y-4">
+    <h2 class="font-serif text-2xl border-b border-border pb-2">{headings.education}</h2>
+    {cv.education.map((ed) => (
+      <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <p>
+          <span class="font-serif text-lg">{ed.degree[lang]}</span>
+          <span class="text-muted"> · {ed.institution}</span>
+          {ed.note && <span class="text-muted text-sm"> · {ed.note[lang]}</span>}
+        </p>
+        <p class="text-sm text-muted">{ed.period} · {ed.location}</p>
+      </div>
+    ))}
+  </section>
+
+  <section class="space-y-3">
+    <h2 class="font-serif text-2xl border-b border-border pb-2">{headings.languages}</h2>
+    <ul class="space-y-2">
+      {cv.languages.map((l) => (
+        <li class="flex flex-wrap items-baseline gap-x-3">
+          <span class="font-serif">{l.language[lang]}</span>
+          <span class="text-muted">— {l.level[lang]}</span>
+          {l.note && <span class="text-sm text-muted">· {l.note[lang]}</span>}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="space-y-3">
+    <h2 class="font-serif text-2xl border-b border-border pb-2">{headings.skills}</h2>
+    <dl class="space-y-3">
+      {cv.skills.map((group) => (
+        <div class="flex flex-wrap items-baseline gap-x-4">
+          <dt class="font-serif w-40 shrink-0">{group.label[lang]}</dt>
+          <dd class="flex flex-wrap gap-2">
+            {group.items.map((item) => (
+              <span class="font-mono text-xs border border-border px-2 py-0.5 rounded">{item}</span>
+            ))}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="space-y-3">
+    <h2 class="font-serif text-2xl border-b border-border pb-2">{headings.socialSkills}</h2>
+    <dl class="space-y-3">
+      {cv.socialSkills.map((item) => (
+        <div class="flex flex-wrap items-baseline gap-x-4">
+          <dt class="font-serif w-40 shrink-0">{item.label[lang]}</dt>
+          <dd class="max-w-prose">{item.description[lang]}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="space-y-3">
+    <h2 class="font-serif text-2xl border-b border-border pb-2">{headings.interests}</h2>
+    <p>{cv.interests[lang]}</p>
+  </section>
+</article>
