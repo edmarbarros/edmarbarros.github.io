@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CvPage from '../components/CvPage.astro';
+import { getUIStrings } from '../i18n';
+
+const lang = 'en' as const;
+const t = getUIStrings(lang);
+const title = t.nav.cv;
+const description = 'Staff Backend Engineer with 10+ years building distributed systems. Experience, skills, and education.';
+---
+
+<BaseLayout title={title} lang={lang} description={description}>
+  <CvPage lang={lang} />
+</BaseLayout>
