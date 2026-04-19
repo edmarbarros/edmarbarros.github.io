@@ -1,0 +1,164 @@
+---
+import type { Locale } from '../i18n';
+import { SITE_CONFIG } from '../config';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+
+const labels = {
+  en: {
+    name: 'Name',
+    email: 'Email',
+    message: 'Message',
+    submit: 'Send',
+    sending: 'Sending…',
+    success: 'Thanks — I\u2019ll reply soon.',
+    failed: 'Send failed — email hello@edmarbarros.com directly.',
+  },
+  pt: {
+    name: 'Nome',
+    email: 'Email',
+    message: 'Mensagem',
+    submit: 'Enviar',
+    sending: 'Enviando…',
+    success: 'Obrigado — respondo em breve.',
+    failed: 'Falha no envio — escreva para hello@edmarbarros.com.',
+  },
+}[lang];
+---
+
+<form
+  id="contact-form"
+  class="space-y-4 max-w-prose"
+  novalidate
+  data-endpoint={SITE_CONFIG.contactEndpoint}
+  data-label-sending={labels.sending}
+  data-label-submit={labels.submit}
+  data-label-success={labels.success}
+  data-label-failed={labels.failed}
+>
+  <label class="block space-y-1">
+    <span class="text-sm text-muted">{labels.name}</span>
+    <input
+      type="text"
+      name="name"
+      required
+      maxlength="200"
+      class="w-full bg-transparent border border-border rounded px-3 py-2 focus:border-accent focus:outline-none"
+    />
+  </label>
+
+  <label class="block space-y-1">
+    <span class="text-sm text-muted">{labels.email}</span>
+    <input
+      type="email"
+      name="email"
+      required
+      maxlength="254"
+      class="w-full bg-transparent border border-border rounded px-3 py-2 focus:border-accent focus:outline-none"
+    />
+  </label>
+
+  <label class="block space-y-1">
+    <span class="text-sm text-muted">{labels.message}</span>
+    <textarea
+      name="message"
+      required
+      minlength="10"
+      maxlength="5000"
+      rows="6"
+      class="w-full bg-transparent border border-border rounded px-3 py-2 focus:border-accent focus:outline-none"
+    ></textarea>
+  </label>
+
+  <!-- Honeypot: hidden, must stay empty -->
+  <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+    <label>
+      Website
+      <input type="text" name="website" tabindex="-1" autocomplete="off" />
+    </label>
+  </div>
+
+  <div
+    class="cf-turnstile"
+    data-sitekey={SITE_CONFIG.turnstileSiteKey}
+    data-theme="auto"
+  ></div>
+
+  <input type="hidden" name="ts" />
+
+  <button
+    type="submit"
+    class="inline-flex items-center gap-2 border border-border px-4 py-2 hover:border-accent hover:text-accent transition-colors"
+  >
+    {labels.submit}
+  </button>
+
+  <p id="contact-status" class="text-sm min-h-[1.5em]" role="status" aria-live="polite"></p>
+</form>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('contact-status') as HTMLParagraphElement | null;
+  if (form && status) {
+    const tsInput = form.querySelector<HTMLInputElement>('input[name="ts"]');
+    if (tsInput) tsInput.value = String(Date.now());
+
+    const endpoint = form.dataset.endpoint!;
+    const LSending = form.dataset.labelSending!;
+    const LSubmit = form.dataset.labelSubmit!;
+    const LSuccess = form.dataset.labelSuccess!;
+    const LFailed = form.dataset.labelFailed!;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = LSending;
+      }
+      status.textContent = '';
+
+      const fd = new FormData(form);
+      const turnstileToken = (fd.get('cf-turnstile-response') as string) || '';
+      const payload = {
+        name: (fd.get('name') as string) || '',
+        email: (fd.get('email') as string) || '',
+        message: (fd.get('message') as string) || '',
+        website: (fd.get('website') as string) || '',
+        ts: Number(fd.get('ts')) || Date.now(),
+        turnstileToken,
+      };
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (res.status === 204) {
+          status.textContent = LSuccess;
+          form.reset();
+          if (tsInput) tsInput.value = String(Date.now());
+          // reset Turnstile widget if present
+          const w = (window as unknown as { turnstile?: { reset: () => void } }).turnstile;
+          if (w?.reset) w.reset();
+        } else {
+          status.textContent = LFailed;
+        }
+      } catch {
+        status.textContent = LFailed;
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = LSubmit;
+        }
+      }
+    });
+  }
+</script>

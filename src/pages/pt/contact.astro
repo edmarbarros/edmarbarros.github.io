@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { getUIStrings } from '../../i18n';
+import { cv } from '../../data/cv';
+
+const lang = 'pt' as const;
+const t = getUIStrings(lang);
+---
+
+<BaseLayout title={t.nav.contact} lang={lang} description="Entre em contato — email, LinkedIn, GitHub ou o formulário.">
+  <section class="space-y-10">
+    <header class="max-w-prose space-y-3">
+      <h1 class="font-serif text-4xl">{t.nav.contact}</h1>
+      <p>
+        É um prazer falar com engenheiros, recrutadores ou qualquer pessoa com um problema interessante.
+        O caminho mais rápido é por email: <a href={`mailto:${cv.identity.email}`}>{cv.identity.email}</a>.
+        Também estou no
+        <a href={cv.identity.github} rel="me noopener">GitHub</a> e no
+        <a href={cv.identity.linkedin} rel="me noopener">LinkedIn</a>.
+      </p>
+      <p class="text-sm text-muted">Ou deixe uma mensagem no formulário abaixo.</p>
+    </header>
+    <ContactForm lang={lang} />
+  </section>
+</BaseLayout>
