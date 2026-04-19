@@ -1,14 +1,53 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CvPage from '../../components/CvPage.astro';
+import JsonLd from '../../components/JsonLd.astro';
 import { getUIStrings } from '../../i18n';
+import { cv } from '../../data/cv';
 
 const lang = 'pt' as const;
 const t = getUIStrings(lang);
 const title = t.nav.cv;
 const description = 'Engenheiro Backend com mais de 10 anos em sistemas distribuídos. Experiência, habilidades e formação.';
+
+const twitterUrl = cv.identity.twitter
+  ? `https://twitter.com/${cv.identity.twitter.replace(/^@/, '')}`
+  : undefined;
+const sameAs = [cv.identity.github, cv.identity.linkedin, twitterUrl].filter(Boolean);
+
+const skillsFlat = cv.skills.flatMap((g) => g.items);
+const alumniOf = cv.education.map((ed) => ({
+  '@type': 'EducationalOrganization',
+  name: ed.institution,
+}));
+const currentCompany = cv.experience[0];
+const worksFor = currentCompany
+  ? {
+      '@type': 'Organization',
+      name: currentCompany.company,
+      url: currentCompany.url,
+    }
+  : undefined;
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: cv.identity.name,
+  jobTitle: cv.identity.title[lang],
+  url: new URL(Astro.url.pathname, Astro.site).toString(),
+  email: `mailto:${cv.identity.email}`,
+  image: new URL(cv.identity.photo, Astro.site).toString(),
+  description: cv.summary[lang],
+  knowsAbout: skillsFlat,
+  sameAs,
+  alumniOf,
+  ...(worksFor && { worksFor }),
+};
 ---
 
 <BaseLayout title={title} lang={lang} description={description}>
+  <Fragment slot="head">
+    <JsonLd data={personLd} />
+  </Fragment>
   <CvPage lang={lang} />
 </BaseLayout>

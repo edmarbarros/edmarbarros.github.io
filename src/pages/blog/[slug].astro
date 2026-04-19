@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Prose from '../../components/Prose.astro';
 import Tag from '../../components/Tag.astro';
+import JsonLd from '../../components/JsonLd.astro';
 import { render } from 'astro:content';
 import { getPosts, postSlug, findPostTranslation, postUrl } from '../../content/helpers';
 
@@ -20,9 +21,38 @@ const dateStr = publishedAt.toLocaleDateString('en-US', { year: 'numeric', month
 
 const ptTranslation = await findPostTranslation(entry, 'pt');
 const altLangHref = ptTranslation ? postUrl(ptTranslation, 'pt') : '/pt/blog';
+
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description: summary,
+  datePublished: publishedAt.toISOString(),
+  ...(entry.data.updatedAt && { dateModified: entry.data.updatedAt.toISOString() }),
+  author: {
+    '@type': 'Person',
+    name: 'Edmar Barros',
+    url: 'https://edmarbarros.com',
+  },
+  inLanguage: 'en-US',
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).toString(),
+  keywords: tags.join(', '),
+};
 ---
 
-<BaseLayout title={title} lang="en" description={summary} altLangHref={altLangHref}>
+<BaseLayout
+  title={title}
+  lang="en"
+  description={summary}
+  altLangHref={altLangHref}
+  ogType="article"
+  publishedTime={publishedAt.toISOString()}
+  modifiedTime={entry.data.updatedAt?.toISOString()}
+  articleTags={tags}
+>
+  <Fragment slot="head">
+    <JsonLd data={articleLd} />
+  </Fragment>
   <article class="space-y-8">
     <header class="space-y-3">
       <p class="text-sm">

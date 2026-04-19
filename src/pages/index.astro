@@ -1,13 +1,41 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import JsonLd from '../components/JsonLd.astro';
 import { getUIStrings } from '../i18n';
 import { cv } from '../data/cv';
 
 const lang = 'en' as const;
 const t = getUIStrings(lang);
+
+const siteUrl = 'https://edmarbarros.com';
+const twitterUrl = cv.identity.twitter
+  ? `https://twitter.com/${cv.identity.twitter.replace(/^@/, '')}`
+  : undefined;
+const sameAs = [cv.identity.github, cv.identity.linkedin, twitterUrl].filter(Boolean);
+
+const personLd = {
+  '@type': 'Person',
+  name: cv.identity.name,
+  jobTitle: cv.identity.title[lang],
+  url: siteUrl,
+  email: `mailto:${cv.identity.email}`,
+  image: new URL(cv.identity.photo, siteUrl).toString(),
+  sameAs,
+  description: cv.summary[lang],
+};
+const websiteLd = {
+  '@type': 'WebSite',
+  name: cv.identity.name,
+  url: siteUrl,
+  inLanguage: 'en-US',
+};
+const jsonLd = { '@context': 'https://schema.org', '@graph': [personLd, websiteLd] };
 ---
 
 <BaseLayout title={t.siteName} lang={lang} description={cv.summary.en.slice(0, 160)}>
+  <Fragment slot="head">
+    <JsonLd data={jsonLd} />
+  </Fragment>
   <section class="max-w-prose space-y-8">
     <div class="flex items-center gap-5">
       <img src={cv.identity.photo} alt={cv.identity.name} width="72" height="72" class="w-16 h-16 rounded-full object-cover border border-border" />
