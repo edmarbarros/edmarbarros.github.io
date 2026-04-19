@@ -1,0 +1,22 @@
+name: Link check
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --exclude-path node_modules
+            --exclude-path dist
+            --exclude-path .astro
+            --base https://edmarbarros.com
+            --accept 200,429
+            ./src ./public
+          fail: true
