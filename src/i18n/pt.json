@@ -9,7 +9,8 @@
     "contact": "Contato"
   },
   "footer": {
-    "bio": "Staff Backend Engineer — sistemas distribuídos, infraestrutura, dados.",
+    "role": "Staff Backend Engineer",
+    "domains": "sistemas distribuídos, infraestrutura, dados.",
     "builtWith": "Feito com Astro",
     "rights": "Todos os direitos reservados."
   },
@@ -18,7 +19,7 @@
     "toggleDark": "Mudar para tema escuro"
   },
   "lang": {
-    "switchTo": "English"
+    "current": "Português"
   },
   "notFound": {
     "title": "Página não encontrada",

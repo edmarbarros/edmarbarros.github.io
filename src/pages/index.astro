@@ -1,15 +1,26 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getUIStrings } from '../i18n';
+import { cv } from '../data/cv';
 
 const lang = 'en' as const;
 const t = getUIStrings(lang);
 ---
 
-<BaseLayout title={t.siteName} lang={lang} description={t.tagline}>
-  <section class="max-w-prose space-y-6">
-    <h1 class="font-serif text-4xl md:text-5xl">Edmar Barros</h1>
-    <p class="text-muted">{t.tagline}</p>
-    <p>Hello — this site is being built. Come back soon.</p>
+<BaseLayout title={t.siteName} lang={lang} description={cv.summary.en.slice(0, 160)}>
+  <section class="max-w-prose space-y-8">
+    <div class="flex items-center gap-5">
+      <img src={cv.identity.photo} alt={cv.identity.name} width="72" height="72" class="w-16 h-16 rounded-full object-cover border border-border" />
+      <div>
+        <h1 class="font-serif text-3xl md:text-4xl leading-tight">{cv.identity.name}</h1>
+        <p class="text-muted">{cv.identity.title.en} · {cv.identity.location.en}</p>
+      </div>
+    </div>
+    <p class="leading-relaxed">{cv.summary.en}</p>
+    <p class="flex flex-wrap gap-x-4 text-sm">
+      <a href="/cv">Read the CV →</a>
+      <a href="/blog">Read the blog →</a>
+      <a href="/contact">Get in touch →</a>
+    </p>
   </section>
 </BaseLayout>
