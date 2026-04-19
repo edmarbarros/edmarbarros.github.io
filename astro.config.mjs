@@ -6,6 +6,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://edmarbarros.com',
   trailingSlash: 'never',
+  build: {
+    inlineStylesheets: 'always',
+  },
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'pt'],
