@@ -9,9 +9,10 @@ interface Props {
   description?: string;
   lang?: Locale;
   ogImage?: string;
+  altLangHref?: string;
 }
 
-const { title, description, lang = 'en', ogImage } = Astro.props;
+const { title, description, lang = 'en', ogImage, altLangHref } = Astro.props;
 const t = getUIStrings(lang);
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const siteTitle = title === t.siteName ? t.siteName : `${title} — ${t.siteName}`;
@@ -49,7 +50,7 @@ const siteTitle = title === t.siteName ? t.siteName : `${title} — ${t.siteName
     <link rel="alternate" type="application/rss+xml" title="Edmar Barros — Blog (PT)" href="/pt/rss.xml" hreflang="pt" />
   </head>
   <body class="min-h-screen flex flex-col">
-    <SiteHeader lang={lang} />
+    <SiteHeader lang={lang} altLangHref={altLangHref} />
     <main class="flex-1 w-full max-w-content mx-auto px-6 py-12">
       <slot />
     </main>

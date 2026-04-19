@@ -33,3 +33,20 @@ export function postSlug(entry: PostEntry): string {
   const parts = entry.id.replace(/\.mdx?$/, '').split('/');
   return parts.slice(1).join('/');
 }
+
+/** Find the counterpart post in the other locale by matching translationKey. */
+export async function findPostTranslation(
+  entry: PostEntry,
+  otherLang: Locale,
+): Promise<PostEntry | undefined> {
+  const key = entry.data.translationKey;
+  if (!key) return undefined;
+  const others = await getPosts(otherLang);
+  return others.find((p: PostEntry) => p.data.translationKey === key);
+}
+
+/** Build a public URL to a post in the given locale. */
+export function postUrl(entry: PostEntry, lang: Locale): string {
+  const slug = postSlug(entry);
+  return lang === 'en' ? `/blog/${slug}` : `/pt/blog/${slug}`;
+}

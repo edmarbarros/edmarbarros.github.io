@@ -3,7 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Prose from '../../../components/Prose.astro';
 import Tag from '../../../components/Tag.astro';
 import { render } from 'astro:content';
-import { getPosts, postSlug } from '../../../content/helpers';
+import { getPosts, postSlug, findPostTranslation, postUrl } from '../../../content/helpers';
 
 export async function getStaticPaths() {
   const entries = await getPosts('pt');
@@ -17,9 +17,12 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 const { title, publishedAt, summary, tags } = entry.data;
 const dateStr = publishedAt.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const enTranslation = await findPostTranslation(entry, 'en');
+const altLangHref = enTranslation ? postUrl(enTranslation, 'en') : '/blog';
 ---
 
-<BaseLayout title={title} lang="pt" description={summary}>
+<BaseLayout title={title} lang="pt" description={summary} altLangHref={altLangHref}>
   <article class="space-y-8">
     <header class="space-y-3">
       <p class="text-sm">

@@ -29,6 +29,7 @@ const posts = defineCollection({
     summary: z.string(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    translationKey: z.string().optional(),
   }),
 });
 
