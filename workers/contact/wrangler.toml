@@ -13,10 +13,10 @@ binding = "CONTACT_LIMITS"
 id = "066ceb8042374bd5bef874238dc39814"
 
 [vars]
-ALLOWED_ORIGIN = "https://edmarbarros.com,https://www.edmarbarros.com,http://localhost:4321,http://localhost:4322,http://localhost:4323"
-TO_EMAIL = "hello@edmarbarros.com"
+ALLOWED_ORIGIN = "https://edmarbarros.com,https://www.edmarbarros.com,http://localhost:4321"
 FROM_EMAIL = "notifications@send.edmarbarros.com"
 
 # Secrets (set via `wrangler secret put <NAME>`), not committed:
 # - RESEND_API_KEY
 # - TURNSTILE_SECRET
+# - TO_EMAIL
