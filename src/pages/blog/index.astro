@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, postSlug } from '../../content/helpers';
+import { getUIStrings } from '../../i18n';
+
+const lang = 'en' as const;
+const t = getUIStrings(lang);
+const posts = await getPosts(lang);
+---
+
+<BaseLayout title={t.nav.blog} lang={lang} description="Notes on distributed systems, infra, and engineering leadership.">
+  <div class="space-y-10">
+    <header class="max-w-prose space-y-2">
+      <h1 class="font-serif text-4xl">{t.nav.blog}</h1>
+      <p class="text-muted">Notes on the work.</p>
+      <p class="text-sm">
+        <a href="/rss.xml" class="text-muted hover:text-accent">RSS</a>
+      </p>
+    </header>
+    <div class="space-y-6">
+      {posts.length === 0 ? (
+        <p class="text-muted">No posts yet.</p>
+      ) : (
+        posts.map((entry) => (
+          <PostCard entry={entry} href={`/blog/${postSlug(entry)}`} lang={lang} />
+        ))
+      )}
+    </div>
+  </div>
+</BaseLayout>

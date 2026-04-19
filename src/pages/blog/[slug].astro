@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Prose from '../../components/Prose.astro';
+import Tag from '../../components/Tag.astro';
+import { render } from 'astro:content';
+import { getPosts, postSlug } from '../../content/helpers';
+
+export async function getStaticPaths() {
+  const entries = await getPosts('en');
+  return entries.map((entry) => ({
+    params: { slug: postSlug(entry) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, publishedAt, summary, tags } = entry.data;
+const dateStr = publishedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout title={title} lang="en" description={summary}>
+  <article class="space-y-8">
+    <header class="space-y-3">
+      <p class="text-sm">
+        <a href="/blog" class="text-muted hover:text-accent">← Blog</a>
+      </p>
+      <h1 class="font-serif text-4xl md:text-5xl">{title}</h1>
+      <p class="text-sm text-muted">
+        <time datetime={publishedAt.toISOString()}>{dateStr}</time>
+      </p>
+      {tags.length > 0 && (
+        <ul class="flex flex-wrap gap-2 pt-1">
+          {tags.map((t: string) => <li><Tag label={t} /></li>)}
+        </ul>
+      )}
+    </header>
+    <Prose>
+      <Content />
+    </Prose>
+  </article>
+</BaseLayout>
