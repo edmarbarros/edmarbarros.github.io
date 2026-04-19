@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import type { Locale } from '../i18n';
 import { cv } from '../data/cv';
 import { formatPeriod, formatDuration, companyRange } from '../data/duration';
+import photo from '../assets/edmar.jpg';
 
 interface Props {
   lang: Locale;
@@ -21,13 +23,18 @@ const headings = {
 
 <article class="space-y-12">
   <header class="flex flex-col md:flex-row items-start gap-6">
-    <img
-      src={cv.identity.photo}
+    <Image
+      src={photo}
       alt={cv.identity.name}
-      width="120"
-      height="120"
+      width={224}
+      height={224}
+      widths={[96, 112, 192, 224]}
+      sizes="(min-width: 768px) 112px, 96px"
       class="w-24 h-24 md:w-28 md:h-28 rounded-full object-cover border border-border"
       loading="eager"
+      fetchpriority="high"
+      format="webp"
+      quality={80}
     />
     <div class="space-y-3 flex-1">
       <h1 class="font-serif text-4xl md:text-5xl">{cv.identity.name}</h1>

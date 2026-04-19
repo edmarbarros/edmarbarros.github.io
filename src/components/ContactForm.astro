@@ -15,6 +15,7 @@ const labels = {
     message: 'Message',
     submit: 'Send',
     sending: 'Sending…',
+    verifying: 'Verifying…',
     success: 'Thanks — I\u2019ll reply soon.',
     failed: 'Send failed — email hello@edmarbarros.com directly.',
   },
@@ -24,6 +25,7 @@ const labels = {
     message: 'Mensagem',
     submit: 'Enviar',
     sending: 'Enviando…',
+    verifying: 'Verificando…',
     success: 'Obrigado — respondo em breve.',
     failed: 'Falha no envio — escreva para hello@edmarbarros.com.',
   },
@@ -36,6 +38,7 @@ const labels = {
   novalidate
   data-endpoint={SITE_CONFIG.contactEndpoint}
   data-label-sending={labels.sending}
+  data-label-verifying={labels.verifying}
   data-label-submit={labels.submit}
   data-label-success={labels.success}
   data-label-failed={labels.failed}
@@ -100,8 +103,6 @@ const labels = {
   <p id="contact-status" class="text-sm min-h-[1.5em]" role="status" aria-live="polite"></p>
 </form>
 
-<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
 <script>
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const status = document.getElementById('contact-status') as HTMLParagraphElement | null;
@@ -111,9 +112,36 @@ const labels = {
 
     const endpoint = form.dataset.endpoint!;
     const LSending = form.dataset.labelSending!;
+    const LVerifying = form.dataset.labelVerifying!;
     const LSubmit = form.dataset.labelSubmit!;
     const LSuccess = form.dataset.labelSuccess!;
     const LFailed = form.dataset.labelFailed!;
+
+    const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    let turnstileInjected = false;
+    function injectTurnstile() {
+      if (turnstileInjected) return;
+      turnstileInjected = true;
+      const s = document.createElement('script');
+      s.src = TURNSTILE_SRC;
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+
+    // Inject on first textarea blur — widget can render before the user reaches submit.
+    const msg = form.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
+    msg?.addEventListener('blur', injectTurnstile, { once: true });
+
+    async function waitForToken(maxMs = 10000): Promise<string> {
+      const start = Date.now();
+      while (Date.now() - start < maxMs) {
+        const el = form!.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]');
+        if (el?.value) return el.value;
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      return '';
+    }
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -124,15 +152,22 @@ const labels = {
       }
       status.textContent = '';
 
+      // Ensure the challenge is loading. If this is the first click (no blur yet), show verifying.
+      const alreadyInjected = turnstileInjected;
+      injectTurnstile();
+      if (!alreadyInjected) status.textContent = LVerifying;
+
+      const token = await waitForToken();
+      status.textContent = '';
+
       const fd = new FormData(form);
-      const turnstileToken = (fd.get('cf-turnstile-response') as string) || '';
       const payload = {
         name: (fd.get('name') as string) || '',
         email: (fd.get('email') as string) || '',
         message: (fd.get('message') as string) || '',
         website: (fd.get('website') as string) || '',
         ts: Number(fd.get('ts')) || Date.now(),
-        turnstileToken,
+        turnstileToken: token,
       };
 
       try {
@@ -145,7 +180,6 @@ const labels = {
           status.textContent = LSuccess;
           form.reset();
           if (tsInput) tsInput.value = String(Date.now());
-          // reset Turnstile widget if present
           const w = (window as unknown as { turnstile?: { reset: () => void } }).turnstile;
           if (w?.reset) w.reset();
         } else {
