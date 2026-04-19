@@ -81,6 +81,7 @@ export const cv: CV = {
     email: 'hello@edmarbarros.com',
     linkedin: 'https://linkedin.com/in/edmarbarros/',
     github: 'https://github.com/edmarbarros',
+    twitter: '@edmarbarros_',
     photo: '/images/edmar.jpg',
   },
   summary: {
