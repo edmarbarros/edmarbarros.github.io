@@ -1,0 +1,22 @@
+name = "contact"
+main = "src/index.ts"
+compatibility_date = "2026-01-01"
+workers_dev = false
+
+[[routes]]
+pattern = "api.edmarbarros.com/contact"
+zone_name = "edmarbarros.com"
+
+[[kv_namespaces]]
+binding = "CONTACT_LIMITS"
+# Fill in after `wrangler kv:namespace create CONTACT_LIMITS`
+id = "066ceb8042374bd5bef874238dc39814"
+
+[vars]
+ALLOWED_ORIGIN = "https://edmarbarros.com,https://www.edmarbarros.com,http://localhost:4321,http://localhost:4322,http://localhost:4323"
+TO_EMAIL = "hello@edmarbarros.com"
+FROM_EMAIL = "notifications@send.edmarbarros.com"
+
+# Secrets (set via `wrangler secret put <NAME>`), not committed:
+# - RESEND_API_KEY
+# - TURNSTILE_SECRET
