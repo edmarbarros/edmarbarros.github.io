@@ -2,17 +2,14 @@
 import { SITE_CONFIG } from '../config';
 
 const enabled = import.meta.env.PROD;
-const gaId = SITE_CONFIG.gaMeasurementId;
+const token = SITE_CONFIG.cfWebAnalyticsToken;
+const beacon = token ? JSON.stringify({ token }) : undefined;
 ---
 
-{enabled && gaId && (
-  <>
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
-    <script is:inline define:vars={{ gaId }}>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', gaId);
-    </script>
-  </>
+{enabled && beacon && (
+  <script
+    defer
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon={beacon}
+  ></script>
 )}
