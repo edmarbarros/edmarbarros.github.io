@@ -18,7 +18,6 @@ const personLd = {
   name: cv.identity.name,
   jobTitle: cv.identity.title[lang],
   url: siteUrl,
-  email: `mailto:${cv.identity.email}`,
   image: new URL(cv.identity.photo, siteUrl).toString(),
   sameAs,
   description: cv.summary[lang],
