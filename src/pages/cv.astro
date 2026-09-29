@@ -35,7 +35,6 @@ const personLd = {
   name: cv.identity.name,
   jobTitle: cv.identity.title[lang],
   url: new URL(Astro.url.pathname, Astro.site).toString(),
-  email: `mailto:${cv.identity.email}`,
   image: new URL(cv.identity.photo, Astro.site).toString(),
   description: cv.summary[lang],
   knowsAbout: skillsFlat,
