@@ -1,0 +1,33 @@
+---
+import Tag from './Tag.astro';
+import type { ProjectEntry } from '../content/helpers';
+
+interface Props {
+  entry: ProjectEntry;
+  href: string;
+}
+
+const { entry, href } = Astro.props;
+const { title, company, role, period, summary, stack, link } = entry.data;
+---
+
+<article class="border-b border-border pb-6 last:border-b-0">
+  <header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-2">
+    <h3 class="font-serif text-xl">
+      <a href={href} class="no-underline text-text hover:text-accent">{title}</a>
+    </h3>
+    <p class="text-sm text-muted">{period}</p>
+  </header>
+  {(company || role) && (
+    <p class="text-sm text-muted mb-2">
+      {company}{company && role && ' · '}{role}
+      {link && <>
+        {' · '}<a href={link} rel="noopener" class="no-underline hover:text-accent">{new URL(link).hostname} ↗</a>
+      </>}
+    </p>
+  )}
+  <p class="max-w-prose mb-3">{summary}</p>
+  <ul class="flex flex-wrap gap-2">
+    {stack.map((s: string) => <li><Tag label={s} /></li>)}
+  </ul>
+</article>

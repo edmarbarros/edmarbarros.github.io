@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjects, projectSlug } from '../../content/helpers';
+import { getUIStrings } from '../../i18n';
+
+const lang = 'en' as const;
+const t = getUIStrings(lang);
+const work = await getProjects(lang, 'work');
+const side = await getProjects(lang, 'side');
+---
+
+<BaseLayout
+  title={t.nav.projects}
+  lang={lang}
+  description="Work projects and side projects — what I built, what shipped, what I learned."
+>
+  <div class="space-y-16">
+    <header class="max-w-prose space-y-3">
+      <h1 class="font-serif text-4xl">{t.nav.projects}</h1>
+      <p class="text-muted">Projects I've shipped, with context on the problem, what I built, outcomes, and lessons.</p>
+    </header>
+
+    <section class="space-y-6">
+      <h2 class="font-serif text-2xl border-b border-border pb-2">Work</h2>
+      <div class="space-y-6">
+        {work.map((entry) => (
+          <ProjectCard
+            entry={entry}
+            href={`/projects/work/${projectSlug(entry)}`}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section class="space-y-6">
+      <h2 class="font-serif text-2xl border-b border-border pb-2">Side Projects</h2>
+      {side.length === 0 ? (
+        <p class="text-muted">Coming soon — I'll post side projects here.</p>
+      ) : (
+        <div class="space-y-6">
+          {side.map((entry) => (
+            <ProjectCard
+              entry={entry}
+              href={`/projects/side/${projectSlug(entry)}`}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  </div>
+</BaseLayout>
