@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import { getProjects, projectSlug } from '../../../content/helpers';
+import { getUIStrings } from '../../../i18n';
+
+const lang = 'pt' as const;
+const t = getUIStrings(lang);
+const work = await getProjects(lang, 'work');
+const side = await getProjects(lang, 'side');
+---
+
+<BaseLayout
+  title={t.nav.projects}
+  lang={lang}
+  description="Projetos profissionais e pessoais — o que construí, o que entreguei, o que aprendi."
+>
+  <div class="space-y-16">
+    <header class="max-w-prose space-y-3">
+      <h1 class="font-serif text-4xl">{t.nav.projects}</h1>
+      <p class="text-muted">Projetos que entreguei, com contexto do problema, do que foi construído, resultados e lições.</p>
+    </header>
+
+    <section class="space-y-6">
+      <h2 class="font-serif text-2xl border-b border-border pb-2">Profissional</h2>
+      <div class="space-y-6">
+        {work.map((entry) => (
+          <ProjectCard
+            entry={entry}
+            href={`/pt/projects/work/${projectSlug(entry)}`}
+          />
+        ))}
+      </div>
+    </section>
+
+    <section class="space-y-6">
+      <h2 class="font-serif text-2xl border-b border-border pb-2">Projetos Pessoais</h2>
+      {side.length === 0 ? (
+        <p class="text-muted">Em breve — vou publicar projetos pessoais aqui.</p>
+      ) : (
+        <div class="space-y-6">
+          {side.map((entry) => (
+            <ProjectCard
+              entry={entry}
+              href={`/pt/projects/side/${projectSlug(entry)}`}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  </div>
+</BaseLayout>
