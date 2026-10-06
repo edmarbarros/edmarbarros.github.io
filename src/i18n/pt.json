@@ -25,5 +25,25 @@
     "title": "Página não encontrada",
     "body": "Essa página não existe. Voltar para a página inicial?",
     "back": "Voltar ao início"
+  },
+  "mcp": {
+    "title": "Converse comigo via MCP",
+    "intro": "Conecte um assistente de IA a este site e pergunte sobre minha experiência, habilidades, projetos e textos. Ele responde com o mesmo conteúdo que você vê aqui, em português ou inglês. É somente leitura e não exige login.",
+    "endpoint": "URL do servidor",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "tryTitle": "Experimente perguntar",
+    "prompts": [
+      "Faça um resumo do Edmar e de suas principais habilidades.",
+      "O que ele construiu recentemente?",
+      "Quais tecnologias seus projetos usaram?"
+    ],
+    "setupTitle": "Como conectar",
+    "terminal": "Execute no terminal:",
+    "claudeApp": "Abra claude.ai/customize/connectors, adicione um conector personalizado e cole a URL do servidor. Nos planos Team e Enterprise, um administrador precisa adicionar.",
+    "chatgpt": "Adicione um servidor MCP personalizado no ChatGPT e cole a URL do servidor. Escolha sem autenticação, se perguntado. Nomes de menu, disponibilidade por plano e políticas do workspace mudam com frequência, então um administrador pode precisar liberar.",
+    "cursor": "Adicione isto em ~/.cursor/mcp.json:",
+    "vscode": "Adicione isto em .vscode/mcp.json:",
+    "other": "Qualquer cliente com suporte a MCP remoto via streamable HTTP pode usar a mesma URL."
   }
 }
