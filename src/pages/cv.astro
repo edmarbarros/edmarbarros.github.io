@@ -20,7 +20,8 @@ const alumniOf = cv.education.map((ed) => ({
   '@type': 'EducationalOrganization',
   name: ed.institution,
 }));
-const currentCompany = cv.experience[0];
+// Only declare an employer in structured data while the latest role is still open.
+const currentCompany = cv.experience.find((c) => c.roles.some((r) => r.endMonth === 'present'));
 const worksFor = currentCompany
   ? {
       '@type': 'Organization',
