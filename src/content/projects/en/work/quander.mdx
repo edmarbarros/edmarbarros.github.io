@@ -1,0 +1,45 @@
+---
+title: "Quander (Hypesonic) — Senior Software Engineer"
+kind: work
+company: Quander
+role: Senior Software Engineer
+period: "May 2026 – Oct 2026"
+location: Remote
+summary: "Worked on the ad platform behind Hypesonic, Quander's AI growth product: richer Meta ad data, agent skills over it, direct publishing and a TikTok integration, plus a designed architecture for adding new ad channels cheaply."
+stack:
+  - Node.js
+  - TypeScript
+  - PostgreSQL
+  - LLM APIs
+  - AI Agents
+  - Stripe
+  - Meta Marketing API
+  - TikTok Ads API
+  - PostHog
+  - Grafana
+link: "https://hypesonic.com/"
+order: 110
+featured: true
+---
+
+## Problem
+
+Hypesonic is Quander's AI growth platform. It runs marketing and distribution continuously: testing creative, targeting audiences and optimizing ad spend. To do that well it needs rich and reliable ad-performance data, a way to publish generated creatives without leaving the product, and ad channels that are cheap to add. Meta was the first paid channel, and B2B customers were still billed manually.
+
+## What I built
+
+- **Richer Meta ad data.** Improved the Meta Ad sync to collect more insights and demographic data, giving the platform deeper context on how each ad performs. Also reduced sync error rates, closed data gaps and improved sync ETA estimates.
+- **Agent skills over ad data.** Added skills that let the AI agent navigate a user's Meta ads data, so its decisions rest on real performance context.
+- **Direct publishing to Meta.** Integrated the Meta Ad Publisher so users create and manage Campaigns, Ad Sets and Ads and publish their generated assets directly from the product.
+- **TikTok for Business.** Developed the TikTok Business integration for TikTok Ads sync and publish, giving customers a second paid channel alongside Meta.
+- **Ad integration architecture.** Designed a refactor to reduce the friction of adding a new ad integration, using the Port, Adapter, Registry and Host patterns. The design is done but has not been implemented.
+- **Observability package.** Built and wrapped observability in a single package that plugs into every area of the codebase and keeps the underlying tools easy to replace. PostHog and Grafana sit behind it.
+- **Self-serve billing.** Built the full subscription and payment flow on Stripe, so customers can sign up and pay on their own.
+
+## Outcomes
+
+- Opened a self-serve revenue stream. Before this, B2B customers were billed manually.
+- Gave customers a second paid ad channel with TikTok sync and publish.
+- Gave the AI agent richer ad-performance context, from deeper Meta insights and demographic data.
+- Designed a port, adapter, registry and host architecture to make new ad integrations cheaper to add. It has not been implemented yet.
+- Restored domain trust by getting hypesonic.com cleared from security vendor blocklists, which had been hurting traffic and signups.
