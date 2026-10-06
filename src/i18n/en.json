@@ -1,6 +1,6 @@
 {
   "siteName": "Edmar Barros",
-  "tagline": "Staff Backend Engineer",
+  "tagline": "Staff Software Engineer",
   "nav": {
     "home": "Home",
     "cv": "CV",
@@ -9,7 +9,7 @@
     "contact": "Contact"
   },
   "footer": {
-    "role": "Staff Backend Engineer",
+    "role": "Staff Software Engineer",
     "domains": "distributed systems, infra, data.",
     "builtWith": "Built with Astro",
     "rights": "All rights reserved."

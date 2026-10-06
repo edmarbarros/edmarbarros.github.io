@@ -74,8 +74,8 @@ export const cv: CV = {
   identity: {
     name: 'Edmar Barros',
     title: {
-      en: 'Staff Software Engineer & Solutions Architect',
-      pt: 'Staff Software Engineer & Solutions Architect',
+      en: 'Staff Software Engineer',
+      pt: 'Staff Software Engineer',
     },
     location: { en: 'Brazil · Remote', pt: 'Brasil · Remoto' },
     email: 'hello[at]edmarbarros[.]com',
@@ -85,8 +85,8 @@ export const cv: CV = {
     photo: '/images/edmar.jpg',
   },
   summary: {
-    en: 'Software Engineer with 10+ years building and operating production-grade distributed systems, most recently building AI-driven growth tooling at Quander (Hypesonic). I tie engineering work to business outcomes: opened a self-serve revenue stream with Stripe subscriptions, improved an unbalanced Elasticsearch cluster to cut its cost by 41%, halved new-engineer ramp-up time and reduced customer onboarding from 2 weeks to 1 day. Specialized in backend architecture (monolith-to-microservices), cloud infrastructure (GCP, AWS, Terraform, Kubernetes), CI/CD and data platforms (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
-    pt: 'Engenheiro de Software com mais de 10 anos construindo e operando sistemas distribuídos em produção, mais recentemente construindo ferramentas de crescimento orientadas por IA na Quander (Hypesonic). Conecto engenharia a resultados de negócio: abri uma nova fonte de receita self-service com assinaturas no Stripe, melhorei um cluster Elasticsearch desbalanceado, reduzindo seu custo em 41%, reduzi pela metade o tempo de ramp-up de novos engenheiros e diminuí o onboarding de clientes de 2 semanas para 1 dia. Especializado em arquitetura backend (monolito para microsserviços), infraestrutura em nuvem (GCP, AWS, Terraform, Kubernetes), CI/CD e plataformas de dados (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
+    en: 'Staff Software Engineer with 10+ years building and operating production-grade distributed systems, most recently building AI-driven growth tooling at Quander (Hypesonic). I tie engineering work to business outcomes: opened a self-serve revenue stream with Stripe subscriptions, improved an unbalanced Elasticsearch cluster to cut its cost by 41%, halved new-engineer ramp-up time and reduced customer onboarding from 2 weeks to 1 day. Specialized in backend architecture (monolith-to-microservices), cloud infrastructure (GCP, AWS, Terraform, Kubernetes), CI/CD and data platforms (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
+    pt: 'Staff Software Engineer com mais de 10 anos construindo e operando sistemas distribuídos em produção, mais recentemente construindo ferramentas de crescimento orientadas por IA na Quander (Hypesonic). Conecto engenharia a resultados de negócio: abri uma nova fonte de receita self-service com assinaturas no Stripe, melhorei um cluster Elasticsearch desbalanceado, reduzindo seu custo em 41%, reduzi pela metade o tempo de ramp-up de novos engenheiros e diminuí o onboarding de clientes de 2 semanas para 1 dia. Especializado em arquitetura backend (monolito para microsserviços), infraestrutura em nuvem (GCP, AWS, Terraform, Kubernetes), CI/CD e plataformas de dados (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
   },
   quote: {
     en: 'The mind that opens to a new idea never returns to its original size.',
