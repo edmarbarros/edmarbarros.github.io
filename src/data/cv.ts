@@ -85,8 +85,8 @@ export const cv: CV = {
     photo: '/images/edmar.jpg',
   },
   summary: {
-    en: 'Software Engineer with 10+ years building and operating production-grade distributed systems, most recently building AI-driven growth tooling at Quander (Hypesonic). I tie engineering work to business outcomes: opened a self-serve revenue stream with Stripe subscriptions, cut cloud spend by 41%, halved new-engineer ramp-up time and reduced customer onboarding from 2 weeks to 1 day. Specialized in backend architecture (monolith-to-microservices), cloud infrastructure (GCP, AWS, Terraform, Kubernetes), CI/CD and data platforms (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
-    pt: 'Engenheiro de Software com mais de 10 anos construindo e operando sistemas distribuídos em produção, mais recentemente construindo ferramentas de crescimento orientadas por IA na Quander (Hypesonic). Conecto engenharia a resultados de negócio: abri uma nova fonte de receita self-service com assinaturas no Stripe, reduzi o custo de nuvem em 41%, reduzi pela metade o tempo de ramp-up de novos engenheiros e diminuí o onboarding de clientes de 2 semanas para 1 dia. Especializado em arquitetura backend (monolito para microsserviços), infraestrutura em nuvem (GCP, AWS, Terraform, Kubernetes), CI/CD e plataformas de dados (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
+    en: 'Software Engineer with 10+ years building and operating production-grade distributed systems, most recently building AI-driven growth tooling at Quander (Hypesonic). I tie engineering work to business outcomes: opened a self-serve revenue stream with Stripe subscriptions, improved an unbalanced Elasticsearch cluster to cut its cost by 41%, halved new-engineer ramp-up time and reduced customer onboarding from 2 weeks to 1 day. Specialized in backend architecture (monolith-to-microservices), cloud infrastructure (GCP, AWS, Terraform, Kubernetes), CI/CD and data platforms (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
+    pt: 'Engenheiro de Software com mais de 10 anos construindo e operando sistemas distribuídos em produção, mais recentemente construindo ferramentas de crescimento orientadas por IA na Quander (Hypesonic). Conecto engenharia a resultados de negócio: abri uma nova fonte de receita self-service com assinaturas no Stripe, melhorei um cluster Elasticsearch desbalanceado, reduzindo seu custo em 41%, reduzi pela metade o tempo de ramp-up de novos engenheiros e diminuí o onboarding de clientes de 2 semanas para 1 dia. Especializado em arquitetura backend (monolito para microsserviços), infraestrutura em nuvem (GCP, AWS, Terraform, Kubernetes), CI/CD e plataformas de dados (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
   },
   quote: {
     en: 'The mind that opens to a new idea never returns to its original size.',
@@ -149,14 +149,14 @@ export const cv: CV = {
           endMonth: '2026-05',
           bullets: {
             en: [
-              'Cut infrastructure spend by 41%: Rebuilt an unbalanced Elasticsearch cluster (oversized shards, outdated version, no index lifecycle policies) and documented a roadmap for further savings.',
+              'Cut Elasticsearch spend by 41%: Rebuilt an unbalanced Elasticsearch cluster (oversized shards, outdated version, no index lifecycle policies) and documented a roadmap for further savings.',
               'Scaled to 90k+ daily listings: Led the migration from a Node.js monolith to event-driven microservices on Kafka, reducing listing latency by 300ms, cutting failed marketplace syncs and speeding up new marketplace integrations.',
               'Halved new-engineer ramp-up (6 to 3 weeks): Launched internal Tech Talks (10+ sessions) and a structured 1:1 mentorship framework to close system knowledge gaps.',
               'Faster, lighter releases: Re-engineered build and deployment pipelines (GitHub Actions, CircleCI), shrinking Docker images by 70% (1 GB to 300 MB) and shortening deployment cycles.',
               'Infrastructure ownership: Owned GCP/Kubernetes infrastructure via Terraform and Helm (cluster provisioning, service mesh, environment promotion) and built the observability stack that caught performance bottlenecks before they reached users.',
             ],
             pt: [
-              'Redução de 41% no custo de infraestrutura: Reestruturei um cluster Elasticsearch desbalanceado (shards superdimensionados, versão desatualizada, sem políticas de ciclo de vida de índices) e documentei um roadmap para economias adicionais.',
+              'Redução de 41% no custo do Elasticsearch: Reestruturei um cluster Elasticsearch desbalanceado (shards superdimensionados, versão desatualizada, sem políticas de ciclo de vida de índices) e documentei um roadmap para economias adicionais.',
               'Escala para mais de 90 mil anúncios diários: Liderei a migração de um monolito Node.js para microsserviços orientados a eventos com Kafka, reduzindo a latência de listagem em 300ms, diminuindo falhas de sincronização com marketplaces e acelerando novas integrações.',
               'Ramp-up de novos engenheiros pela metade (de 6 para 3 semanas): Criei Tech Talks internos (mais de 10 sessões) e um framework estruturado de mentoria 1:1 para fechar lacunas de conhecimento do sistema.',
               'Releases mais rápidos e leves: Reestruturei os pipelines de build e deploy (GitHub Actions, CircleCI), reduzindo as imagens Docker em 70% (de 1 GB para 300 MB) e encurtando os ciclos de deploy.',
