@@ -145,7 +145,7 @@ export function registerTools(server: McpServer, env: Env, ctx?: ExecutionContex
             rss: new URL('/rss.xml', env.SITE_URL).href,
           },
           languages: ['en', 'pt'],
-          current_or_latest_company: cv.experience[0]?.company ?? null,
+          latest_company: cv.experience[0]?.company ?? null,
         };
         const text = [
           `${profile.name}, ${profile.title}`,

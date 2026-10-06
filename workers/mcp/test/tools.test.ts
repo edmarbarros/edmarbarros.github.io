@@ -55,7 +55,7 @@ describe('site_get_profile', () => {
     const { text, data } = await call('site_get_profile');
     expect(text).toContain('Edmar Barros');
     expect(data.links.website).toBe('https://site.test/');
-    expect(data.current_or_latest_company).toBe('Quander');
+    expect(data.latest_company).toBe('Quander');
   });
 });
 
