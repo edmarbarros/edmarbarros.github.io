@@ -1,0 +1,45 @@
+name: Deploy MCP worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'workers/mcp/**'
+      - '.github/workflows/worker-mcp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Test worker
+        working-directory: workers/mcp
+        run: pnpm test
+
+      - name: Typecheck worker
+        working-directory: workers/mcp
+        run: pnpm typecheck
+
+      - name: Deploy worker
+        working-directory: workers/mcp
+        run: ./node_modules/.bin/wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
