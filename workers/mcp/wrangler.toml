@@ -1,0 +1,15 @@
+name = "mcp"
+main = "src/index.ts"
+compatibility_date = "2026-01-01"
+workers_dev = false
+
+# Same zone and host as the contact worker; different path.
+[[routes]]
+pattern = "api.edmarbarros.com/mcp"
+zone_name = "edmarbarros.com"
+
+[vars]
+# Where the static JSON export (src/pages/api) is served from.
+SITE_URL = "https://edmarbarros.com"
+# Seconds a fetched JSON file stays in the Cloudflare cache.
+CACHE_TTL = "300"
