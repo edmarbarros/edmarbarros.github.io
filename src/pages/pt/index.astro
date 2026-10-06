@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import JsonLd from '../../components/JsonLd.astro';
+import McpSection from '../../components/McpSection.astro';
 import { getUIStrings } from '../../i18n';
 import { cv } from '../../data/cv';
 
@@ -50,4 +51,5 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': [personLd, websiteL
       <a href="/pt/contact">Entrar em contato →</a>
     </p>
   </section>
+  <McpSection lang={lang} />
 </BaseLayout>

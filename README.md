@@ -38,7 +38,7 @@ The site content is also available to AI clients over the Model Context Protocol
 - Tools are read-only: `site_get_profile`, `site_get_cv`, `site_list_posts`, `site_get_post`, `site_list_projects`, `site_get_project`, `site_search`.
 - Deploys through `.github/workflows/worker-mcp.yml` when `workers/mcp/**` changes.
 
-Add it to Claude Code:
+The home page lists setup steps for Claude Code, Claude (web and desktop), ChatGPT, Cursor, VS Code, Gemini CLI and Codex CLI (`src/components/McpSection.astro`, strings in `src/i18n`). For Claude Code:
 
 ```bash
 claude mcp add --transport http edmarbarros https://api.edmarbarros.com/mcp
