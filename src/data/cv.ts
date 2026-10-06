@@ -85,8 +85,8 @@ export const cv: CV = {
     photo: '/images/edmar.jpg',
   },
   summary: {
-    en: 'Software Engineer with 10+ years building and operating production-grade distributed systems, now building AI-driven growth tooling at Hypesonic. I tie engineering work to business outcomes: opened a self-serve revenue stream with Stripe subscriptions, cut cloud spend by 41%, halved new-engineer ramp-up time and reduced customer onboarding from 2 weeks to 1 day. Specialized in backend architecture (monolith-to-microservices), cloud infrastructure (GCP, AWS, Terraform, Kubernetes), CI/CD and data platforms (Kafka, Elasticsearch, BigQuery).',
-    pt: 'Engenheiro de Software com mais de 10 anos construindo e operando sistemas distribuídos em produção, hoje construindo ferramentas de crescimento orientadas por IA na Hypesonic. Conecto engenharia a resultados de negócio: abri uma nova fonte de receita self-service com assinaturas no Stripe, reduzi o custo de nuvem em 41%, reduzi pela metade o tempo de ramp-up de novos engenheiros e diminuí o onboarding de clientes de 2 semanas para 1 dia. Especializado em arquitetura backend (monolito para microsserviços), infraestrutura em nuvem (GCP, AWS, Terraform, Kubernetes), CI/CD e plataformas de dados (Kafka, Elasticsearch, BigQuery).',
+    en: 'Software Engineer with 10+ years building and operating production-grade distributed systems, now building AI-driven growth tooling at Quander (Hypesonic). I tie engineering work to business outcomes: opened a self-serve revenue stream with Stripe subscriptions, cut cloud spend by 41%, halved new-engineer ramp-up time and reduced customer onboarding from 2 weeks to 1 day. Specialized in backend architecture (monolith-to-microservices), cloud infrastructure (GCP, AWS, Terraform, Kubernetes), CI/CD and data platforms (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
+    pt: 'Engenheiro de Software com mais de 10 anos construindo e operando sistemas distribuídos em produção, hoje construindo ferramentas de crescimento orientadas por IA na Quander (Hypesonic). Conecto engenharia a resultados de negócio: abri uma nova fonte de receita self-service com assinaturas no Stripe, reduzi o custo de nuvem em 41%, reduzi pela metade o tempo de ramp-up de novos engenheiros e diminuí o onboarding de clientes de 2 semanas para 1 dia. Especializado em arquitetura backend (monolito para microsserviços), infraestrutura em nuvem (GCP, AWS, Terraform, Kubernetes), CI/CD e plataformas de dados (PostgreSQL, Kafka, Elasticsearch, BigQuery).',
   },
   quote: {
     en: 'The mind that opens to a new idea never returns to its original size.',
@@ -95,18 +95,18 @@ export const cv: CV = {
   quoteAuthor: 'Albert Einstein',
   experience: [
     {
-      company: 'Hypesonic',
+      company: 'Quander',
       location: 'Remote',
       url: 'https://hypesonic.com/',
       blurb: {
-        en: 'AI growth platform that runs marketing and distribution continuously: testing creative, targeting audiences and optimizing ad spend without human bottlenecks.',
-        pt: 'Plataforma de crescimento com IA que executa marketing e distribuição de forma contínua: testando criativos, segmentando públicos e otimizando o investimento em anúncios sem gargalos humanos.',
+        en: 'Maker of Hypesonic, an AI growth platform that runs marketing and distribution continuously: testing creative, targeting audiences and optimizing ad spend without human bottlenecks.',
+        pt: 'Criadora da Hypesonic, plataforma de crescimento com IA que executa marketing e distribuição de forma contínua: testando criativos, segmentando públicos e otimizando o investimento em anúncios sem gargalos humanos.',
       },
       roles: [
         {
           role: { en: 'Senior Software Engineer', pt: 'Senior Software Engineer' },
           startMonth: '2026-05',
-          endMonth: 'present',
+          endMonth: '2026-10',
           bullets: {
             en: [
               'Opened self-serve revenue: Built the full subscription and payment flow on Stripe, letting customers sign up and pay on their own. Before this, B2B customers were billed manually.',
@@ -127,7 +127,7 @@ export const cv: CV = {
               'Pipeline de conteúdo: Construí um mecanismo de curadoria que alimenta a biblioteca de anúncios a partir de fontes externas, e a primeira versão de um editor de vídeo que aplica templates a vídeos.',
             ],
           },
-          stack: ['Node.js', 'TypeScript', 'LLM APIs', 'AI Agents', 'Stripe', 'Meta Marketing API', 'TikTok Ads API', 'PostHog', 'Grafana'],
+          stack: ['Node.js', 'TypeScript', 'LLM APIs', 'AI Agents', 'PostgreSQL', 'Stripe', 'Meta Marketing API', 'TikTok Ads API', 'PostHog', 'Grafana'],
         },
       ],
     },
