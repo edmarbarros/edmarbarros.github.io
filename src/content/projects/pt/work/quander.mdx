@@ -1,0 +1,45 @@
+---
+title: "Quander (Hypesonic) — Senior Software Engineer"
+kind: work
+company: Quander
+role: Senior Software Engineer
+period: "Mai 2026 – Out 2026"
+location: Remoto
+summary: "Atuei na plataforma de anúncios da Hypesonic, produto de crescimento com IA da Quander: dados mais ricos da Meta, skills de agente sobre eles, publicação direta e integração com o TikTok, além de uma arquitetura desenhada para adicionar novos canais com baixo custo."
+stack:
+  - Node.js
+  - TypeScript
+  - PostgreSQL
+  - LLM APIs
+  - AI Agents
+  - Stripe
+  - Meta Marketing API
+  - TikTok Ads API
+  - PostHog
+  - Grafana
+link: "https://hypesonic.com/"
+order: 110
+featured: true
+---
+
+## Problema
+
+A Hypesonic é a plataforma de crescimento com IA da Quander. Ela executa marketing e distribuição de forma contínua: testa criativos, segmenta públicos e otimiza o investimento em anúncios. Para isso, precisa de dados de desempenho ricos e confiáveis, de uma forma de publicar criativos gerados sem sair do produto e de canais de anúncio baratos de adicionar. A Meta era o primeiro canal pago, e os clientes B2B ainda eram cobrados manualmente.
+
+## O que construí
+
+- **Dados mais ricos da Meta.** Melhorei o Meta Ad Sync para coletar mais insights e dados demográficos, dando à plataforma contexto mais profundo sobre o desempenho de cada anúncio. Também reduzi a taxa de erros do sync, corrigi lacunas de dados e melhorei a estimativa de ETA.
+- **Skills de agente sobre os dados de anúncios.** Adicionei skills que permitem ao agente de IA navegar pelos dados de anúncios da Meta de um usuário, para que suas decisões se baseiem em contexto real de desempenho.
+- **Publicação direta na Meta.** Integrei o Meta Ad Publisher para que usuários criem e gerenciem Campanhas, Conjuntos de Anúncios e Anúncios e publiquem seus ativos gerados direto do produto.
+- **TikTok for Business.** Desenvolvi a integração com o TikTok Business para sincronizar e publicar anúncios no TikTok, dando aos clientes um segundo canal pago além da Meta.
+- **Arquitetura de integrações de anúncios.** Desenhei um refactor para reduzir o atrito de adicionar uma nova integração de anúncios, usando os padrões Port, Adapter, Registry e Host. O desenho está pronto, mas não foi implementado.
+- **Pacote de observabilidade.** Construí e encapsulei a observabilidade em um único pacote que se integra a todas as áreas do código e mantém as ferramentas por trás fáceis de substituir. PostHog e Grafana ficam atrás dele.
+- **Cobrança self-service.** Construí todo o fluxo de assinatura e pagamento no Stripe, para que clientes se cadastrem e paguem sozinhos.
+
+## Resultados
+
+- Abri uma fonte de receita self-service. Antes disso, clientes B2B eram cobrados manualmente.
+- Dei aos clientes um segundo canal pago de anúncios, com sincronização e publicação no TikTok.
+- Dei ao agente de IA mais contexto de desempenho, com insights e dados demográficos mais profundos da Meta.
+- Desenhei uma arquitetura de port, adapter, registry e host para tornar novas integrações de anúncios mais baratas de adicionar. Ela ainda não foi implementada.
+- Restaurei a confiança do domínio ao remover o hypesonic.com de listas de bloqueio de fornecedores de segurança, que prejudicavam tráfego e cadastros.
