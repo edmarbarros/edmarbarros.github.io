@@ -33,7 +33,7 @@ export function overviewPrompt(lang: Lang): string {
 }
 
 /** How strong is he with one skill, with the proof behind the answer. */
-export function skillCheckPrompt(skill: string, lang: Lang): string {
+export function skillsCheckPrompt(skill: string, lang: Lang): string {
   return [
     `How strong is Edmar Barros with "${skill}"? Answer in ${ANSWER_LANGUAGE[lang]} using the edmarbarros tools.`,
     '',
@@ -54,7 +54,7 @@ export function skillCheckPrompt(skill: string, lang: Lang): string {
 }
 
 /** How well he fits a job description, requirement by requirement, with gaps stated. */
-export function fitPrompt(jobDescription: string, lang: Lang): string {
+export function roleFitPrompt(jobDescription: string, lang: Lang): string {
   return [
     `Assess how well Edmar Barros fits the job description below, answering in ${ANSWER_LANGUAGE[lang]}. Use only the edmarbarros tools for evidence about him.`,
     '',
