@@ -43,7 +43,7 @@ describe('/mcp endpoint', () => {
   it('lists tools over plain JSON without a session', async () => {
     const res = await worker.fetch(rpc({ jsonrpc: '2.0', id: 2, method: 'tools/list' }), env);
     const body = (await res.json()) as any;
-    expect(body.result.tools).toHaveLength(7);
+    expect(body.result.tools).toHaveLength(9);
   });
 
   it('calls a tool end to end', async () => {

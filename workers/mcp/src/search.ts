@@ -1,5 +1,5 @@
 export interface SearchDoc {
-  type: 'post' | 'project' | 'experience';
+  type: 'post' | 'project' | 'experience' | 'skill';
   title: string;
   url: string;
   /** Short description shown with the hit. */

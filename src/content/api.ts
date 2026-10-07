@@ -1,6 +1,7 @@
 import type { Locale } from '../i18n';
 import { cv, type Bilingual } from '../data/cv';
-import { formatPeriod } from '../data/duration';
+import { formatPeriod, monthIndex } from '../data/duration';
+import { skillGroupLabels, skillLevelLabels, skills, type Skill } from '../data/skills';
 import { postSlug, postUrl, projectSlug, type PostEntry, type ProjectEntry } from './helpers';
 
 /** Build a JSON response for a static endpoint. */
@@ -126,5 +127,92 @@ export function cvJson(lang: Locale, site: URL | undefined) {
     interests: cv.interests[lang],
     pdf: absoluteUrl(cv.pdf[lang], site),
     url: absoluteUrl(lang === 'en' ? '/cv' : '/pt/cv', site),
+  };
+}
+
+/** Roles whose tech list names this skill, with the union of months across them. */
+function skillEvidence(skill: Skill, lang: Locale) {
+  if (skill.matches.length === 0) return null;
+  const wanted = new Set(skill.matches.map((m) => m.toLowerCase()));
+  const roles = cv.experience.flatMap((c) =>
+    c.roles.flatMap((r) => {
+      const used = r.stack.filter((t) => wanted.has(t.toLowerCase()));
+      if (used.length === 0) return [];
+      return [
+        {
+          company: c.company,
+          role: r.role[lang],
+          period: formatPeriod(r.startMonth, r.endMonth, lang),
+          startMonth: r.startMonth,
+          endMonth: r.endMonth,
+          used,
+        },
+      ];
+    }),
+  );
+  if (roles.length === 0) return null;
+
+  const months = new Set<number>();
+  for (const r of roles) {
+    for (let i = monthIndex(r.startMonth); i <= monthIndex(r.endMonth); i++) months.add(i);
+  }
+  const byStart = [...roles].sort((a, b) => monthIndex(a.startMonth) - monthIndex(b.startMonth));
+  const byEnd = [...roles].sort((a, b) => monthIndex(b.endMonth) - monthIndex(a.endMonth));
+  return {
+    roles,
+    roles_count: roles.length,
+    first_used: byStart[0]!.startMonth,
+    last_used: byEnd[0]!.endMonth,
+    months: months.size,
+    years: Math.round((months.size / 12) * 10) / 10,
+    basis:
+      lang === 'en'
+        ? 'Months across roles whose tech list names it, with overlaps counted once. A lower bound, since tech lists are not exhaustive.'
+        : 'Meses nos cargos cuja lista de tecnologias a cita, sem contar sobreposições duas vezes. É um mínimo, pois as listas de tecnologias não são exaustivas.',
+  };
+}
+
+export function skillSummaryJson(skill: Skill, lang: Locale, site: URL | undefined) {
+  const evidence = skillEvidence(skill, lang);
+  return {
+    id: skill.id,
+    name: skill.name,
+    group: skill.group,
+    group_label: skillGroupLabels[skill.group][lang],
+    aliases: skill.aliases,
+    level: skill.level ?? null,
+    level_label: skill.level ? skillLevelLabels[skill.level][lang] : null,
+    years: evidence?.years ?? null,
+    months: evidence?.months ?? null,
+    first_used: evidence?.first_used ?? null,
+    last_used: evidence?.last_used ?? null,
+    roles_count: evidence?.roles_count ?? 0,
+    proof_count: skill.proof.length,
+    proof: skill.proof.map((p) => p[lang]),
+    // Listed on the CV but with no role or achievement attached to it yet.
+    listed_only: !evidence && skill.proof.length === 0,
+    api: absoluteUrl(`/api/${lang}/skills/${skill.id}.json`, site),
+  };
+}
+
+export function skillFullJson(skill: Skill, lang: Locale, site: URL | undefined) {
+  const evidence = skillEvidence(skill, lang);
+  return {
+    ...skillSummaryJson(skill, lang, site),
+    roles: evidence?.roles ?? [],
+    basis: evidence?.basis ?? null,
+  };
+}
+
+export function skillsListJson(lang: Locale, site: URL | undefined) {
+  const items = skills.map((s) => skillSummaryJson(s, lang, site));
+  return {
+    lang,
+    count: items.length,
+    note:
+      lang === 'en'
+        ? 'Years and roles are computed from the CV. A level appears only once it has been stated, so a missing level means not stated, not low.'
+        : 'Anos e cargos são calculados a partir do CV. O nível só aparece depois de informado, então nível ausente significa não informado, não baixo.',
+    items,
   };
 }

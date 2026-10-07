@@ -9,7 +9,7 @@ export function GET({ site }: APIContext) {
   return json({
     name: 'Edmar Barros — site API',
     description:
-      'Static, read-only JSON export of the site content (blog posts, projects, CV). Regenerated on every deploy.',
+      'Static, read-only JSON export of the site content (blog posts, projects, CV, skills with evidence). Regenerated on every deploy.',
     locales: ['en', 'pt'],
     endpoints: {
       posts: { en: u('/api/en/posts.json'), pt: u('/api/pt/posts.json') },
@@ -17,6 +17,8 @@ export function GET({ site }: APIContext) {
       projects: { en: u('/api/en/projects.json'), pt: u('/api/pt/projects.json') },
       project: t('api/{lang}/projects/{kind}/{slug}.json'),
       cv: { en: u('/api/en/cv.json'), pt: u('/api/pt/cv.json') },
+      skills: { en: u('/api/en/skills.json'), pt: u('/api/pt/skills.json') },
+      skill: t('api/{lang}/skills/{id}.json'),
       rss: { en: u('/rss.xml'), pt: u('/pt/rss.xml') },
       sitemap: u('/sitemap-index.xml'),
     },

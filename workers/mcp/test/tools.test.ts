@@ -32,17 +32,21 @@ afterEach(() => {
 });
 
 describe('tool catalogue', () => {
-  it('exposes seven read-only tools with the site_ prefix', async () => {
+  it('exposes nine read-only tools with the site_ prefix', async () => {
     const { tools } = await client.listTools();
-    expect(tools.map((t) => t.name).sort()).toEqual([
-      'site_get_cv',
-      'site_get_post',
-      'site_get_profile',
-      'site_get_project',
-      'site_list_posts',
-      'site_list_projects',
-      'site_search',
-    ]);
+    expect(tools.map((t) => t.name).sort()).toEqual(
+      [
+        'site_get_cv',
+        'site_get_post',
+        'site_get_profile',
+        'site_get_project',
+        'site_list_posts',
+        'site_list_projects',
+        'site_list_skills',
+        'site_get_skill',
+        'site_search',
+      ].sort(),
+    );
     for (const t of tools) {
       expect(t.annotations?.readOnlyHint).toBe(true);
       expect(t.description?.length).toBeGreaterThan(20);
@@ -134,17 +138,94 @@ describe('projects', () => {
 });
 
 describe('site_search', () => {
-  it('finds posts, projects and CV experience', async () => {
+  it('finds posts, projects, skills and CV experience', async () => {
     const { data } = await call('site_search', { query: 'kafka' });
     const types = new Set(data.hits.map((h: any) => h.type));
-    expect(types).toEqual(new Set(['post', 'project']));
+    expect(types).toEqual(new Set(['post', 'project', 'skill']));
     const cv = await call('site_search', { query: 'stripe subscription' });
     expect(cv.data.hits[0].type).toBe('experience');
+  });
+  it('finds skills by alias and by proof text', async () => {
+    const byAlias = await call('site_search', { query: 'relational databases' });
+    expect(byAlias.data.hits[0].type).toBe('skill');
+    expect(byAlias.data.hits[0].title).toBe('SQL');
+    const byProof = await call('site_search', { query: 'onboarding 2 weeks' });
+    expect(byProof.data.hits.some((h: any) => h.type === 'skill')).toBe(true);
   });
   it('reports no results helpfully', async () => {
     const { text, isError } = await call('site_search', { query: 'zzzzzz' });
     expect(isError).toBe(false);
     expect(text).toContain('No results');
+  });
+});
+
+describe('site_list_skills', () => {
+  it('groups skills and shows experience and proof counts', async () => {
+    const { text, data } = await call('site_list_skills');
+    expect(text).toContain('## Data & databases');
+    expect(text).toContain(
+      '**SQL** [sql]: about 7.7 years across 6 roles, Jan 2019 to Oct 2026; 2 achievements',
+    );
+    expect(text).toContain('level: Strong');
+    expect(text).toContain('listed on the CV, no role or achievement attached yet');
+    expect(data.count).toBe(6);
+  });
+  it('filters by group', async () => {
+    const { text } = await call('site_list_skills', { group: 'cloud' });
+    expect(text).toContain('Kubernetes');
+    expect(text).not.toContain('SQL');
+  });
+  it('serves Portuguese', async () => {
+    const { text } = await call('site_list_skills', { lang: 'pt' });
+    expect(text).toContain('## Dados & bancos de dados');
+    expect(text).toContain('cerca de 7.7 anos em 6 cargos');
+    expect(text).toContain('1 conquista');
+  });
+});
+
+describe('site_get_skill', () => {
+  it('returns the evidence for SQL without inventing a level', async () => {
+    const { text } = await call('site_get_skill', { name: 'SQL' });
+    expect(text).toContain('# SQL');
+    expect(text).toContain('Level: not stated');
+    expect(text).toContain('Experience: about 7.7 years across 6 roles, Jan 2019 to Oct 2026.');
+    expect(text).toContain('- Citruslabs, Senior Software Engineer, Jan 2019 – Sep 2021 (MySQL)');
+    expect(text).toContain('- Redesigned the MySQL data model');
+    expect(text).toContain('A lower bound.');
+  });
+  it('resolves aliases and shows a stated level', async () => {
+    expect((await call('site_get_skill', { name: 'Postgres' })).text).toContain('# PostgreSQL');
+    const k8s = await call('site_get_skill', { name: 'k8s' });
+    expect(k8s.text).toContain('# Kubernetes');
+    expect(k8s.text).toContain('Level: Strong');
+  });
+  it('says so when a skill has no evidence attached', async () => {
+    const { text, isError } = await call('site_get_skill', { name: 'java' });
+    expect(isError).toBe(false);
+    expect(text).toContain('Experience: none attached yet');
+  });
+  it('explains skills proven by achievements rather than a tech list', async () => {
+    const { text } = await call('site_get_skill', { name: 'system design' });
+    expect(text).toContain('# Backend architecture');
+    expect(text).toContain('shown through the achievements below');
+  });
+  it('asks to be more specific when a word matches several skills', async () => {
+    const { text, isError } = await call('site_get_skill', { name: 'containers' });
+    expect(isError).toBe(true);
+    expect(text).toContain('Docker [docker]');
+    expect(text).toContain('Kubernetes [kubernetes]');
+  });
+  it('lists the available skills on a miss', async () => {
+    const { text, isError } = await call('site_get_skill', { name: 'cobol' });
+    expect(isError).toBe(true);
+    expect(text).toContain('Available skills: SQL, PostgreSQL');
+  });
+  it('serves Portuguese', async () => {
+    const { text } = await call('site_get_skill', { name: 'sql', lang: 'pt' });
+    expect(text).toContain('Experiência: cerca de 7.7 anos em 6 cargos, Jan 2019 a Out 2026.');
+    expect(text).toContain('Usado em:');
+    expect(text).toContain('Evidências:');
+    expect(text).toContain('Nível: não informado');
   });
 });
 
