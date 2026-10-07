@@ -1,7 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { DEFAULT_LANG, LANG_VALUES } from '../languages';
-import { fitPrompt, overviewPrompt, skillCheckPrompt } from './templates';
+import { overviewPrompt, roleFitPrompt, skillsCheckPrompt } from './templates';
 
 /** A prompt result is a single user message that tells the assistant what to do. */
 const userMessage = (description: string, text: string) => ({
@@ -31,7 +31,7 @@ export function registerPrompts(server: McpServer): void {
   );
 
   server.registerPrompt(
-    'skill_check',
+    'skills-check',
     {
       title: 'Check a skill',
       description:
@@ -42,11 +42,11 @@ export function registerPrompts(server: McpServer): void {
       },
     },
     ({ skill, lang }) =>
-      userMessage(`Skill check: ${skill}`, skillCheckPrompt(skill, lang ?? DEFAULT_LANG)),
+      userMessage(`Skill check: ${skill}`, skillsCheckPrompt(skill, lang ?? DEFAULT_LANG)),
   );
 
   server.registerPrompt(
-    'fit',
+    'role-fit',
     {
       title: 'Fit for a role',
       description:
@@ -61,6 +61,6 @@ export function registerPrompts(server: McpServer): void {
       },
     },
     ({ job_description, lang }) =>
-      userMessage('Fit for a role', fitPrompt(job_description, lang ?? DEFAULT_LANG)),
+      userMessage('Fit for a role', roleFitPrompt(job_description, lang ?? DEFAULT_LANG)),
   );
 }

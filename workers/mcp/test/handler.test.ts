@@ -51,9 +51,9 @@ describe('/mcp endpoint', () => {
     const res = await worker.fetch(rpc({ jsonrpc: '2.0', id: 5, method: 'prompts/list' }), env);
     const body = (await res.json()) as any;
     expect(body.result.prompts.map((p: any) => p.name).sort()).toEqual([
-      'fit',
       'overview',
-      'skill_check',
+      'role-fit',
+      'skills-check',
     ]);
   });
 
