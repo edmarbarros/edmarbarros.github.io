@@ -20,8 +20,8 @@ export async function sendEmail({
 }: SendParams): Promise<boolean> {
   const drafted = via === 'assistant-draft';
   const subject = drafted
-    ? `Contact form (drafted with an AI assistant) — ${payload.name}`
-    : `Contact form — ${payload.name}`;
+    ? `Contact form (drafted with an AI assistant) - ${payload.name}`
+    : `Contact form - ${payload.name}`;
   const body =
     `New message from ${payload.name} <${payload.email}>\n\n` +
     `${payload.message}\n\n` +

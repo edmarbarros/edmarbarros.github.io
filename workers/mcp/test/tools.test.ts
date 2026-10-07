@@ -69,7 +69,7 @@ describe('site_get_cv', () => {
   it('returns everything by default', async () => {
     const { text } = await call('site_get_cv');
     expect(text).toContain('## Experience');
-    expect(text).toContain('May 2026 – Oct 2026');
+    expect(text).toContain('May 2026 - Oct 2026');
     expect(text).toContain('## Skills');
   });
   it('returns only requested sections', async () => {
@@ -166,7 +166,7 @@ describe('site_list_skills', () => {
     const { text, data } = await call('site_list_skills');
     expect(text).toContain('## Data & databases');
     expect(text).toContain(
-      '**SQL** [sql]: Extensive evidence; about 7.7 years across 6 roles, January 2019 – October 2026; 2 achievements',
+      '**SQL** [sql]: Extensive evidence; about 7.7 years across 6 roles, January 2019 - October 2026; 2 achievements',
     );
     expect(text).toContain('level: Strong');
     expect(text).toContain('listed on the CV, no role or achievement attached yet');
@@ -191,9 +191,9 @@ describe('site_get_skill', () => {
     expect(text).toContain('# SQL');
     expect(text).toContain('Level: not stated');
     expect(text).toContain(
-      'Experience: about 7.7 years across 6 roles, January 2019 – October 2026.',
+      'Experience: about 7.7 years across 6 roles, January 2019 - October 2026.',
     );
-    expect(text).toContain('- Citruslabs, Senior Software Engineer, Jan 2019 – Sep 2021 (MySQL)');
+    expect(text).toContain('- Citruslabs, Senior Software Engineer, Jan 2019 - Sep 2021 (MySQL)');
     expect(text).toContain('- Redesigned the MySQL data model');
     expect(text).toContain('A lower bound.');
   });
@@ -242,7 +242,7 @@ describe('site_get_skill', () => {
   it('serves Portuguese', async () => {
     const { text } = await call('site_get_skill', { name: 'sql', lang: 'pt' });
     expect(text).toContain(
-      'Experiência: cerca de 7,7 anos em 6 cargos, janeiro 2019 – outubro 2026.',
+      'Experiência: cerca de 7,7 anos em 6 cargos, janeiro 2019 - outubro 2026.',
     );
     expect(text).toContain('Usado em:');
     expect(text).toContain('Evidências:');

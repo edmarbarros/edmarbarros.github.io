@@ -7,7 +7,7 @@ export function GET({ site }: APIContext) {
   // Templates are plain strings so the {placeholders} are not percent-encoded.
   const t = (p: string) => u('/') + p;
   return json({
-    name: 'Edmar Barros — site API',
+    name: 'Edmar Barros - site API',
     description:
       'Static, read-only JSON export of the site content (blog posts, projects, CV, skills with evidence). Regenerated on every deploy.',
     locales: ['en', 'pt'],

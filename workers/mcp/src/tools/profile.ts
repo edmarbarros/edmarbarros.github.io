@@ -25,7 +25,7 @@ const TOOL_NAMES =
 
 function cvMarkdown(cv: Cv, sections: ReadonlySet<string>): string {
   const all = sections.has('all');
-  const out: string[] = [`# ${cv.identity.name} — ${cv.identity.title}`, `${cv.identity.location}`];
+  const out: string[] = [`# ${cv.identity.name} - ${cv.identity.title}`, `${cv.identity.location}`];
   if (all || sections.has('summary')) out.push('', '## Summary', cv.summary);
   if (all || sections.has('experience')) {
     out.push('', '## Experience');

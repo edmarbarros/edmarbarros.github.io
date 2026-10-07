@@ -1,4 +1,4 @@
-# Personal Website Design — edmarbarros.com
+# Personal Website Design - edmarbarros.com
 
 **Date:** 2026-04-17
 **Author:** Edmar Barros (with Claude via brainstorming skill)
@@ -50,7 +50,7 @@ These can be added later without restructuring.
 ```
 /                           Home (EN)
 /cv                         CV (EN)
-/projects                   Projects index — Work + Side sections
+/projects                   Projects index - Work + Side sections
 /projects/work/<slug>       Single work-project page
 /projects/side/<slug>       Single side-project page
 /blog                       Blog index (EN posts)
@@ -78,15 +78,15 @@ These can be added later without restructuring.
 ### Collections (`src/content/config.ts`)
 
 ```ts
-// Projects — unified collection with kind discriminator.
-// Locale is derived from directory path (en/ or pt/) — not duplicated in frontmatter.
+// Projects - unified collection with kind discriminator.
+// Locale is derived from directory path (en/ or pt/) - not duplicated in frontmatter.
 projects: z.object({
   title: z.string(),
   kind: z.enum(['work', 'side']),
   company: z.string().optional(),        // work only
   role: z.string().optional(),           // work only
-  period: z.string(),                    // e.g. "May 2024 – Present"
-  summary: z.string(),                   // 1–2 lines for index cards
+  period: z.string(),                    // e.g. "May 2024 - Present"
+  summary: z.string(),                   // 1-2 lines for index cards
   stack: z.array(z.string()),            // tech tags
   link: z.string().url().optional(),
   repo: z.string().url().optional(),     // side projects
@@ -94,7 +94,7 @@ projects: z.object({
   order: z.number().default(0),
 })
 
-// Blog posts — locale also derived from directory path.
+// Blog posts - locale also derived from directory path.
 posts: z.object({
   title: z.string(),
   publishedAt: z.date(),
@@ -162,7 +162,7 @@ Source PDF lives at `/Users/edmar/projects/EdmarBarros_CV/main.pdf` (LaTeX sourc
 
 - Body: **Inter** (variable).
 - Headings: **Fraunces** (variable serif).
-- Mono: **JetBrains Mono** — code blocks, tag chips.
+- Mono: **JetBrains Mono** - code blocks, tag chips.
 - Base size: fluid via `clamp()`, ~18px mobile → ~19px desktop. Line height 1.7 for prose.
 
 **Palette (CSS variables):**
@@ -188,11 +188,11 @@ One accent applied sparingly (links, focus ring, active nav, tag outline, theme-
 **Components (first pass):**
 
 - `SiteHeader.astro`, `SiteFooter.astro`
-- `ThemeToggle.astro` — inline `<script>` in `<head>` sets class pre-hydration to avoid FOUC.
-- `LanguageSwitch.astro` — maps current path across locales.
+- `ThemeToggle.astro` - inline `<script>` in `<head>` sets class pre-hydration to avoid FOUC.
+- `LanguageSwitch.astro` - maps current path across locales.
 - `ProjectCard.astro`, `PostCard.astro`, `Tag.astro`
-- `Prose.astro` — typography wrapper for MDX body content.
-- `CvPage.astro` — renders `cv.ts` data.
+- `Prose.astro` - typography wrapper for MDX body content.
+- `CvPage.astro` - renders `cv.ts` data.
 
 **Favicon & logo:** derived from user-provided EMB monogram (blue on white, bordered). During implementation: trace raster to SVG if a vector isn't available; produce `favicon.svg` + `apple-touch-icon.png`. User to confirm path to source logo file at start of implementation.
 
@@ -210,18 +210,18 @@ Rendered from `src/data/cv.ts` via `CvPage.astro`:
 [Summary paragraph, localized]
 
 Experience
-  Vendoo · Staff Backend Engineer · May 2024 – Present
+  Vendoo · Staff Backend Engineer · May 2024 - Present
     • bullet
     • bullet
     Stack: chips…
-  Vendoo · Senior Backend Engineer & Tech Lead · Jun 2023 – Apr 2024
-  Paerpay · Senior Backend Engineer · Jul 2022 – May 2023
-  EMB Software Engineering · Senior Backend Engineer & Architect · Sep 2021 – Apr 2022
-  Citruslabs · Senior Backend Engineer · Jan 2019 – Sep 2021
+  Vendoo · Senior Backend Engineer & Tech Lead · Jun 2023 - Apr 2024
+  Paerpay · Senior Backend Engineer · Jul 2022 - May 2023
+  EMB Software Engineering · Senior Backend Engineer & Architect · Sep 2021 - Apr 2022
+  Citruslabs · Senior Backend Engineer · Jan 2019 - Sep 2021
 
 Education
-  MSc Software Engineering · Coimbra University · 2013–
-  BSc Computer Science · Coimbra University · 2009–2014
+  MSc Software Engineering · Coimbra University · 2013-
+  BSc Computer Science · Coimbra University · 2009-2014
 
 Technical skills
   Programming: Python · TypeScript · Java · PHP · C
@@ -242,16 +242,16 @@ Localized prose fields (`summary`, bullets, interests) are `{ en, pt }` objects 
 
 ### Index (`/projects`, `/pt/projects`)
 
-Two headed sections: **Work** (populated from 4 seeded MDX files), **Side Projects** (empty placeholder in v1: "Coming soon — I'll post side projects here."). Within Work: ordered by `order` descending (most recent first). `featured: true` can pin to top in future.
+Two headed sections: **Work** (populated from 4 seeded MDX files), **Side Projects** (empty placeholder in v1: "Coming soon - I'll post side projects here."). Within Work: ordered by `order` descending (most recent first). `featured: true` can pin to top in future.
 
 ### Single project page
 
 ```
-[Title]           Vendoo — Staff Backend Engineer
-[Meta row]        May 2024 – Present · Remote · vendoo.co ↗
+[Title]           Vendoo - Staff Backend Engineer
+[Meta row]        May 2024 - Present · Remote · vendoo.co ↗
 [Stack chips]     Kafka · TypeScript · NodeJS · GCP · BigQuery · ES
 
-## Problem            (H2 convention — not schema-enforced)
+## Problem            (H2 convention - not schema-enforced)
 ## What I built
 ## Outcomes
 ## Lessons
@@ -279,7 +279,7 @@ Settings → Pages → Source: **GitHub Actions**.
 - Triggers: push to `main` touching `workers/**`.
 - Runs `wrangler deploy` using `CLOUDFLARE_API_TOKEN` repo secret.
 
-### Custom domain — Cloudflare path (recommended)
+### Custom domain - Cloudflare path (recommended)
 
 1. Add `edmarbarros.com` as a Cloudflare zone (free plan). Update registrar nameservers to Cloudflare's assigned pair.
 2. DNS records on Cloudflare (all **DNS-only / grey cloud** for GitHub Pages targets; GH Pages terminates its own TLS and proxying interferes):
@@ -290,7 +290,7 @@ Settings → Pages → Source: **GitHub Actions**.
 4. GitHub Pages settings: custom domain `edmarbarros.com`, Enforce HTTPS.
 5. Create Worker route: `api.edmarbarros.com/*` → contact Worker. Add `api` CNAME record (orange / proxied) to placeholder; Worker route takes precedence.
 
-Propagation: DNS ~5–30 min typical; GitHub HTTPS cert minutes to 24 h.
+Propagation: DNS ~5-30 min typical; GitHub HTTPS cert minutes to 24 h.
 
 **Rollback:** every deploy is an artifact on GitHub Pages; reverting a commit on `main` triggers a fresh deploy of the previous state.
 
@@ -306,7 +306,7 @@ Page body:
 - Form fields:
   - `name` (required)
   - `email` (required, validated)
-  - `message` (required, 10–5000 chars)
+  - `message` (required, 10-5000 chars)
   - `website` (honeypot, hidden via CSS + `tabindex="-1"`)
   - Hidden `ts` timestamp injected on page load
   - Turnstile widget
@@ -319,9 +319,9 @@ Client-side script (plain `<script>` in the `.astro` page, no framework): interc
 - **Endpoint:** `POST https://api.edmarbarros.com/contact`
 - **Stack:** TypeScript, deployed via `wrangler`. `wrangler.toml` committed.
 - **Validation (Zod):**
-  - `name`: string, 1–200 chars.
+  - `name`: string, 1-200 chars.
   - `email`: valid email, ≤254 chars.
-  - `message`: string, 10–5000 chars.
+  - `message`: string, 10-5000 chars.
   - `website` honeypot must be empty.
   - `ts` must be >2 s and <30 min old.
   - Turnstile token must verify against secret.
@@ -341,7 +341,7 @@ Client-side script (plain `<script>` in the `.astro` page, no framework): interc
 
 ### Fallback
 
-If Worker is unreachable or returns error, UI shows: "Send failed — email me@edmarbarros.com directly." Direct email link is always visible above the form, so nothing is blocked.
+If Worker is unreachable or returns error, UI shows: "Send failed - email me@edmarbarros.com directly." Direct email link is always visible above the form, so nothing is blocked.
 
 ## 11. Testing & validation
 
@@ -349,9 +349,9 @@ Scope is proportional to a static personal site + small Worker.
 
 **Build-time (CI):**
 
-- `astro check` — TS + `.astro` typecheck, fails build on errors.
-- `astro build` — implicitly validates all Zod-typed content collections; malformed frontmatter breaks the build.
-- `lychee-action` — internal + external link check on PRs.
+- `astro check` - TS + `.astro` typecheck, fails build on errors.
+- `astro build` - implicitly validates all Zod-typed content collections; malformed frontmatter breaks the build.
+- `lychee-action` - internal + external link check on PRs.
 
 **Lint / format:**
 
@@ -502,4 +502,4 @@ Expected monthly cost: **$0**.
 | Cloudflare Turnstile | Free | Unlimited |
 | Resend | Free | 3,000 emails/month, 100/day |
 
-Ongoing: only `edmarbarros.com` registrar renewal (~$10–15 / year, already paid by user).
+Ongoing: only `edmarbarros.com` registrar renewal (~$10-15 / year, already paid by user).

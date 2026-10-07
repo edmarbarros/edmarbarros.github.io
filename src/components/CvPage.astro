@@ -66,7 +66,7 @@ const headings = {
     <p class="leading-relaxed">{cv.summary[lang]}</p>
     <blockquote class="border-l-2 border-border pl-4 italic text-muted">
       <p>&ldquo;{cv.quote[lang]}&rdquo;</p>
-      <footer class="text-sm mt-1 not-italic">— {cv.quoteAuthor}</footer>
+      <footer class="text-sm mt-1 not-italic">- {cv.quoteAuthor}</footer>
     </blockquote>
   </section>
 
@@ -135,7 +135,7 @@ const headings = {
       {cv.languages.map((l) => (
         <li class="flex flex-wrap items-baseline gap-x-3">
           <span class="font-serif">{l.language[lang]}</span>
-          <span class="text-muted">— {l.level[lang]}</span>
+          <span class="text-muted">- {l.level[lang]}</span>
           {l.note && <span class="text-sm text-muted">· {l.note[lang]}</span>}
         </li>
       ))}

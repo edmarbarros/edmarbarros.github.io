@@ -42,9 +42,9 @@ export function formatMonth(value: string | null, lang: Lang): string {
   return `${name} ${year}`;
 }
 
-/** 'January 2019 – October 2026'. The dash needs no translation. */
+/** 'January 2019 - October 2026'. The dash needs no translation. */
 export function formatMonthRange(from: string | null, to: string | null, lang: Lang): string {
-  return `${formatMonth(from, lang)} – ${formatMonth(to, lang)}`;
+  return `${formatMonth(from, lang)} - ${formatMonth(to, lang)}`;
 }
 
 export type PluralForms = { one: string; other: string };
@@ -131,7 +131,7 @@ export const SKILL_LABELS: Record<Lang, SkillLabels> = {
   },
 };
 
-/** 'about 7.7 years across 6 roles, January 2019 – October 2026', or '' when there is no tech-list evidence. */
+/** 'about 7.7 years across 6 roles, January 2019 - October 2026', or '' when there is no tech-list evidence. */
 export function formatSkillExperience(
   skill: Pick<SkillSummary, 'years' | 'roles_count' | 'first_used' | 'last_used'>,
   lang: Lang,

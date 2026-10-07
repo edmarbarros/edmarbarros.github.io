@@ -276,7 +276,7 @@ describe('sending from the form with a draft', () => {
     expect(res.status).toBe(204);
 
     const [email] = emails();
-    expect(email.subject).toBe('Contact form (drafted with an AI assistant) — Ana Recruiter');
+    expect(email.subject).toBe('Contact form (drafted with an AI assistant) - Ana Recruiter');
     expect(email.text).toContain('I edited this message myself before sending it.');
     expect(email.text).not.toContain('staff backend role');
     expect(email.text).toContain('Drafted with an AI assistant');
@@ -291,8 +291,8 @@ describe('sending from the form with a draft', () => {
     await worker.fetch(submit({ draft: token }), env);
     await worker.fetch(submit({ draft: token }, '198.51.100.5'), env);
     expect(emails().map((e) => e.subject)).toEqual([
-      'Contact form (drafted with an AI assistant) — Ana Recruiter',
-      'Contact form — Ana Recruiter',
+      'Contact form (drafted with an AI assistant) - Ana Recruiter',
+      'Contact form - Ana Recruiter',
     ]);
   });
 
@@ -316,13 +316,13 @@ describe('sending from the form with a draft', () => {
         ).status,
       ).toBe(204);
     }
-    expect(emails().every((e) => e.subject === 'Contact form — Ana Recruiter')).toBe(true);
+    expect(emails().every((e) => e.subject === 'Contact form - Ana Recruiter')).toBe(true);
   });
 
   it('is unchanged for a normal form message', async () => {
     const { env } = makeEnv();
     expect((await worker.fetch(submit({}), env)).status).toBe(204);
-    expect(emails()[0].subject).toBe('Contact form — Ana Recruiter');
+    expect(emails()[0].subject).toBe('Contact form - Ana Recruiter');
     expect(emails()[0].text).not.toContain('Drafted with an AI assistant');
   });
 });

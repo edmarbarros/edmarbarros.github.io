@@ -1,6 +1,6 @@
 # edmarbarros.com
 
-Personal website for Edmar Barros — built with Astro, hosted on GitHub Pages.
+Personal website for Edmar Barros - built with Astro, hosted on GitHub Pages.
 
 ## Development
 

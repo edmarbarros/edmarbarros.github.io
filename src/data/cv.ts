@@ -286,14 +286,14 @@ export const cv: CV = {
     {
       institution: 'University of Coimbra',
       degree: { en: 'MSc in Software Engineering', pt: 'Mestrado em Engenharia de Software' },
-      period: '2013 – ',
+      period: '2013 - ',
       location: 'Coimbra, Portugal',
       note: { en: 'Attended', pt: 'Cursado' },
     },
     {
       institution: 'University of Coimbra',
       degree: { en: 'BSc in Computer Science', pt: 'Bacharelado em Ciência da Computação' },
-      period: '2009 – 2014',
+      period: '2009 - 2014',
       location: 'Coimbra, Portugal',
     },
   ],

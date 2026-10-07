@@ -27,7 +27,7 @@ export function formatMonth(m: MonthStr, lang: 'en' | 'pt'): string {
 }
 
 export function formatPeriod(start: MonthStr, end: MonthStr, lang: 'en' | 'pt'): string {
-  return `${formatMonth(start, lang)} – ${formatMonth(end, lang)}`;
+  return `${formatMonth(start, lang)} - ${formatMonth(end, lang)}`;
 }
 
 function diffInclusiveMonths(start: MonthStr, end: MonthStr): number {
