@@ -48,11 +48,28 @@ export function tokenize(query: string): string[] {
     .filter((t) => t.length > 1);
 }
 
+/** Terms this short match whole words only: 'yc' must not find 'cycles', nor 'ai' find 'email'. */
+const WHOLE_WORD_MAX_LENGTH = 2;
+const isWordChar = /[\p{L}\p{N}]/u;
+
+/** Index of the next occurrence of `term` in `haystack` at or after `from`, or -1. */
+function indexOfTerm(haystack: string, term: string, from = 0): number {
+  let i = haystack.indexOf(term, from);
+  if (term.length > WHOLE_WORD_MAX_LENGTH) return i;
+  while (i !== -1) {
+    const before = haystack[i - 1];
+    const after = haystack[i + term.length];
+    if (!(before && isWordChar.test(before)) && !(after && isWordChar.test(after))) return i;
+    i = haystack.indexOf(term, i + 1);
+  }
+  return -1;
+}
+
 function countOccurrences(haystack: string, needle: string): number {
   let count = 0;
   let from = 0;
   for (;;) {
-    const i = haystack.indexOf(needle, from);
+    const i = indexOfTerm(haystack, needle, from);
     if (i === -1) return count;
     count++;
     from = i + needle.length;
@@ -60,7 +77,7 @@ function countOccurrences(haystack: string, needle: string): number {
 }
 
 function snippetAround(text: string, term: string): string {
-  const i = text.toLowerCase().indexOf(term);
+  const i = indexOfTerm(text.toLowerCase(), term);
   if (i === -1) return '';
   const start = Math.max(0, i - SNIPPET_RADIUS);
   const end = Math.min(text.length, i + term.length + SNIPPET_RADIUS);
@@ -71,7 +88,9 @@ function snippetAround(text: string, term: string): string {
 /** When a hit matched only in the tags or tech stack, show that instead of a generic summary. */
 function tagSnippet(tags: string, terms: string[]): string {
   const lower = tags.toLowerCase();
-  return terms.some((t) => lower.includes(t)) ? `Tech: ${tags.split(' ').join(', ')}` : '';
+  return terms.some((t) => indexOfTerm(lower, t) !== -1)
+    ? `Tech: ${tags.split(' ').join(', ')}`
+    : '';
 }
 
 /** The weighted score for a document, or null when any search word is missing. */
