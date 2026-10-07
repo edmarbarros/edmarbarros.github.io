@@ -5,6 +5,8 @@ export interface Env {
   SITE_URL: string;
   /** Seconds to keep fetched JSON in the Cloudflare cache. */
   CACHE_TTL?: string;
+  /** Private link to the contact worker, used to save drafts. Absent in tests and when not deployed. */
+  CONTACT?: Fetcher;
 }
 
 export interface PostSummary {

@@ -67,11 +67,13 @@ export const EXAMPLE_GROUPS: ExampleGroup[] = [
         'Give me a short overview of Edmar and his strongest skills.',
         'How much SQL experience does he have, and what proves it?',
         'What did he build at Quander?',
+        'Write a message to Edmar saying I would like to talk about a role.',
       ],
       [PT]: [
         'Faça um resumo do Edmar e de suas principais habilidades.',
         'Quanta experiência ele tem com SQL e o que comprova isso?',
         'O que ele construiu na Quander?',
+        'Escreva uma mensagem ao Edmar dizendo que quero conversar sobre uma vaga.',
       ],
     },
   },
@@ -152,6 +154,13 @@ export const TOOL_HELP: HelpEntry[] = [
     summary: {
       [EN]: 'This guide: what to ask and what is available.',
       [PT]: 'Este guia: o que perguntar e o que está disponível.',
+    },
+  },
+  {
+    name: 'site_draft_message',
+    summary: {
+      [EN]: 'Drafts a message to Edmar and gives you a link to review and send it.',
+      [PT]: 'Rascunha uma mensagem ao Edmar e dá um link para você revisar e enviar.',
     },
   },
   {

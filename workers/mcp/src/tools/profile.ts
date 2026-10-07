@@ -21,7 +21,7 @@ const cvInput = {
 // Formatting --------------------------------------------------------------------
 
 const TOOL_NAMES =
-  'site_help, site_get_cv, site_list_skills, site_get_skill, site_list_posts, site_get_post, site_list_projects, site_get_project, site_search';
+  'site_help, site_draft_message, site_get_cv, site_list_skills, site_get_skill, site_list_posts, site_get_post, site_list_projects, site_get_project, site_search';
 
 function cvMarkdown(cv: Cv, sections: ReadonlySet<string>): string {
   const all = sections.has('all');

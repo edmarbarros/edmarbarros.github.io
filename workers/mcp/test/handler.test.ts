@@ -44,7 +44,7 @@ describe('/mcp endpoint', () => {
   it('lists tools over plain JSON without a session', async () => {
     const res = await worker.fetch(rpc({ jsonrpc: '2.0', id: 2, method: 'tools/list' }), env);
     const body = (await res.json()) as any;
-    expect(body.result.tools).toHaveLength(10);
+    expect(body.result.tools).toHaveLength(11);
   });
 
   it('lists the prompts over plain JSON', async () => {
@@ -70,6 +70,42 @@ describe('/mcp endpoint', () => {
     );
     const body = (await res.json()) as any;
     expect(body.result.content[0].text).toContain('Hello, world');
+  });
+
+  it("passes the caller's address to the contact worker", async () => {
+    const contactFetch = vi.fn(
+      async () =>
+        new Response('{"token":"AAAAAAAAAAAAAAAAAAAAAA","expires_in":1800}', { status: 200 }),
+    );
+    const res = await worker.fetch(
+      rpc(
+        {
+          jsonrpc: '2.0',
+          id: 6,
+          method: 'tools/call',
+          params: {
+            name: 'site_draft_message',
+            arguments: {
+              name: 'Ana',
+              email: 'ana@example.com',
+              message: 'Hello Edmar, I would like to talk.',
+            },
+          },
+        },
+        {
+          headers: {
+            'content-type': 'application/json',
+            accept: 'application/json, text/event-stream',
+            'cf-connecting-ip': '198.51.100.5',
+          },
+        },
+      ),
+      { ...env, CONTACT: { fetch: contactFetch } as unknown as Fetcher },
+    );
+    expect(((await res.json()) as any).result.content[0].text).toContain('Draft saved');
+    const headers = (contactFetch.mock.calls[0] as unknown as [string, RequestInit])[1]
+      .headers as Record<string, string>;
+    expect(headers['x-client-ip']).toBe('198.51.100.5');
   });
 
   it('sends CORS headers, including on preflight', async () => {
