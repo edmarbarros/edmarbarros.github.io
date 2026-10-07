@@ -32,11 +32,12 @@ afterEach(() => {
 });
 
 describe('tool catalogue', () => {
-  it('exposes nine read-only tools with the site_ prefix', async () => {
+  it('exposes ten read-only tools with the site_ prefix', async () => {
     const { tools } = await client.listTools();
     expect(tools.map((t) => t.name).sort()).toEqual(
       [
         'site_get_cv',
+        'site_help',
         'site_get_post',
         'site_get_profile',
         'site_get_project',

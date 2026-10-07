@@ -1,7 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { DEFAULT_LANG, LANG_VALUES } from '../languages';
-import { overviewPrompt, roleFitPrompt, skillsCheckPrompt } from './templates';
+import { helpPrompt, overviewPrompt, roleFitPrompt, skillsCheckPrompt } from './templates';
 
 /** A prompt result is a single user message that tells the assistant what to do. */
 const userMessage = (description: string, text: string) => ({
@@ -19,6 +19,17 @@ const langArg = z
  * list them as commands. Plain questions work just as well.
  */
 export function registerPrompts(server: McpServer): void {
+  server.registerPrompt(
+    'help',
+    {
+      title: 'What can I ask?',
+      description:
+        'Shows a short guide: example questions, the guided commands and what is available.',
+      argsSchema: { lang: langArg },
+    },
+    ({ lang }) => userMessage('What can I ask?', helpPrompt(lang ?? DEFAULT_LANG)),
+  );
+
   server.registerPrompt(
     'overview',
     {
