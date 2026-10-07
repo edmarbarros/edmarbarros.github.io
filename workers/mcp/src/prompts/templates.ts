@@ -1,3 +1,4 @@
+import { buildHelp } from '../help';
 import { LANGUAGES, type Lang } from '../languages';
 
 /** Names the model should answer in. The instructions themselves stay in English. */
@@ -74,5 +75,17 @@ export function roleFitPrompt(jobDescription: string, lang: Lang): string {
     '--- JOB DESCRIPTION ---',
     jobDescription,
     '--- END JOB DESCRIPTION ---',
+  ].join('\n');
+}
+
+/** Show the guide. It is already written, so no tool call is needed. */
+export function helpPrompt(lang: Lang): string {
+  return [
+    `Show me the guide below as a short, friendly menu, in ${ANSWER_LANGUAGE[lang]}. Keep its structure and do not add claims of your own. No tool calls are needed.`,
+    'End by asking which of the example questions I would like to start with.',
+    '',
+    '--- GUIDE ---',
+    buildHelp(lang),
+    '--- END GUIDE ---',
   ].join('\n');
 }

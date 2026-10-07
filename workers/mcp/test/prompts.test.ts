@@ -25,9 +25,14 @@ async function getPrompt(name: string, args: Record<string, string> = {}) {
 }
 
 describe('prompt catalogue', () => {
-  it('offers overview, skills-check and role-fit with their arguments', async () => {
+  it('offers help, overview, skills-check and role-fit with their arguments', async () => {
     const { prompts } = await client.listPrompts();
-    expect(prompts.map((p) => p.name).sort()).toEqual(['overview', 'role-fit', 'skills-check']);
+    expect(prompts.map((p) => p.name).sort()).toEqual([
+      'help',
+      'overview',
+      'role-fit',
+      'skills-check',
+    ]);
     const args = (name: string) =>
       Object.fromEntries(
         (prompts.find((p) => p.name === name)?.arguments ?? []).map((a) => [
@@ -35,6 +40,7 @@ describe('prompt catalogue', () => {
           a.required === true,
         ]),
       );
+    expect(args('help')).toEqual({ lang: false });
     expect(args('overview')).toEqual({ lang: false });
     expect(args('skills-check')).toEqual({ skill: true, lang: false });
     expect(args('role-fit')).toEqual({ job_description: true, lang: false });

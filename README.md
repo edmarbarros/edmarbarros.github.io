@@ -35,8 +35,8 @@ The site content is also available to AI clients over the Model Context Protocol
 
 - `src/pages/api/` exports posts, projects and the CV as static JSON at build time (start at `/api/index.json`).
 - `workers/mcp/` is a stateless Cloudflare Worker at `https://api.edmarbarros.com/mcp`. It reads that JSON from the live site, cached for 5 minutes, so a site deploy updates it without redeploying the worker.
-- Tools are read-only: `site_get_profile`, `site_get_cv`, `site_list_skills`, `site_get_skill`, `site_list_posts`, `site_get_post`, `site_list_projects`, `site_get_project`, `site_search`.
-- Prompts are ready-made starting points: `overview`, `skills-check` and `role-fit`. Claude Code lists them as commands such as `/edmarbarros:overview`, using the name the server was added under. They live in `workers/mcp/src/prompts`.
+- Tools are read-only: `site_help`, `site_get_profile`, `site_get_cv`, `site_list_skills`, `site_get_skill`, `site_list_posts`, `site_get_post`, `site_list_projects`, `site_get_project`, `site_search`.
+- Prompts are ready-made starting points: `overview`, `skills-check`, `role-fit` and `help`. Claude Code lists them as commands such as `/edmarbarros:overview`, using the name the server was added under. They live in `workers/mcp/src/prompts`.
 - Skills carry evidence. `src/data/skills.ts` defines each skill and the proof behind it. Years and roles are computed from the CV role tech lists at build time, and each skill gets a computed evidence label from the years and roles. A skill's level is shown only once you set it, and skills with no achievement of their own show the headline results of the roles that used them, labelled as context.
 - Deploys through `.github/workflows/worker-mcp.yml` when `workers/mcp/**` changes.
 

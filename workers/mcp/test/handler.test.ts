@@ -44,13 +44,14 @@ describe('/mcp endpoint', () => {
   it('lists tools over plain JSON without a session', async () => {
     const res = await worker.fetch(rpc({ jsonrpc: '2.0', id: 2, method: 'tools/list' }), env);
     const body = (await res.json()) as any;
-    expect(body.result.tools).toHaveLength(9);
+    expect(body.result.tools).toHaveLength(10);
   });
 
   it('lists the prompts over plain JSON', async () => {
     const res = await worker.fetch(rpc({ jsonrpc: '2.0', id: 5, method: 'prompts/list' }), env);
     const body = (await res.json()) as any;
     expect(body.result.prompts.map((p: any) => p.name).sort()).toEqual([
+      'help',
       'overview',
       'role-fit',
       'skills-check',
