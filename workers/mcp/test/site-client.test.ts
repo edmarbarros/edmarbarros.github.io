@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SiteDataError, fetchSiteJson } from '../src/data';
+import { SiteDataError, fetchSiteJson } from '../src/site-client';
 import { env } from './fixtures';
 
 afterEach(() => {

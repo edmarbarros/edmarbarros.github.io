@@ -1,11 +1,11 @@
+import type { Lang } from './languages';
+
 export interface Env {
   /** Origin that serves the static JSON export, e.g. https://edmarbarros.com */
   SITE_URL: string;
   /** Seconds to keep fetched JSON in the Cloudflare cache. */
   CACHE_TTL?: string;
 }
-
-export type Lang = 'en' | 'pt';
 
 export interface PostSummary {
   slug: string;

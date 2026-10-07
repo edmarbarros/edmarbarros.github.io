@@ -1,7 +1,7 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createServer } from '../src/index';
+import { createServer } from '../src/server';
 import { env, routes, stubSite } from './fixtures';
 
 let client: Client;
@@ -164,7 +164,7 @@ describe('site_list_skills', () => {
     const { text, data } = await call('site_list_skills');
     expect(text).toContain('## Data & databases');
     expect(text).toContain(
-      '**SQL** [sql]: about 7.7 years across 6 roles, Jan 2019 to Oct 2026; 2 achievements',
+      '**SQL** [sql]: about 7.7 years across 6 roles, January 2019 – October 2026; 2 achievements',
     );
     expect(text).toContain('level: Strong');
     expect(text).toContain('listed on the CV, no role or achievement attached yet');
@@ -178,7 +178,7 @@ describe('site_list_skills', () => {
   it('serves Portuguese', async () => {
     const { text } = await call('site_list_skills', { lang: 'pt' });
     expect(text).toContain('## Dados & bancos de dados');
-    expect(text).toContain('cerca de 7.7 anos em 6 cargos');
+    expect(text).toContain('cerca de 7,7 anos em 6 cargos');
     expect(text).toContain('1 conquista');
   });
 });
@@ -188,7 +188,9 @@ describe('site_get_skill', () => {
     const { text } = await call('site_get_skill', { name: 'SQL' });
     expect(text).toContain('# SQL');
     expect(text).toContain('Level: not stated');
-    expect(text).toContain('Experience: about 7.7 years across 6 roles, Jan 2019 to Oct 2026.');
+    expect(text).toContain(
+      'Experience: about 7.7 years across 6 roles, January 2019 – October 2026.',
+    );
     expect(text).toContain('- Citruslabs, Senior Software Engineer, Jan 2019 – Sep 2021 (MySQL)');
     expect(text).toContain('- Redesigned the MySQL data model');
     expect(text).toContain('A lower bound.');
@@ -222,10 +224,21 @@ describe('site_get_skill', () => {
   });
   it('serves Portuguese', async () => {
     const { text } = await call('site_get_skill', { name: 'sql', lang: 'pt' });
-    expect(text).toContain('Experiência: cerca de 7.7 anos em 6 cargos, Jan 2019 a Out 2026.');
+    expect(text).toContain(
+      'Experiência: cerca de 7,7 anos em 6 cargos, janeiro 2019 – outubro 2026.',
+    );
     expect(text).toContain('Usado em:');
     expect(text).toContain('Evidências:');
     expect(text).toContain('Nível: não informado');
+  });
+});
+
+describe('language validation', () => {
+  it.each(['en-EN', 'pt-BR', 'fr', ''])('rejects the unsupported language %j', async (bad) => {
+    const res = await client
+      .callTool({ name: 'site_list_posts', arguments: { lang: bad } })
+      .catch((e) => e);
+    expect(res instanceof Error || (res as { isError?: boolean }).isError).toBe(true);
   });
 });
 
