@@ -136,7 +136,7 @@ describe('MCP worker and contact worker together', () => {
     // Turnstile ran, and the email says how it was written.
     expect(fetchMock.mock.calls.map((c) => String(c[0]))).toContain(SITEVERIFY);
     const [email] = emails();
-    expect(email.subject).toBe('Contact form (drafted with an AI assistant) — Ana Recruiter');
+    expect(email.subject).toBe('Contact form (drafted with an AI assistant) - Ana Recruiter');
     expect(email.text).toContain('I changed my mind about the wording');
 
     // 4. The draft is used up.

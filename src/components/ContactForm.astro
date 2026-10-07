@@ -17,8 +17,8 @@ const labels = {
     sending: 'Sending…',
     verifying: 'Verifying…',
     successTitle: 'Message sent',
-    success: 'Thanks — I\u2019ll reply soon.',
-    failed: 'Send failed — email hello[at]edmarbarros[.]com directly.',
+    success: 'Thanks - I\u2019ll reply soon.',
+    failed: 'Send failed - email hello[at]edmarbarros[.]com directly.',
     draftLoaded: 'Drafted with your AI assistant. Review it, complete the check and press Send.',
     draftExpired: 'This draft link has expired or was already used. Write your message below.',
   },
@@ -30,8 +30,8 @@ const labels = {
     sending: 'Enviando…',
     verifying: 'Verificando…',
     successTitle: 'Mensagem enviada',
-    success: 'Obrigado — respondo em breve.',
-    failed: 'Falha no envio — escreva para hello[at]edmarbarros[.]com.',
+    success: 'Obrigado - respondo em breve.',
+    failed: 'Falha no envio - escreva para hello[at]edmarbarros[.]com.',
     draftLoaded:
       'Rascunho feito com seu assistente de IA. Revise, conclua a verificação e clique em Enviar.',
     draftExpired: 'Este link de rascunho expirou ou já foi usado. Escreva sua mensagem abaixo.',
@@ -169,7 +169,7 @@ const labels = {
       document.head.appendChild(s);
     }
 
-    // Inject on first textarea blur — widget can render before the user reaches submit.
+    // Inject on first textarea blur - widget can render before the user reaches submit.
     const msg = form.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
     msg?.addEventListener('blur', injectTurnstile, { once: true });
 

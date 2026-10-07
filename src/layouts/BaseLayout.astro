@@ -36,7 +36,7 @@ const {
 
 const t = getUIStrings(lang);
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
-const siteTitle = title === t.siteName ? t.siteName : `${title} — ${t.siteName}`;
+const siteTitle = title === t.siteName ? t.siteName : `${title} - ${t.siteName}`;
 
 const target = otherLocale(lang);
 const altUrl = altLangHref
@@ -112,8 +112,8 @@ const resolvedOgImage = ogImage
         } catch (e) {}
       })();
     </script>
-    <link rel="alternate" type="application/rss+xml" title="Edmar Barros — Blog (EN)" href="/rss.xml" />
-    <link rel="alternate" type="application/rss+xml" title="Edmar Barros — Blog (PT)" href="/pt/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Edmar Barros - Blog (EN)" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Edmar Barros - Blog (PT)" href="/pt/rss.xml" />
 
     <Analytics />
 

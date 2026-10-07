@@ -48,7 +48,7 @@ describe('formatMonth', () => {
     expect(formatMonth('soon', 'en')).toBe('soon');
   });
   it('formats a range with a dash', () => {
-    expect(formatMonthRange('2019-01', 'present', 'pt')).toBe('janeiro 2019 – presente');
+    expect(formatMonthRange('2019-01', 'present', 'pt')).toBe('janeiro 2019 - presente');
   });
 });
 

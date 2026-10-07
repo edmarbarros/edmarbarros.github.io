@@ -11,7 +11,7 @@ export interface ContactPayload {
   name: string;
   email: string;
   message: string;
-  website: string;      // honeypot — must be empty
+  website: string;      // honeypot - must be empty
   ts: number;           // ms epoch when the page was rendered client-side
   turnstileToken: string;
 }

@@ -31,7 +31,7 @@ const project = (
   title,
   company: 'Acme',
   role: 'Engineer',
-  period: 'Jun 2023 – Apr 2024',
+  period: 'Jun 2023 - Apr 2024',
   location: 'Remote',
   summary: `Summary of ${title}`,
   stack: ['Node.js', 'Kafka'],
@@ -68,7 +68,7 @@ const cv = (lang: 'en' | 'pt') => ({
           role: 'Senior Software Engineer',
           startMonth: '2026-05',
           endMonth: '2026-10',
-          period: 'May 2026 – Oct 2026',
+          period: 'May 2026 - Oct 2026',
           bullets: ['Built the Stripe subscription flow.', 'Launched TikTok Ads integration.'],
           stack: ['PostgreSQL', 'Stripe'],
         },
@@ -79,7 +79,7 @@ const cv = (lang: 'en' | 'pt') => ({
     {
       institution: 'University',
       degree: 'BSc',
-      period: '2009 – 2014',
+      period: '2009 - 2014',
       location: 'Coimbra',
       note: null,
     },
@@ -154,7 +154,7 @@ const skillRoles = {
     {
       company: 'Quander',
       role: 'Senior Software Engineer',
-      period: 'May 2026 – Oct 2026',
+      period: 'May 2026 - Oct 2026',
       startMonth: '2026-05',
       endMonth: '2026-10',
       used: ['PostgreSQL'],
@@ -163,7 +163,7 @@ const skillRoles = {
     {
       company: 'Citruslabs',
       role: 'Senior Software Engineer',
-      period: 'Jan 2019 – Sep 2021',
+      period: 'Jan 2019 - Sep 2021',
       startMonth: '2019-01',
       endMonth: '2021-09',
       used: ['MySQL'],
@@ -174,7 +174,7 @@ const skillRoles = {
     {
       company: 'Quander',
       role: 'Senior Software Engineer',
-      period: 'May 2026 – Oct 2026',
+      period: 'May 2026 - Oct 2026',
       startMonth: '2026-05',
       endMonth: '2026-10',
       used: ['PostgreSQL'],
