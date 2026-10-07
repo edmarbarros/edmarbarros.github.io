@@ -4,7 +4,9 @@ compatibility_date = "2026-01-01"
 workers_dev = false
 
 [[routes]]
-pattern = "api.edmarbarros.com/contact"
+# The trailing * matters: a pattern is matched against the whole URL, so without it
+# /contact?draft=... would never reach the worker (a 522 from the zone origin instead).
+pattern = "api.edmarbarros.com/contact*"
 zone_name = "edmarbarros.com"
 
 [[kv_namespaces]]
