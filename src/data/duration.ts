@@ -13,6 +13,12 @@ function parseMonth(m: MonthStr): { year: number; month0: number } {
   return { year: y, month0: mo - 1 };
 }
 
+/** Months since year 0, so ranges can be compared and merged. 'present' means the current month. */
+export function monthIndex(m: MonthStr): number {
+  const { year, month0 } = parseMonth(m);
+  return year * 12 + month0;
+}
+
 export function formatMonth(m: MonthStr, lang: 'en' | 'pt'): string {
   if (m === 'present') return lang === 'en' ? 'Present' : 'Presente';
   const { year, month0 } = parseMonth(m);

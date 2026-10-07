@@ -92,6 +92,43 @@ export interface Cv {
   url: string;
 }
 
+export interface SkillSummary {
+  id: string;
+  name: string;
+  group: 'languages' | 'cloud' | 'data' | 'practices';
+  group_label: string;
+  aliases: string[];
+  level: 'expert' | 'strong' | 'working' | null;
+  level_label: string | null;
+  years: number | null;
+  months: number | null;
+  first_used: string | null;
+  last_used: string | null;
+  roles_count: number;
+  proof_count: number;
+  proof: string[];
+  listed_only: boolean;
+  api: string;
+}
+
+export interface SkillRole {
+  company: string;
+  role: string;
+  period: string;
+  startMonth: string;
+  endMonth: string;
+  used: string[];
+}
+
+export interface SkillFull extends SkillSummary {
+  roles: SkillRole[];
+  basis: string | null;
+}
+
+export interface SkillsList extends ListResponse<SkillSummary> {
+  note: string;
+}
+
 export interface ListResponse<T> {
   lang: Lang;
   count: number;

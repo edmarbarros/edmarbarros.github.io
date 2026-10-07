@@ -128,6 +128,134 @@ export const projects = {
   pt: [] as ReturnType<typeof project>[],
 };
 
+const skill = (over: Record<string, unknown>) => ({
+  id: 'x',
+  name: 'X',
+  group: 'data',
+  group_label: 'Data & databases',
+  aliases: [] as string[],
+  level: null,
+  level_label: null,
+  years: null,
+  months: null,
+  first_used: null,
+  last_used: null,
+  roles_count: 0,
+  proof_count: 0,
+  proof: [] as string[],
+  listed_only: false,
+  api: 'https://site.test/api/en/skills/x.json',
+  ...over,
+});
+
+const skillRoles = {
+  sql: [
+    {
+      company: 'Quander',
+      role: 'Senior Software Engineer',
+      period: 'May 2026 – Oct 2026',
+      startMonth: '2026-05',
+      endMonth: '2026-10',
+      used: ['PostgreSQL'],
+    },
+    {
+      company: 'Citruslabs',
+      role: 'Senior Software Engineer',
+      period: 'Jan 2019 – Sep 2021',
+      startMonth: '2019-01',
+      endMonth: '2021-09',
+      used: ['MySQL'],
+    },
+  ],
+} as Record<string, unknown[]>;
+
+export const skillsEn = [
+  skill({
+    id: 'sql',
+    name: 'SQL',
+    aliases: ['relational databases', 'data modeling'],
+    years: 7.7,
+    months: 92,
+    first_used: '2019-01',
+    last_used: '2026-10',
+    roles_count: 6,
+    proof_count: 2,
+    proof: [
+      'Redesigned the MySQL data model, cutting onboarding from 2 weeks to 1 day.',
+      'Built a BigQuery pipeline.',
+    ],
+  }),
+  skill({
+    id: 'postgresql',
+    name: 'PostgreSQL',
+    aliases: ['postgres'],
+    years: 4.1,
+    months: 49,
+    first_used: '2021-09',
+    last_used: '2026-10',
+    roles_count: 4,
+  }),
+  skill({
+    id: 'kubernetes',
+    name: 'Kubernetes',
+    group: 'cloud',
+    group_label: 'Cloud & infrastructure',
+    aliases: ['k8s', 'helm', 'containers'],
+    level: 'strong',
+    level_label: 'Strong',
+    years: 2,
+    months: 24,
+    first_used: '2024-05',
+    last_used: '2026-05',
+    roles_count: 1,
+    proof_count: 1,
+    proof: ['Owned the Kubernetes infrastructure through Terraform and Helm.'],
+  }),
+  skill({
+    id: 'docker',
+    name: 'Docker',
+    group: 'cloud',
+    group_label: 'Cloud & infrastructure',
+    aliases: ['containers'],
+    years: 5,
+    months: 60,
+    first_used: '2019-01',
+    last_used: '2026-10',
+    roles_count: 5,
+  }),
+  skill({
+    id: 'java',
+    name: 'Java',
+    group: 'languages',
+    group_label: 'Languages & frameworks',
+    listed_only: true,
+  }),
+  skill({
+    id: 'architecture',
+    name: 'Backend architecture',
+    group: 'practices',
+    group_label: 'Practices & leadership',
+    aliases: ['system design'],
+    proof_count: 1,
+    proof: ['Led the migration to event-driven microservices on Kafka.'],
+  }),
+];
+
+export const skillsPt = [
+  skill({
+    id: 'sql',
+    name: 'SQL',
+    group_label: 'Dados & bancos de dados',
+    years: 7.7,
+    months: 92,
+    first_used: '2019-01',
+    last_used: '2026-10',
+    roles_count: 6,
+    proof_count: 1,
+    proof: ['Redesenhei o modelo de dados MySQL.'],
+  }),
+];
+
 /** Route table for the stubbed fetch, mirroring the static /api export. */
 export function routes(): Record<string, unknown> {
   const r: Record<string, unknown> = {};
@@ -145,6 +273,20 @@ export function routes(): Record<string, unknown> {
     };
     for (const p of projects[lang]) r[`/api/${lang}/projects/${p.kind}/${p.slug}.json`] = p;
     r[`/api/${lang}/cv.json`] = cv(lang);
+    const list = lang === 'en' ? skillsEn : skillsPt;
+    r[`/api/${lang}/skills.json`] = {
+      lang,
+      count: list.length,
+      note: 'Levels appear only once stated.',
+      items: list,
+    };
+    for (const sk of list) {
+      r[`/api/${lang}/skills/${sk.id}.json`] = {
+        ...sk,
+        roles: skillRoles[sk.id as string] ?? [],
+        basis: skillRoles[sk.id as string] ? 'A lower bound.' : null,
+      };
+    }
   }
   return r;
 }

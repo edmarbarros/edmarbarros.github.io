@@ -1,6 +1,16 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { SiteDataError, getCv, getPost, getProject, listPosts, listProjects } from './data';
+import {
+  SiteDataError,
+  getCv,
+  getPost,
+  getProject,
+  getSkillDetail,
+  listPosts,
+  listProjects,
+  listSkills,
+} from './data';
+import { lookupSkill } from './skill-lookup';
 import { search, type SearchDoc } from './search';
 import type { Cv, Env, Lang } from './types';
 
@@ -81,6 +91,71 @@ function page<T>(items: T[], limit: number, offset: number) {
 
 const date = (iso: string) => iso.slice(0, 10);
 
+const MONTHS: Record<Lang, string[]> = {
+  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  pt: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+};
+
+/** '2019-01' becomes 'Jan 2019'. */
+function monthLabel(value: string | null, lang: Lang): string {
+  if (!value) return '';
+  if (value === 'present') return lang === 'en' ? 'present' : 'presente';
+  const [year, month] = value.split('-');
+  return `${MONTHS[lang][Number(month) - 1] ?? month} ${year}`;
+}
+
+const GROUP_ORDER = ['languages', 'cloud', 'data', 'practices'] as const;
+
+/** Labels the skill tools print, in the language that was asked for. */
+const SKILL_TEXT = {
+  en: {
+    levelWord: 'Level',
+    levelNotStated:
+      'not stated. A missing level means it has not been self-assessed, not that it is low.',
+    experience: 'Experience',
+    viaAchievements: 'shown through the achievements below rather than a tech list.',
+    noEvidence:
+      'none attached yet. It is listed on the CV, but no role or achievement is linked to it.',
+    usedIn: 'Used in',
+    proof: 'Proof',
+    to: 'to',
+    listLevel: 'level',
+    listOnly: 'listed on the CV, no role or achievement attached yet',
+    achievement: (n: number) => `${n} achievement${n === 1 ? '' : 's'}`,
+  },
+  pt: {
+    levelWord: 'Nível',
+    levelNotStated:
+      'não informado. Nível ausente significa que ainda não foi autoavaliado, não que seja baixo.',
+    experience: 'Experiência',
+    viaAchievements: 'demonstrada pelas conquistas abaixo, e não por uma lista de tecnologias.',
+    noEvidence:
+      'nada associado ainda. Consta no CV, mas nenhum cargo ou conquista está ligado a ela.',
+    usedIn: 'Usado em',
+    proof: 'Evidências',
+    to: 'a',
+    listLevel: 'nível',
+    listOnly: 'consta no CV, ainda sem cargo ou conquista associado',
+    achievement: (n: number) => `${n} conquista${n === 1 ? '' : 's'}`,
+  },
+} as const;
+
+function experienceLine(
+  s: {
+    years: number | null;
+    roles_count: number;
+    first_used: string | null;
+    last_used: string | null;
+  },
+  lang: Lang,
+): string {
+  if (s.years === null) return '';
+  const span = `${monthLabel(s.first_used, lang)} ${SKILL_TEXT[lang].to} ${monthLabel(s.last_used, lang)}`;
+  return lang === 'en'
+    ? `about ${s.years} years across ${s.roles_count} role${s.roles_count === 1 ? '' : 's'}, ${span}`
+    : `cerca de ${s.years} anos em ${s.roles_count} cargo${s.roles_count === 1 ? '' : 's'}, ${span}`;
+}
+
 function cvMarkdown(cv: Cv, sections: Set<string>): string {
   const all = sections.has('all');
   const out: string[] = [`# ${cv.identity.name} — ${cv.identity.title}`, `${cv.identity.location}`];
@@ -159,7 +234,7 @@ export function registerTools(server: McpServer, env: Env, ctx?: ExecutionContex
           `GitHub: ${profile.links.github}`,
           `Email: ${profile.links.email}`,
           '',
-          'Tools: site_get_cv, site_list_posts, site_get_post, site_list_projects, site_get_project, site_search.',
+          'Tools: site_get_cv, site_list_skills, site_get_skill, site_list_posts, site_get_post, site_list_projects, site_get_project, site_search.',
         ].join('\n');
         return ok(text, profile);
       }),
@@ -346,10 +421,11 @@ export function registerTools(server: McpServer, env: Env, ctx?: ExecutionContex
     ({ query, lang, limit }) =>
       guard(async () => {
         const l = lang as Lang;
-        const [posts, projects, cv] = await Promise.all([
+        const [posts, projects, cv, skillList] = await Promise.all([
           listPosts(env, l, ctx),
           listProjects(env, l, ctx),
           getCv(env, l, ctx),
+          listSkills(env, l, ctx),
         ]);
         const [fullPosts, fullProjects] = await Promise.all([
           Promise.all(posts.items.map((p) => getPost(env, l, p.slug, ctx))),
@@ -386,6 +462,16 @@ export function registerTools(server: McpServer, env: Env, ctx?: ExecutionContex
               text: `${c.blurb}\n${r.bullets.join('\n')}`,
             })),
           ),
+          ...skillList.items.map((s) => ({
+            type: 'skill' as const,
+            title: s.name,
+            url: cv.url,
+            summary:
+              [experienceLine(s, l), s.level_label].filter(Boolean).join('. ') || s.group_label,
+            title_: `${s.name} ${s.aliases.join(' ')}`,
+            tags: s.group_label,
+            text: s.proof.join('\n'),
+          })),
         ];
 
         const hits = search(docs, query, limit);
@@ -404,6 +490,114 @@ export function registerTools(server: McpServer, env: Env, ctx?: ExecutionContex
           count: hits.length,
           hits,
         });
+      }),
+  );
+
+  server.registerTool(
+    'site_list_skills',
+    {
+      title: 'List skills with evidence',
+      description:
+        "Every skill on Edmar's CV with how long and where he has used it, and how many achievements prove it. Use it to see his strengths at a glance, then site_get_skill for the proof behind one.",
+      inputSchema: {
+        lang,
+        group: z
+          .enum(['languages', 'cloud', 'data', 'practices'])
+          .optional()
+          .describe('Only one group: languages, cloud, data or practices.'),
+      },
+      annotations: READ_ONLY,
+    },
+    ({ lang, group }) =>
+      guard(async () => {
+        const l = lang as Lang;
+        const { items, note } = await listSkills(env, l, ctx);
+        const shown = group ? items.filter((s) => s.group === group) : items;
+        if (shown.length === 0) return ok('No skills found.', { count: 0, items: [] });
+
+        const sections = GROUP_ORDER.flatMap((g) => {
+          const inGroup = shown
+            .filter((s) => s.group === g)
+            .sort((a, b) => (b.years ?? -1) - (a.years ?? -1) || b.proof_count - a.proof_count);
+          if (inGroup.length === 0) return [];
+          const lines = inGroup.map((s) => {
+            const parts = [
+              s.level_label ? `${SKILL_TEXT[l].listLevel}: ${s.level_label}` : '',
+              experienceLine(s, l),
+              s.proof_count ? SKILL_TEXT[l].achievement(s.proof_count) : '',
+              s.listed_only ? SKILL_TEXT[l].listOnly : '',
+            ].filter(Boolean);
+            return `- **${s.name}** [${s.id}]: ${parts.join('; ')}`;
+          });
+          return [`## ${inGroup[0]!.group_label}`, ...lines, ''];
+        });
+        return ok(`${shown.length} skill(s). ${note}\n\n${sections.join('\n')}`, {
+          count: shown.length,
+          note,
+          items: shown,
+        });
+      }),
+  );
+
+  server.registerTool(
+    'site_get_skill',
+    {
+      title: 'Get the evidence behind a skill',
+      description:
+        "How much experience Edmar has with one skill or technology, with the roles where it was used and the achievements that prove it. Accepts a name or common alias such as 'SQL', 'Postgres', 'k8s' or 'CI/CD'. Use this instead of guessing proficiency from the CV.",
+      inputSchema: {
+        name: z
+          .string()
+          .min(1)
+          .max(60)
+          .describe("Skill or technology, e.g. 'SQL', 'Kafka', 'Terraform'."),
+        lang,
+      },
+      annotations: READ_ONLY,
+    },
+    ({ name, lang }) =>
+      guard(async () => {
+        const l = lang as Lang;
+        const { items } = await listSkills(env, l, ctx);
+        const found = lookupSkill(items, name);
+        if (found.kind === 'missing') {
+          return fail(
+            `No skill matches "${name}". Available skills: ${items.map((s) => s.name).join(', ')}. Try site_search for anything else.`,
+          );
+        }
+        if (found.kind === 'ambiguous') {
+          return fail(
+            `"${name}" matches several skills: ${found.skills.map((s) => `${s.name} [${s.id}]`).join(', ')}. Ask again with one of those names.`,
+          );
+        }
+
+        const detail = await getSkillDetail(env, l, found.skill.id, ctx);
+        const lines = [`# ${detail.name}`, detail.group_label, ''];
+        lines.push(
+          detail.level_label
+            ? `${SKILL_TEXT[l].levelWord}: ${detail.level_label}`
+            : `${SKILL_TEXT[l].levelWord}: ${SKILL_TEXT[l].levelNotStated}`,
+        );
+        const experience = experienceLine(detail, l);
+        if (experience) {
+          lines.push(`${SKILL_TEXT[l].experience}: ${experience}.`);
+        } else if (detail.proof.length > 0) {
+          lines.push(`${SKILL_TEXT[l].experience}: ${SKILL_TEXT[l].viaAchievements}`);
+        } else {
+          lines.push(`${SKILL_TEXT[l].experience}: ${SKILL_TEXT[l].noEvidence}`);
+        }
+        if (detail.roles.length > 0) {
+          lines.push('', `${SKILL_TEXT[l].usedIn}:`);
+          for (const r of detail.roles) {
+            lines.push(`- ${r.company}, ${r.role}, ${r.period} (${r.used.join(', ')})`);
+          }
+          if (detail.basis) lines.push('', detail.basis);
+        }
+        if (detail.proof.length > 0) {
+          lines.push('', `${SKILL_TEXT[l].proof}:`);
+          for (const p of detail.proof) lines.push(`- ${p}`);
+        }
+        return ok(lines.join('\n'), detail as unknown as Record<string, unknown>);
       }),
   );
 }

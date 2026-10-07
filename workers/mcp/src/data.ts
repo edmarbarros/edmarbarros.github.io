@@ -7,6 +7,8 @@ import type {
   PostSummary,
   ProjectFull,
   ProjectSummary,
+  SkillFull,
+  SkillsList,
 } from './types';
 
 export class SiteDataError extends Error {
@@ -90,3 +92,9 @@ export const getProject = (
 
 export const getCv = (env: Env, lang: Lang, ctx?: ExecutionContext) =>
   fetchSiteJson<Cv>(env, `/api/${lang}/cv.json`, ctx);
+
+export const listSkills = (env: Env, lang: Lang, ctx?: ExecutionContext) =>
+  fetchSiteJson<SkillsList>(env, `/api/${lang}/skills.json`, ctx);
+
+export const getSkillDetail = (env: Env, lang: Lang, id: string, ctx?: ExecutionContext) =>
+  fetchSiteJson<SkillFull>(env, `/api/${lang}/skills/${encodeURIComponent(id)}.json`, ctx);
