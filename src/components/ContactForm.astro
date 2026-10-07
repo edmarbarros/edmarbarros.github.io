@@ -19,6 +19,8 @@ const labels = {
     successTitle: 'Message sent',
     success: 'Thanks — I\u2019ll reply soon.',
     failed: 'Send failed — email hello[at]edmarbarros[.]com directly.',
+    draftLoaded: 'Drafted with your AI assistant. Review it, complete the check and press Send.',
+    draftExpired: 'This draft link has expired or was already used. Write your message below.',
   },
   pt: {
     name: 'Nome',
@@ -30,6 +32,9 @@ const labels = {
     successTitle: 'Mensagem enviada',
     success: 'Obrigado — respondo em breve.',
     failed: 'Falha no envio — escreva para hello[at]edmarbarros[.]com.',
+    draftLoaded:
+      'Rascunho feito com seu assistente de IA. Revise, conclua a verificação e clique em Enviar.',
+    draftExpired: 'Este link de rascunho expirou ou já foi usado. Escreva sua mensagem abaixo.',
   },
 }[lang];
 ---
@@ -43,6 +48,8 @@ const labels = {
   data-label-verifying={labels.verifying}
   data-label-submit={labels.submit}
   data-label-failed={labels.failed}
+  data-label-draft-loaded={labels.draftLoaded}
+  data-label-draft-expired={labels.draftExpired}
 >
   <label class="block space-y-1">
     <span class="text-sm text-muted">{labels.name}</span>
@@ -146,6 +153,8 @@ const labels = {
     const LVerifying = form.dataset.labelVerifying!;
     const LSubmit = form.dataset.labelSubmit!;
     const LFailed = form.dataset.labelFailed!;
+    const LDraftLoaded = form.dataset.labelDraftLoaded!;
+    const LDraftExpired = form.dataset.labelDraftExpired!;
     const successPanel = document.getElementById('contact-success');
 
     const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
@@ -163,6 +172,39 @@ const labels = {
     // Inject on first textarea blur — widget can render before the user reaches submit.
     const msg = form.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
     msg?.addEventListener('blur', injectTurnstile, { once: true });
+
+    // An AI assistant can draft a message and give the person a link like /contact?draft=TOKEN.
+    // The token is read once, taken out of the address bar, and sent back with the normal submit.
+    // The person still edits the fields and passes the Turnstile check before anything is sent.
+    let draftToken = '';
+    const linkedDraft = new URLSearchParams(location.search).get('draft');
+    if (linkedDraft && /^[A-Za-z0-9_-]{22}$/.test(linkedDraft)) {
+      history.replaceState(null, '', location.pathname);
+      loadDraft(linkedDraft);
+    }
+
+    async function loadDraft(token: string) {
+      try {
+        const res = await fetch(`${endpoint}?draft=${token}`);
+        if (!res.ok) {
+          status!.textContent = LDraftExpired;
+          return;
+        }
+        const draft = (await res.json()) as { name: string; email: string; message: string };
+        for (const field of ['name', 'email', 'message'] as const) {
+          const el = form!.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+            `[name="${field}"]`,
+          );
+          if (el) el.value = draft[field] ?? '';
+        }
+        draftToken = token;
+        status!.textContent = LDraftLoaded;
+        // Start the challenge early: there is nothing left to type.
+        injectTurnstile();
+      } catch {
+        status!.textContent = LDraftExpired;
+      }
+    }
 
     async function waitForToken(maxMs = 10000): Promise<string> {
       const start = Date.now();
@@ -199,6 +241,7 @@ const labels = {
         website: (fd.get('website') as string) || '',
         ts: Number(fd.get('ts')) || Date.now(),
         turnstileToken: token,
+        ...(draftToken ? { draft: draftToken } : {}),
       };
 
       try {
