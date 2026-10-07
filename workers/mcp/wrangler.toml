@@ -5,7 +5,9 @@ workers_dev = false
 
 # Same zone and host as the contact worker; different path.
 [[routes]]
-pattern = "api.edmarbarros.com/mcp"
+# The trailing * lets URLs with a query string reach the worker, which a pattern without it
+# would not match. See the contact worker.
+pattern = "api.edmarbarros.com/mcp*"
 zone_name = "edmarbarros.com"
 
 [vars]
