@@ -1,0 +1,43 @@
+---
+title: 'Servidor MCP para este site'
+kind: side
+period: 'Out 2026'
+summary: 'Um servidor MCP público que permite a um assistente de IA responder perguntas sobre meu CV, habilidades com evidências, projetos e textos em português e inglês, e rascunhar uma mensagem para mim que só chega à minha caixa de entrada pelo meu formulário de contato.'
+stack:
+  - TypeScript
+  - Cloudflare Workers
+  - MCP
+  - Astro
+  - Zod
+  - Vitest
+repo: 'https://github.com/edmarbarros/edmarbarros.github.io'
+order: 120
+featured: true
+---
+
+## Problema
+
+Um CV é um documento plano. Um recrutador, ou o assistente de IA dele, precisa adivinhar a profundidade de cada habilidade e o que a comprova. Eu queria que um assistente respondesse a partir das evidências do meu trabalho, sem login, e sem manter um servidor para um site estático no GitHub Pages.
+
+## O que construí
+
+- **Uma exportação JSON estática.** Endpoints do Astro geram posts, projetos, o CV e as habilidades em JSON no build, nos dois idiomas. Rascunhos ficam de fora.
+- **Um Cloudflare Worker stateless em `/mcp`.** TypeScript sobre o transporte HTTP streamable do SDK do MCP, em modo JSON. Cada requisição recebe um servidor novo, não há sessões, e o corpo é limitado a 64 KB. Ele lê o JSON pelo cache de borda, então um deploy do site aparece em até cinco minutos sem publicar o worker de novo.
+- **Onze ferramentas e quatro prompts.** As ferramentas cobrem perfil, CV, habilidades com evidências, projetos, posts, busca, um guia de ajuda e o rascunho de uma mensagem. Os prompts dão uma visão para recrutadores, uma checagem de habilidade, e uma avaliação de adequação à vaga que relaciona cada requisito a evidências e diz onde há lacunas.
+- **Evidências para habilidades, não notas.** Anos e cargos são calculados a partir das listas de tecnologias do meu CV, e as conquistas são a prova. O nível só aparece depois que eu o informo, e a resposta diz "não informado" em vez de adivinhar, porque nível ausente não é nível baixo.
+- **Contato sem contornar o Turnstile.** Um assistente não passa pelo Turnstile. A ferramenta salva um rascunho de curta duração por um service binding privado e devolve um link. A pessoa revisa a mensagem e a envia pelo formulário normal, então o formulário continua sendo o único caminho até minha caixa de entrada.
+- **Português e inglês.** Nomes de meses, plurais, números e listas vêm do `Intl` do runtime, sem tabelas de tradução escritas à mão.
+
+## Resultados
+
+- No ar em `api.edmarbarros.com/mcp`: público, somente leitura exceto para rascunhar uma mensagem, e sem login.
+- Os passos de configuração para sete clientes estão na página inicial.
+- Mais de 150 testes entre os workers de MCP e de contato, incluindo um que executa os dois workers juntos, do rascunho até o e-mail entregue.
+- O guia de ajuda é gerado de um único arquivo, e testes falham se ele se afastar das ferramentas e prompts reais.
+
+## O que aprendi
+
+- **Rotas casam com a URL inteira.** Minhas rotas do Cloudflare não tinham um curinga no final, então um link com `?draft=` pulava o worker e dava timeout com um 522 em produção, enquanto todos os testes unitários passavam. Testes unitários chamam o worker direto e nunca veem o roteamento. Um teste sobre a configuração agora pega isso.
+- **Um limite de tamanho baseado em `Content-Length` pode ser contornado.** O header pode faltar ou estar errado em uploads em partes. O worker agora conta os bytes enquanto lê.
+- **Um pedido de permissão no chat não é uma verificação humana.** O servidor não consegue confirmar que o pedido aconteceu, e qualquer pessoa pode chamar a URL direto. A verificação precisa estar onde o servidor consegue conferir, o que significou levar a pessoa ao formulário.
+- **Use do jeito que o seu leitor vai usar.** As lacunas só apareceram quando perguntei a um assistente sobre mim: meu cargo mais recente não estava lá, e as habilidades não tinham prova.

@@ -44,6 +44,7 @@
     "chatgpt": "Adicione um servidor MCP personalizado no ChatGPT e cole a URL do servidor. Escolha sem autenticação, se perguntado. Nomes de menu, disponibilidade por plano e políticas do workspace mudam com frequência, então um administrador pode precisar liberar.",
     "cursor": "Adicione isto em ~/.cursor/mcp.json:",
     "vscode": "Adicione isto em .vscode/mcp.json:",
-    "other": "Qualquer cliente com suporte a MCP remoto via streamable HTTP pode usar a mesma URL."
+    "other": "Qualquer cliente com suporte a MCP remoto via streamable HTTP pode usar a mesma URL.",
+    "readMore": "Leia como eu construí"
   }
 }
