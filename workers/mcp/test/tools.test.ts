@@ -72,6 +72,10 @@ describe('site_get_cv', () => {
     expect(text).toContain('May 2026 - Oct 2026');
     expect(text).toContain('## Skills');
   });
+  it('says who backed each company', async () => {
+    const { text } = await call('site_get_cv', { sections: ['experience'] });
+    expect(text).toContain('Backed by Accel, Y Combinator (YC W22).');
+  });
   it('returns only requested sections', async () => {
     const { text } = await call('site_get_cv', { sections: ['skills'] });
     expect(text).toContain('PostgreSQL, Redis');
@@ -153,6 +157,14 @@ describe('site_search', () => {
     expect(byAlias.data.hits[0].title).toBe('SQL');
     const byProof = await call('site_search', { query: 'onboarding 2 weeks' });
     expect(byProof.data.hits.some((h: any) => h.type === 'skill')).toBe(true);
+  });
+  it('finds the companies a backer supported, by short label or full name', async () => {
+    for (const query of ['yc', 'combinator', 'accel']) {
+      const { data } = await call('site_search', { query });
+      const hit = data.hits.find((h: any) => h.type === 'experience');
+      expect(hit, query).toBeDefined();
+      expect(hit.snippet, query).toContain('Backed by Accel, Y Combinator (YC W22).');
+    }
   });
   it('reports no results helpfully', async () => {
     const { text, isError } = await call('site_search', { query: 'zzzzzz' });

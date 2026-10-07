@@ -12,10 +12,27 @@ export interface Role {
   stack: string[];
 }
 
+/** An investor or accelerator that backed a company. */
+export interface Backer {
+  /** Full name, for prose and search, such as 'Y Combinator'. */
+  name: string;
+  /** What people write next to a company name, such as 'YC'. Defaults to the name. */
+  short?: string;
+  /** Batch or program, such as 'W22'. */
+  detail?: string;
+}
+
+/** 'YC W22', 'Techstars', 'Accel'. */
+export function backerLabel(backer: Backer): string {
+  return [backer.short ?? backer.name, backer.detail].filter(Boolean).join(' ');
+}
+
 export interface Company {
   company: string;
   location: string;
   url?: string;
+  /** Who backed the company while I worked there. */
+  backers?: Backer[];
   blurb: Bilingual;
   roles: Role[];
 }
@@ -98,6 +115,7 @@ export const cv: CV = {
       company: 'Quander',
       location: 'Remote',
       url: 'https://hypesonic.com/',
+      backers: [{ name: 'Accel' }],
       blurb: {
         en: 'Maker of Hypesonic, an AI growth platform that runs marketing and distribution continuously: testing creative, targeting audiences and optimizing ad spend without human bottlenecks.',
         pt: 'Criadora da Hypesonic, plataforma de crescimento com IA que executa marketing e distribuição de forma contínua: testando criativos, segmentando públicos e otimizando o investimento em anúncios sem gargalos humanos.',
@@ -135,6 +153,7 @@ export const cv: CV = {
       company: 'Vendoo',
       location: 'Remote',
       url: 'https://vendoo.co/',
+      backers: [{ name: 'Y Combinator', short: 'YC', detail: 'W22' }],
       blurb: {
         en: 'Multichannel Listing Tool and Inventory Management Software for online sellers.',
         pt: 'Ferramenta de listagem multicanal e software de gestão de estoque para vendedores online.',
@@ -198,6 +217,7 @@ export const cv: CV = {
       company: 'Paerpay',
       location: 'Remote',
       url: 'https://paerpay.com/',
+      backers: [{ name: 'Techstars' }],
       blurb: {
         en: 'Mobile payment integration platform for the restaurant industry.',
         pt: 'Plataforma de integração de pagamentos móveis para a indústria de restaurantes.',
@@ -256,6 +276,7 @@ export const cv: CV = {
       company: 'Citruslabs',
       location: 'Remote',
       url: 'https://www.citruslabs.io/',
+      backers: [{ name: 'Techstars' }],
       blurb: {
         en: 'Clinical-trial recruitment platform connecting patients to research.',
         pt: 'Plataforma de recrutamento para ensaios clínicos conectando pacientes a pesquisas.',
@@ -278,6 +299,106 @@ export const cv: CV = {
             ],
           },
           stack: ['Python', 'Angular', 'Node.js', 'MySQL', 'AWS', 'Docker', 'GitHub Actions'],
+        },
+      ],
+    },
+    {
+      company: 'Higglers',
+      location: 'London, United Kingdom',
+      blurb: {
+        en: 'Very early-stage London startup. A SaaS platform for event organizers and traders: one place to create an event, find traders, negotiate and pay to be at the event.',
+        pt: 'Startup londrina em estágio muito inicial. Uma plataforma SaaS para organizadores de eventos e expositores: um único lugar para criar um evento, encontrar expositores, negociar e pagar para participar do evento.',
+      },
+      roles: [
+        {
+          role: { en: 'Lead Software Engineer', pt: 'Lead Software Engineer' },
+          startMonth: '2018-02',
+          endMonth: '2018-09',
+          bullets: {
+            en: [
+              'Re-designed the architecture: Led the redesign of the software architecture to meet evolving requirements and a new set of features.',
+              'Led the engineering team: Guided and supported the team so tasks shipped on time and to a high standard.',
+              'Wide ownership at a very early stage: Owned large parts of the product and reported directly to the CEO.',
+              'Code reviews and new features: Reviewed code to catch flaws and bugs before they reached the project, and designed and built new features.',
+            ],
+            pt: [
+              'Redesenho da arquitetura: Liderei o redesenho da arquitetura do software para atender a requisitos em evolução e a um novo conjunto de funcionalidades.',
+              'Liderança do time de engenharia: Orientei e apoiei o time para que as tarefas fossem entregues no prazo e com alto padrão.',
+              'Ampla autonomia em estágio inicial: Fui responsável por grandes partes do produto e reportava diretamente ao CEO.',
+              'Code reviews e novas funcionalidades: Revisei código para encontrar falhas e bugs antes que afetassem o projeto, e projetei e construí novas funcionalidades.',
+            ],
+          },
+          stack: ['Node.js', 'React', 'Redux', 'Docker', 'Heroku', 'AWS', 'CircleCI', 'Git', 'PostgreSQL'],
+        },
+      ],
+    },
+    {
+      company: 'cloud.IQ',
+      location: 'London, United Kingdom',
+      backers: [{ name: 'PayPal' }],
+      blurb: {
+        en: 'London startup that uses AI to help online sellers increase sales. I worked on site in the London office.',
+        pt: 'Startup de Londres que usa IA para ajudar vendedores online a aumentar as vendas. Trabalhei presencialmente no escritório de Londres.',
+      },
+      roles: [
+        {
+          role: { en: 'Software Engineer', pt: 'Software Engineer' },
+          startMonth: '2016-10',
+          endMonth: '2018-02',
+          bullets: {
+            en: [
+              'From support to development: Started in the support team, learned the product and how clients configure it, then moved into the development team.',
+              'Client self-service dashboard: Part of the team that designed and built a new dashboard so clients could handle their own configuration.',
+              'Simpler setup for clients: Used what I learned in support to build a proof of concept for the new client portal that simplified the configuration process.',
+              'MySQL and MongoDB at scale: Developed against MySQL tables with millions of rows and did data research for reports, plus MongoDB work. This was development and data research, not infrastructure.',
+              'Hiring: Contributed to technical interviews to evaluate candidates.',
+            ],
+            pt: [
+              'Do suporte ao desenvolvimento: Comecei no time de suporte, aprendi o produto e como os clientes o configuram, e depois passei para o time de desenvolvimento.',
+              'Dashboard de autoatendimento para clientes: Fiz parte do time que projetou e construiu um novo dashboard para que os clientes cuidassem da própria configuração.',
+              'Configuração mais simples para clientes: Usei o que aprendi no suporte para construir uma prova de conceito do novo portal do cliente que simplificava o processo de configuração.',
+              'MySQL e MongoDB em volume: Desenvolvi sobre tabelas MySQL com milhões de linhas e fiz pesquisa de dados para relatórios, além de trabalhar com MongoDB. Foi desenvolvimento e pesquisa de dados, não infraestrutura.',
+              'Contratação: Contribuí em entrevistas técnicas para avaliar candidatos.',
+            ],
+          },
+          stack: ['Node.js', 'React', 'Redux', 'Apollo', 'GraphQL', 'Python', 'Docker', 'GCP', 'MySQL', 'MongoDB'],
+        },
+      ],
+    },
+    {
+      company: 'Critical Software',
+      location: 'Coimbra, Portugal',
+      url: 'https://www.criticalsoftware.com/',
+      blurb: {
+        en: 'Software company in Coimbra, Portugal. I worked on a mission-critical project, MobiCS, a short-term car rental system, and on Certitools, a safety and security engineering management application.',
+        pt: 'Empresa de software em Coimbra, Portugal. Trabalhei em um projeto de missão crítica, o MobiCS, um sistema de aluguel de carros por curto período, e no Certitools, uma aplicação de gestão de engenharia de segurança.',
+      },
+      roles: [
+        {
+          role: { en: 'Software Engineer', pt: 'Software Engineer' },
+          startMonth: '2015-02',
+          endMonth: '2016-08',
+          bullets: {
+            en: [
+              'Mission-critical delivery: Gathered client feedback and designed features to meet their expectations on a mission-critical project.',
+              'Payments and international invoicing: As MobiCS expanded to Latin America and European countries, refactored the existing payment and invoicing system to support international requirements on both the payment and the invoicing side.',
+              'Revenue kept flowing: Built a custom standalone tool in Java on short notice, so the client could keep charging users while new payment providers were onboarded overseas. Ran it and delivered a results report to the client.',
+              'PostgreSQL, SQL and PL/SQL: Wrote SQL and PL/SQL on PostgreSQL across both projects.',
+              'Java EE 6 and 7: Built features and fixed issues in Java EE 6 and 7 applications using EJB, JPA/Hibernate, JMS and JBoss.',
+              '24/7 on-call: Resolved production issues and was available for on-call support around the clock.',
+              'Hiring: Worked with the recruitment team to evaluate programming tests for candidates.',
+            ],
+            pt: [
+              'Entrega de missão crítica: Coletei feedback de clientes e projetei funcionalidades para atender às expectativas deles em um projeto de missão crítica.',
+              'Pagamentos e faturas internacionais: Com a expansão do MobiCS para a América Latina e países europeus, refatorei o sistema de pagamentos e faturas existente para atender a requisitos internacionais tanto nos pagamentos quanto nas faturas.',
+              'Receita garantida na expansão: Construí, em pouco tempo, uma ferramenta própria e independente em Java para que o cliente continuasse cobrando os usuários enquanto novos provedores de pagamento eram integrados no exterior. Eu a executava e entregava ao cliente um relatório com os resultados.',
+              'PostgreSQL, SQL e PL/SQL: Escrevi SQL e PL/SQL em PostgreSQL nos dois projetos.',
+              'Java EE 6 e 7: Construí funcionalidades e corrigi problemas em aplicações Java EE 6 e 7 com EJB, JPA/Hibernate, JMS e JBoss.',
+              'Plantão 24/7: Resolvi problemas de produção e fiquei disponível para suporte em regime de plantão 24 horas.',
+              'Contratação: Trabalhei com o time de recrutamento para avaliar testes de programação de candidatos.',
+            ],
+          },
+          stack: ['Java', 'Java EE', 'EJB', 'JPA/Hibernate', 'JMS', 'JBoss', 'PostgreSQL', 'PL/SQL', 'SOAP', 'REST', 'Maven', 'Ant', 'JavaScript', 'jQuery'],
         },
       ],
     },

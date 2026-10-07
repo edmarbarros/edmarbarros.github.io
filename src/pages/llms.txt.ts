@@ -2,7 +2,7 @@ import type { APIContext } from 'astro';
 import { SITE_CONFIG } from '../config';
 import { absoluteUrl, projectUrl } from '../content/api';
 import { getPosts, getProjects, postUrl } from '../content/helpers';
-import { cv } from '../data/cv';
+import { backerLabel, cv } from '../data/cv';
 
 /**
  * /llms.txt: a short markdown guide for AI assistants and the people using them.
@@ -13,6 +13,9 @@ export async function GET({ site }: APIContext) {
   const url = (path: string) => absoluteUrl(path, site);
   const [projects, posts] = await Promise.all([getProjects('en'), getPosts('en')]);
   const { identity } = cv;
+  const backed = cv.experience
+    .filter((c) => c.backers?.length)
+    .map((c) => `${c.company} (${c.backers!.map(backerLabel).join(', ')})`);
 
   const lines = [
     `# ${identity.name}`,
@@ -23,7 +26,7 @@ export async function GET({ site }: APIContext) {
     '',
     '## About',
     '',
-    `- [CV](${url('/cv')}): experience, skills and education.`,
+    `- [CV](${url('/cv')}): experience, skills and education.${backed.length ? ` Companies and their backers: ${backed.join('; ')}.` : ''}`,
     `- [CV as a PDF](${url(cv.pdf.en)}): the same CV, ready to download.`,
     `- [Contact](${url('/contact')}): the contact form.`,
     '',

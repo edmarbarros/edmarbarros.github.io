@@ -62,6 +62,10 @@ const cv = (lang: 'en' | 'pt') => ({
       company: 'Quander',
       location: 'Remote',
       url: null,
+      backers: [
+        { name: 'Accel', label: 'Accel' },
+        { name: 'Y Combinator', label: 'YC W22' },
+      ],
       blurb: 'Maker of an AI growth platform.',
       roles: [
         {

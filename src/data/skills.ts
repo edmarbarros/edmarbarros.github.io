@@ -52,6 +52,10 @@ export const skills: Skill[] = [
         en: 'Built a real-time transaction monitoring pipeline on BigQuery at Paerpay, cutting partner support tickets by 30%+.',
         pt: 'Construí um pipeline de monitoramento de transações em tempo real no BigQuery na Paerpay, reduzindo em mais de 30% os chamados de suporte de parceiros.',
       },
+      {
+        en: 'Wrote SQL and PL/SQL on PostgreSQL at Critical Software, and research queries for reports over tables with millions of rows at cloud.IQ.',
+        pt: 'Escrevi SQL e PL/SQL em PostgreSQL na Critical Software, e consultas de pesquisa para relatórios sobre tabelas com milhões de linhas na cloud.IQ.',
+      },
     ],
   },
   {
@@ -60,7 +64,12 @@ export const skills: Skill[] = [
     group: 'data',
     aliases: ['postgres', 'psql'],
     matches: ['PostgreSQL'],
-    proof: [],
+    proof: [
+      {
+        en: 'Wrote SQL and PL/SQL on PostgreSQL across two Java EE projects at Critical Software.',
+        pt: 'Escrevi SQL e PL/SQL em PostgreSQL em dois projetos Java EE na Critical Software.',
+      },
+    ],
   },
   {
     id: 'mysql',
@@ -72,6 +81,10 @@ export const skills: Skill[] = [
       {
         en: 'Redesigned the MySQL data model at Citruslabs so onboarding went from 2 weeks to 1 day.',
         pt: 'Redesenhei o modelo de dados MySQL na Citruslabs, levando o onboarding de 2 semanas para 1 dia.',
+      },
+      {
+        en: 'Developed against MySQL tables with millions of rows and did data research for reports at cloud.IQ. This was development and data research, not infrastructure.',
+        pt: 'Desenvolvi sobre tabelas MySQL com milhões de linhas e fiz pesquisa de dados para relatórios na cloud.IQ. Foi desenvolvimento e pesquisa de dados, não infraestrutura.',
       },
     ],
   },
@@ -120,6 +133,14 @@ export const skills: Skill[] = [
     group: 'data',
     aliases: ['cache', 'caching'],
     matches: ['Redis'],
+    proof: [],
+  },
+  {
+    id: 'mongodb',
+    name: 'MongoDB',
+    group: 'data',
+    aliases: ['nosql', 'document database'],
+    matches: ['MongoDB'],
     proof: [],
   },
   // Cloud & infrastructure
@@ -258,9 +279,14 @@ export const skills: Skill[] = [
     id: 'java',
     name: 'Java',
     group: 'languages',
-    aliases: [],
-    matches: [],
-    proof: [],
+    aliases: ['java ee', 'jee', 'ejb', 'jboss', 'hibernate', 'jpa'],
+    matches: ['Java', 'Java EE'],
+    proof: [
+      {
+        en: 'Built features and fixed issues in Java EE 6 and 7 applications at Critical Software, including MobiCS, a car rental platform with payment and invoice processing.',
+        pt: 'Construí funcionalidades e corrigi problemas em aplicações Java EE 6 e 7 na Critical Software, incluindo o MobiCS, uma plataforma de aluguel de carros com pagamentos e faturas.',
+      },
+    ],
   },
   {
     id: 'php',
@@ -305,6 +331,10 @@ export const skills: Skill[] = [
         en: 'Designed a Port, Adapter, Registry and Host architecture at Quander to make new ad integrations cheaper to add. The design is done but has not been implemented.',
         pt: 'Desenhei uma arquitetura de Port, Adapter, Registry e Host na Quander para tornar novas integrações de anúncios mais baratas de adicionar. O desenho está pronto, mas não foi implementado.',
       },
+      {
+        en: 'Led the redesign of the software architecture at Higglers to meet evolving requirements and a new set of features.',
+        pt: 'Liderei o redesenho da arquitetura do software na Higglers para atender a requisitos em evolução e a um novo conjunto de funcionalidades.',
+      },
     ],
   },
   {
@@ -321,6 +351,10 @@ export const skills: Skill[] = [
       {
         en: 'Halved new-engineer ramp-up from 6 to 3 weeks at Vendoo with 10+ internal Tech Talks and a structured 1:1 mentorship framework.',
         pt: 'Reduzi pela metade o ramp-up de novos engenheiros, de 6 para 3 semanas, na Vendoo, com mais de 10 Tech Talks internos e um framework estruturado de mentoria 1:1.',
+      },
+      {
+        en: 'Led the engineering team at Higglers, a very early-stage startup, guiding the team and reviewing code, while reporting directly to the CEO.',
+        pt: 'Liderei o time de engenharia na Higglers, uma startup em estágio muito inicial, orientando o time e revisando código, reportando diretamente ao CEO.',
       },
     ],
   },
@@ -355,6 +389,10 @@ export const skills: Skill[] = [
       {
         en: 'Designed adapters for multiple SOAP-based POS systems and REST payment gateways at Paerpay, unlocking integration with major national restaurant chains.',
         pt: 'Projetei adaptadores para diversos sistemas POS baseados em SOAP e gateways de pagamento REST na Paerpay, viabilizando a integração com grandes redes nacionais de restaurantes.',
+      },
+      {
+        en: 'Refactored the existing MobiCS payment and invoicing system at Critical Software to support international requirements as it expanded to Latin America and European countries, and built a standalone Java tool on short notice so the client could keep charging users while new payment providers were onboarded.',
+        pt: 'Refatorei o sistema de pagamentos e faturas existente do MobiCS na Critical Software para atender a requisitos internacionais na expansão para a América Latina e países europeus, e construí em pouco tempo uma ferramenta independente em Java para que o cliente continuasse cobrando os usuários enquanto novos provedores de pagamento eram integrados.',
       },
     ],
   },

@@ -76,6 +76,8 @@ export interface Cv {
     company: string;
     location: string;
     url: string | null;
+    /** Investors and accelerators that backed the company, with how it is usually written. */
+    backers: { name: string; label: string }[];
     blurb: string;
     roles: CvRole[];
   }[];
