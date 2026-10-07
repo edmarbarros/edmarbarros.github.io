@@ -6,7 +6,7 @@ const doc = (over: Partial<SearchDoc>): SearchDoc => ({
   title: 't',
   url: 'https://x/t',
   summary: 's',
-  title_: 't',
+  searchTitle: 't',
   tags: '',
   text: '',
   ...over,
@@ -23,10 +23,10 @@ describe('tokenize', () => {
 
 describe('search', () => {
   const docs = [
-    doc({ title: 'Body only', title_: 'Body only', text: 'we use kafka here' }),
-    doc({ title: 'Title hit', title_: 'Kafka deep dive', text: 'nothing' }),
-    doc({ title: 'Tag hit', title_: 'Other', tags: 'kafka', text: '' }),
-    doc({ title: 'No match', title_: 'Other', text: 'redis' }),
+    doc({ title: 'Body only', searchTitle: 'Body only', text: 'we use kafka here' }),
+    doc({ title: 'Title hit', searchTitle: 'Kafka deep dive', text: 'nothing' }),
+    doc({ title: 'Tag hit', searchTitle: 'Other', tags: 'kafka', text: '' }),
+    doc({ title: 'No match', searchTitle: 'Other', text: 'redis' }),
   ];
 
   it('ranks title above tag above body', () => {

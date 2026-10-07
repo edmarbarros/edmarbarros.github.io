@@ -1,17 +1,26 @@
+// Types ---------------------------------------------------------------------
+
+export const SEARCH_DOC_TYPES = ['post', 'project', 'experience', 'skill'] as const;
+export type SearchDocType = (typeof SEARCH_DOC_TYPES)[number];
+
+/** One thing that can be found: what to match on, and what to show when it is. */
 export interface SearchDoc {
-  type: 'post' | 'project' | 'experience' | 'skill';
+  type: SearchDocType;
+  /** Shown to the reader. */
   title: string;
   url: string;
-  /** Short description shown with the hit. */
+  /** Shown when there is no better snippet. */
   summary: string;
-  /** Fields searched, in descending weight. */
-  title_: string;
+  /** Matched with the highest weight: the title, plus any aliases. */
+  searchTitle: string;
+  /** Matched with medium weight, space separated: tags or tech stack. */
   tags: string;
+  /** Matched with the lowest weight, and the source of snippets. */
   text: string;
 }
 
 export interface SearchHit {
-  type: SearchDoc['type'];
+  type: SearchDocType;
   title: string;
   url: string;
   summary: string;
@@ -19,8 +28,19 @@ export interface SearchHit {
   snippet: string;
 }
 
-const WEIGHTS = { title_: 8, tags: 5, text: 1 } as const;
+// Constants -----------------------------------------------------------------
 
+/** How much one occurrence counts in each searchable field. */
+const WEIGHTS = { searchTitle: 8, tags: 5, text: 1 } as const;
+type SearchField = keyof typeof WEIGHTS;
+const SEARCH_FIELDS = Object.keys(WEIGHTS) as SearchField[];
+
+/** Characters kept on each side of a match when cutting a snippet. */
+const SNIPPET_RADIUS = 80;
+
+// Helpers -------------------------------------------------------------------
+
+/** Lowercase words, keeping tech punctuation such as node.js and c#. */
 export function tokenize(query: string): string[] {
   return query
     .toLowerCase()
@@ -39,11 +59,11 @@ function countOccurrences(haystack: string, needle: string): number {
   }
 }
 
-function snippetAround(text: string, term: string, radius = 80): string {
+function snippetAround(text: string, term: string): string {
   const i = text.toLowerCase().indexOf(term);
   if (i === -1) return '';
-  const start = Math.max(0, i - radius);
-  const end = Math.min(text.length, i + term.length + radius);
+  const start = Math.max(0, i - SNIPPET_RADIUS);
+  const end = Math.min(text.length, i + term.length + SNIPPET_RADIUS);
   const body = text.slice(start, end).replace(/\s+/g, ' ').trim();
   return `${start > 0 ? '…' : ''}${body}${end < text.length ? '…' : ''}`;
 }
@@ -54,6 +74,39 @@ function tagSnippet(tags: string, terms: string[]): string {
   return terms.some((t) => lower.includes(t)) ? `Tech: ${tags.split(' ').join(', ')}` : '';
 }
 
+/** The weighted score for a document, or null when any search word is missing. */
+function scoreDoc(doc: SearchDoc, terms: string[]): number | null {
+  const fields: Record<SearchField, string> = {
+    searchTitle: doc.searchTitle.toLowerCase(),
+    tags: doc.tags.toLowerCase(),
+    text: doc.text.toLowerCase(),
+  };
+  let score = 0;
+  for (const term of terms) {
+    let termScore = 0;
+    for (const field of SEARCH_FIELDS) {
+      termScore += countOccurrences(fields[field], term) * WEIGHTS[field];
+    }
+    // Every term must appear somewhere, so multi-word queries stay precise.
+    if (termScore === 0) return null;
+    score += termScore;
+  }
+  return score;
+}
+
+function toHit(doc: SearchDoc, terms: string[], score: number): SearchHit {
+  return {
+    type: doc.type,
+    title: doc.title,
+    url: doc.url,
+    summary: doc.summary,
+    score,
+    snippet: snippetAround(doc.text, terms[0]!) || tagSnippet(doc.tags, terms) || doc.summary,
+  };
+}
+
+// Search --------------------------------------------------------------------
+
 /** Plain term-frequency search. The corpus is tiny, so no index is needed. */
 export function search(docs: SearchDoc[], query: string, limit: number): SearchHit[] {
   const terms = tokenize(query);
@@ -61,33 +114,8 @@ export function search(docs: SearchDoc[], query: string, limit: number): SearchH
 
   const hits: SearchHit[] = [];
   for (const doc of docs) {
-    const fields = {
-      title_: doc.title_.toLowerCase(),
-      tags: doc.tags.toLowerCase(),
-      text: doc.text.toLowerCase(),
-    };
-    let score = 0;
-    let matchedTerms = 0;
-    for (const term of terms) {
-      let termScore = 0;
-      for (const key of Object.keys(WEIGHTS) as (keyof typeof WEIGHTS)[]) {
-        termScore += countOccurrences(fields[key], term) * WEIGHTS[key];
-      }
-      if (termScore > 0) matchedTerms++;
-      score += termScore;
-    }
-    // Every term must appear somewhere, so multi-word queries stay precise.
-    if (matchedTerms < terms.length) continue;
-
-    const firstTerm = terms[0] as string;
-    hits.push({
-      type: doc.type,
-      title: doc.title,
-      url: doc.url,
-      summary: doc.summary,
-      score,
-      snippet: snippetAround(doc.text, firstTerm) || tagSnippet(doc.tags, terms) || doc.summary,
-    });
+    const score = scoreDoc(doc, terms);
+    if (score !== null) hits.push(toHit(doc, terms, score));
   }
   return hits.sort((a, b) => b.score - a.score).slice(0, limit);
 }
