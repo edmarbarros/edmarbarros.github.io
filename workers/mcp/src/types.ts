@@ -108,6 +108,8 @@ export interface SkillSummary {
   proof_count: number;
   proof: string[];
   listed_only: boolean;
+  /** How well the CV evidences it. A fact about the data, not a claim of proficiency. */
+  evidence: { tier: 'extensive' | 'solid' | 'limited' | 'achievements' | 'none'; label: string };
   api: string;
 }
 
@@ -118,11 +120,14 @@ export interface SkillRole {
   startMonth: string;
   endMonth: string;
   used: string[];
+  /** Headline achievements of the same role. Not specific to this skill. */
+  highlights: string[];
 }
 
 export interface SkillFull extends SkillSummary {
   roles: SkillRole[];
   basis: string | null;
+  highlights_note: string;
 }
 
 export interface SkillsList extends ListResponse<SkillSummary> {

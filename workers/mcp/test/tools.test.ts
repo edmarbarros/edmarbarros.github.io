@@ -164,7 +164,7 @@ describe('site_list_skills', () => {
     const { text, data } = await call('site_list_skills');
     expect(text).toContain('## Data & databases');
     expect(text).toContain(
-      '**SQL** [sql]: about 7.7 years across 6 roles, January 2019 – October 2026; 2 achievements',
+      '**SQL** [sql]: Extensive evidence; about 7.7 years across 6 roles, January 2019 – October 2026; 2 achievements',
     );
     expect(text).toContain('level: Strong');
     expect(text).toContain('listed on the CV, no role or achievement attached yet');
@@ -195,6 +195,20 @@ describe('site_get_skill', () => {
     expect(text).toContain('- Redesigned the MySQL data model');
     expect(text).toContain('A lower bound.');
   });
+  it('shows the evidence label, and no role context when there is proof', async () => {
+    const { text } = await call('site_get_skill', { name: 'SQL' });
+    expect(text).toContain('Evidence: Extensive evidence.');
+    expect(text).not.toContain('same roles');
+  });
+  it('shows labelled role achievements when no achievement is tied to the skill', async () => {
+    const { text } = await call('site_get_skill', { name: 'postgres' });
+    expect(text).toContain('Evidence: Extensive evidence.');
+    expect(text).toContain(
+      'Headline achievements from the same roles. They are not specific to this skill.',
+    );
+    expect(text).toContain('- Quander: Opened self-serve revenue; Launched a new ad channel');
+    expect(text).not.toContain('Proof:');
+  });
   it('resolves aliases and shows a stated level', async () => {
     expect((await call('site_get_skill', { name: 'Postgres' })).text).toContain('# PostgreSQL');
     const k8s = await call('site_get_skill', { name: 'k8s' });
@@ -205,6 +219,7 @@ describe('site_get_skill', () => {
     const { text, isError } = await call('site_get_skill', { name: 'java' });
     expect(isError).toBe(false);
     expect(text).toContain('Experience: none attached yet');
+    expect(text).toContain('Evidence: No evidence attached yet.');
   });
   it('explains skills proven by achievements rather than a tech list', async () => {
     const { text } = await call('site_get_skill', { name: 'system design' });
@@ -230,6 +245,7 @@ describe('site_get_skill', () => {
     expect(text).toContain('Usado em:');
     expect(text).toContain('Evidências:');
     expect(text).toContain('Nível: não informado');
+    expect(text).toContain('Evidência: Evidência extensa.');
   });
 });
 

@@ -372,3 +372,44 @@ export const skills: Skill[] = [
     ],
   },
 ];
+
+// Evidence ---------------------------------------------------------------------
+
+/**
+ * How well the CV evidences a skill. This is a fact about the data, not a claim of
+ * proficiency: it only measures how long and in how many roles a skill appears in the
+ * tech lists. The self-assessed `level` stays separate.
+ */
+export type EvidenceTier = 'extensive' | 'solid' | 'limited' | 'achievements' | 'none';
+
+export const EVIDENCE_RULE = {
+  extensiveMinYears: 4,
+  extensiveMinRoles: 3,
+  solidMinYears: 2,
+} as const;
+
+export const evidenceLabels: Record<EvidenceTier, Bilingual> = {
+  extensive: { en: 'Extensive evidence', pt: 'Evidência extensa' },
+  solid: { en: 'Solid evidence', pt: 'Evidência sólida' },
+  limited: { en: 'Limited evidence', pt: 'Evidência limitada' },
+  achievements: { en: 'Shown through achievements', pt: 'Demonstrada por conquistas' },
+  none: { en: 'No evidence attached yet', pt: 'Sem evidência associada ainda' },
+};
+
+export const evidenceRuleText: Bilingual = {
+  en: `Evidence label: extensive means ${EVIDENCE_RULE.extensiveMinYears}+ years across ${EVIDENCE_RULE.extensiveMinRoles}+ roles, solid means ${EVIDENCE_RULE.solidMinYears}+ years, limited means less. It measures how long a skill appears in the tech lists, not depth, so achievements matter more than the label.`,
+  pt: `Rótulo de evidência: extensa significa ${EVIDENCE_RULE.extensiveMinYears}+ anos em ${EVIDENCE_RULE.extensiveMinRoles}+ cargos, sólida significa ${EVIDENCE_RULE.solidMinYears}+ anos, limitada significa menos. Mede por quanto tempo a habilidade aparece nas listas de tecnologias, não a profundidade, então as conquistas valem mais que o rótulo.`,
+};
+
+export function evidenceTier(input: {
+  years: number | null;
+  roles: number;
+  proofCount: number;
+}): EvidenceTier {
+  const { years, roles, proofCount } = input;
+  if (years === null) return proofCount > 0 ? 'achievements' : 'none';
+  if (years >= EVIDENCE_RULE.extensiveMinYears && roles >= EVIDENCE_RULE.extensiveMinRoles) {
+    return 'extensive';
+  }
+  return years >= EVIDENCE_RULE.solidMinYears ? 'solid' : 'limited';
+}

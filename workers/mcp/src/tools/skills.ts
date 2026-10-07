@@ -34,10 +34,14 @@ const getSkillInput = {
 const byExperience = (a: SkillSummary, b: SkillSummary) =>
   (b.years ?? -1) - (a.years ?? -1) || b.proof_count - a.proof_count;
 
+/** Tiers that say something about how long a skill was used; the others are covered by their own text. */
+const MEASURED_TIERS = new Set<SkillSummary['evidence']['tier']>(['extensive', 'solid', 'limited']);
+
 function skillLine(s: SkillSummary, lang: Lang): string {
   const t = SKILL_LABELS[lang];
   const parts = [
     s.level_label ? `${t.listLevel}: ${s.level_label}` : '',
+    MEASURED_TIERS.has(s.evidence.tier) ? s.evidence.label : '',
     formatSkillExperience(s, lang),
     s.proof_count ? formatCount(lang, s.proof_count, t.achievements) : '',
     s.listed_only ? t.listOnly : '',
@@ -59,6 +63,7 @@ function formatSkillDetail(detail: SkillFull, lang: Lang): string {
   const lines = [`# ${detail.name}`, detail.group_label, ''];
 
   lines.push(`${t.level}: ${detail.level_label ?? t.levelNotStated}`);
+  lines.push(`${t.evidence}: ${detail.evidence.label}.`);
 
   const experience = formatSkillExperience(detail, lang);
   if (experience) lines.push(`${t.experience}: ${experience}.`);
@@ -76,6 +81,13 @@ function formatSkillDetail(detail: SkillFull, lang: Lang): string {
   if (detail.proof.length > 0) {
     lines.push('', `${t.proof}:`);
     for (const p of detail.proof) lines.push(`- ${p}`);
+  } else {
+    // No achievement is tied to this skill, so show what the same roles achieved, labelled as context.
+    const context = detail.roles.filter((r) => r.highlights.length > 0);
+    if (context.length > 0) {
+      lines.push('', detail.highlights_note);
+      for (const r of context) lines.push(`- ${r.company}: ${r.highlights.join('; ')}`);
+    }
   }
   return lines.join('\n');
 }

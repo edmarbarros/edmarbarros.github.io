@@ -25,10 +25,7 @@ const listProjectsInput = {
 
 const getProjectInput = {
   slug: slugField,
-  kind: z
-    .enum(PROJECT_KINDS)
-    .optional()
-    .describe('Disambiguate when a slug exists in both kinds.'),
+  kind: z.enum(PROJECT_KINDS).optional().describe('Disambiguate when a slug exists in both kinds.'),
   lang: langField,
 };
 
