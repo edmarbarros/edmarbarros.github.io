@@ -53,6 +53,39 @@ describe('search', () => {
     expect(hit?.snippet).toBe('Tech: kafka');
   });
 
+  describe('very short terms', () => {
+    const shortDocs = [
+      doc({
+        title: 'Backer',
+        searchTitle: 'Vendoo YC W22',
+        text: 'Backed by Y Combinator (YC W22).',
+      }),
+      doc({
+        title: 'Cycles',
+        searchTitle: 'Other',
+        text: 'Shorter delivery cycles and async work.',
+      }),
+      doc({ title: 'Email', searchTitle: 'Other', text: 'Sends email to maintain contact.' }),
+      doc({ title: 'Agents', searchTitle: 'LLM and AI agents', text: 'Built AI tools.' }),
+    ];
+    it('match whole words only, so yc does not find cycles', () => {
+      expect(search(shortDocs, 'yc', 10).map((h) => h.title)).toEqual(['Backer']);
+    });
+    it('match whole words only, so ai does not find email or maintain', () => {
+      expect(search(shortDocs, 'ai', 10).map((h) => h.title)).toEqual(['Agents']);
+    });
+    it('still match inside longer words for three letters and up, so sql finds PostgreSQL', () => {
+      const docs = [
+        doc({ title: 'Pg', searchTitle: 'Other', text: 'Ran PostgreSQL in production.' }),
+      ];
+      expect(search(docs, 'sql', 10)).toHaveLength(1);
+    });
+    it('cut the snippet at the whole word', () => {
+      const [hit] = search(shortDocs, 'yc', 1);
+      expect(hit!.snippet).toBe('Backed by Y Combinator (YC W22).');
+    });
+  });
+
   it('returns nothing for an empty query', () => {
     expect(search(docs, ' ! ', 10)).toEqual([]);
   });
