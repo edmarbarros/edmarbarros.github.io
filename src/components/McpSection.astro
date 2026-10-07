@@ -11,6 +11,8 @@ const t = getUIStrings(lang).mcp;
 
 const url = SITE_CONFIG.mcpEndpoint;
 const name = 'edmarbarros';
+// The post about how this server was built, one per language.
+const postHref = lang === 'pt' ? '/pt/blog/site-como-mcp' : '/blog/site-as-mcp';
 
 const cursorConfig = JSON.stringify({ mcpServers: { [name]: { url } } }, null, 2);
 const vscodeConfig = JSON.stringify({ servers: { [name]: { type: 'http', url } } }, null, 2);
@@ -88,6 +90,8 @@ const clients: { name: string; text?: string; code?: string }[] = [
         </div>
         <p class="text-sm text-muted mt-3">{t.other}</p>
       </div>
+
+      <p class="text-sm"><a href={postHref}>{t.readMore} →</a></p>
     </div>
   </details>
 </section>

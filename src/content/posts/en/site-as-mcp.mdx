@@ -1,0 +1,102 @@
+---
+title: 'How I turned this site into an MCP'
+publishedAt: 2026-10-07
+summary: "A static Astro site can't run a server, so I exported its content as JSON and put a small Cloudflare Worker in front of it. Now any AI assistant can answer questions about my CV, projects and writing."
+tags:
+  - mcp
+  - cloudflare
+  - astro
+  - ai
+translationKey: site-as-mcp
+draft: false
+---
+
+You can now connect an AI assistant to this site and ask it about my experience, skills, projects and writing. It answers from the same content you can read here, in English or Portuguese. This post covers how it works and what went wrong along the way.
+
+## Why
+
+The site is a static Astro site on GitHub Pages. My CV, projects and posts live in the repository. I wanted an assistant to answer from that content directly, instead of from whatever a model remembers about me or from a PDF it has to parse.
+
+MCP, the Model Context Protocol, is the open standard for connecting assistants to tools and data. An MCP server exposes a set of tools, and any compatible client can discover and call them.
+
+## The constraint
+
+GitHub Pages serves files, not code, and an MCP server has to run somewhere. The content is also MDX, which only renders inside Astro, so a separate worker can't read the repository at request time.
+
+That pushed me to split the job in two: export the content as JSON at build time, then serve it through a small worker.
+
+## Step 1: export the content as JSON
+
+Astro supports static file endpoints. Any file under `src/pages` that exports a `GET` function runs once at build and its response is written to disk as a plain file. The RSS feed already worked this way.
+
+```ts
+// src/pages/api/[lang]/posts.json.ts
+export const getStaticPaths = localePaths;
+
+export async function GET({ params, site }: APIContext) {
+  const lang = params.lang as Locale;
+  const posts = await getPosts(lang);
+  return json({
+    lang,
+    count: posts.length,
+    items: posts.map((p) => postSummaryJson(p, lang, site)),
+  });
+}
+```
+
+There are endpoints for posts, projects and the CV in both languages, plus a discovery document at `/api/index.json`. Drafts stay out because the existing content helpers already filter them. Post and project bodies are exported as raw markdown, which is what a model wants to read.
+
+## Step 2: a small worker
+
+I already had a Cloudflare Worker for the contact form on `api.edmarbarros.com`, so the MCP server went on the same host at `/mcp`. It is stateless. Every request builds a fresh server and transport and answers with plain JSON, with no sessions and no streaming.
+
+```ts
+const server = createServer(env, ctx);
+const transport = new WebStandardStreamableHTTPServerTransport({
+  sessionIdGenerator: undefined,
+  enableJsonResponse: true,
+});
+await server.connect(transport);
+return transport.handleRequest(request);
+```
+
+The tools read the JSON files from the live site through the Cloudflare edge cache. Entries live for five minutes, so a site deploy shows up without redeploying the worker.
+
+There are eleven tools. Ten are read-only: a help guide, a profile overview, the CV, skills with evidence, list posts, get a post, list projects, get a project, and search. The eleventh drafts a message to me, which I explain below. Search is deliberately simple. The corpus is tiny, so there is no index. It counts term matches, requires every word to match, and weighs titles above tags above body text.
+
+Errors are written for the model that will read them. Asking for a post that doesn't exist returns the list of valid slugs, so the assistant can correct itself instead of giving up.
+
+## Testing
+
+The two workers have more than 150 tests between them. Search and the data layer have unit tests with stubbed fetch and cache. The tools are exercised through a real MCP client over an in-memory transport, and the HTTP handler is tested with real requests. The fixtures mirror the shape of the static export.
+
+## Four things that bit me
+
+- **A shared array in Astro.** Returning the same array from `getStaticPaths` in several routes failed the build with `NoMatchingStaticPathFound`. A function that returns a fresh array fixed it.
+- **A request size cap I could bypass.** My first version checked the `Content-Length` header. That header can be missing or wrong on chunked uploads. The worker now counts bytes while reading the body and stops at 64 KB.
+- **A test setup that ran my mock.** `beforeEach(() => stubSite())` returned the mock, and Vitest treats a returned function as a teardown and calls it with no arguments. Wrapping the call in braces fixed it.
+- **A route that ignored query strings.** Cloudflare matches a route pattern against the whole URL and a pattern can't contain a query, so `api.edmarbarros.com/contact` never matched `/contact?draft=...`. The request skipped the worker and timed out with a 522 in production, while every unit test passed, because unit tests call the worker directly and never see routing. A trailing wildcard fixed it, and a test on the config now fails if a route lacks one.
+
+## What a real conversation showed
+
+The first time I used the server from a real assistant, it exposed gaps in my data rather than in the code. My latest role was missing from the project list. My skills had no years or proof behind them, so when asked about SQL the assistant had to infer an answer from my work history. And nothing said whether I was available.
+
+I fixed the first two. My latest role now has a write-up, and each skill shows how long and where I used it, computed from my CV, plus the achievements that prove it. Asking about SQL returns about 7.7 years across six roles and two concrete results instead of a guess. What the data still doesn't hold is my own level for each skill and whether I'm available, and the server says so instead of guessing.
+
+## Try it
+
+The server is public and needs no sign-in. Everything it returns is already on this site. Requests are capped at 64 KB.
+
+One tool writes, and it is the one I thought about longest. `site_draft_message` helps a visitor contact me. My contact form proves a human is present with Turnstile, which an assistant can't pass, so letting an assistant send email directly would have meant skipping that check for anyone who knows the URL. Instead the tool only saves a draft, through a private service binding to the contact worker, and returns a link to my contact page. The person opens it, reviews the message, passes Turnstile and presses Send on the normal form. A draft works once, expires after 30 minutes, and is limited to 5 per hour per address and 50 a day overall, so the form is still the only way into my inbox.
+
+The URL is `https://api.edmarbarros.com/mcp`. In Claude Code:
+
+```bash
+claude mcp add --transport http edmarbarros https://api.edmarbarros.com/mcp
+```
+
+The home page lists setup steps for Claude, ChatGPT, Cursor, VS Code, Gemini CLI and Codex CLI. One caveat for ChatGPT: its deep research mode only uses servers that expose tools named `search` and `fetch`, so it won't call mine yet.
+
+Clients that support MCP prompts, such as Claude Code, also get four ready-made starting points: `overview`, `skills-check`, `role-fit` and `help`, which lists what to ask. In Claude Code they run as commands such as `/edmarbarros:overview`. The last one takes a pasted job description and matches each requirement to evidence on the site, saying where I don't fit.
+
+Try asking for a short overview of me, what I built at Quander, or which of my projects used Kafka.

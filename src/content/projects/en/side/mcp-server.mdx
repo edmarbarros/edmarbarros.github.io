@@ -1,0 +1,43 @@
+---
+title: 'MCP server for this site'
+kind: side
+period: 'Oct 2026'
+summary: 'A public MCP server that lets an AI assistant answer questions about my CV, skills with evidence, projects and writing in English and Portuguese, and draft a message to me that reaches my inbox only through my contact form.'
+stack:
+  - TypeScript
+  - Cloudflare Workers
+  - MCP
+  - Astro
+  - Zod
+  - Vitest
+repo: 'https://github.com/edmarbarros/edmarbarros.github.io'
+order: 120
+featured: true
+---
+
+## Problem
+
+A CV is a flat document. A recruiter, or their AI assistant, has to guess how deep each skill goes and what proves it. I wanted an assistant to answer from the evidence behind my work, with no sign-in, and without running a server for a static site on GitHub Pages.
+
+## What I built
+
+- **A static JSON export.** Astro endpoints write posts, projects, the CV and skills as JSON at build time, in both languages. Drafts stay out.
+- **A stateless Cloudflare Worker at `/mcp`.** TypeScript on the MCP SDK's streamable HTTP transport in JSON mode. Each request gets a fresh server, there are no sessions, and the body is capped at 64 KB. It reads the JSON through the edge cache, so a site deploy shows up within five minutes without redeploying the worker.
+- **Eleven tools and four prompts.** Tools cover the profile, CV, skills with evidence, projects, posts, search, a help guide and drafting a message. The prompts give a recruiter overview, a skill check, and a role-fit assessment that matches each requirement to evidence and states the gaps.
+- **Evidence for skills, not ratings.** Years and roles are computed from the tech lists in my CV, and achievements are the proof. A level appears only once I set it, and the answer says "not stated" instead of guessing, because a missing level is not a low level.
+- **Contact without bypassing Turnstile.** An assistant can't pass Turnstile. The tool saves a short-lived draft through a private service binding and returns a link. The person reviews the message and sends it through the normal form, so the form stays the only way into my inbox.
+- **English and Portuguese.** Month names, plurals, numbers and lists come from the runtime's `Intl`, with no hand-written translation tables.
+
+## Outcomes
+
+- Live at `api.edmarbarros.com/mcp`: public, read-only apart from drafting a message, and no sign-in.
+- Setup steps for seven clients are on the home page. I have tested it from Claude Code.
+- More than 150 tests across the MCP and contact workers, including one that runs both workers together from a draft to a delivered email.
+- The help guide is generated from one file, and tests fail if it drifts from the real tools and prompts.
+
+## What I learned
+
+- **Routes match the whole URL.** My Cloudflare route patterns had no trailing wildcard, so a link with `?draft=` skipped the worker and timed out with a 522 in production, while every unit test passed. Unit tests call the worker directly and never see routing. A test on the config now catches it.
+- **A size cap from `Content-Length` can be bypassed.** The header can be missing or wrong on chunked uploads. The worker now counts bytes while it reads.
+- **A permission prompt in the chat is not a human check.** The server can't verify that the prompt happened, and anyone can call the URL directly. The check has to live where the server can verify it, which meant sending the person to the form.
+- **Use it the way your reader will.** The gaps showed up only when I asked an assistant about myself: my latest role was missing, and skills had no proof behind them.
