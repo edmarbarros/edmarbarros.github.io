@@ -1,5 +1,5 @@
 import type { Locale } from '../i18n';
-import { cv, type Bilingual } from '../data/cv';
+import { backerLabel, cv, type Bilingual } from '../data/cv';
 import { formatPeriod, monthIndex } from '../data/duration';
 import {
   evidenceLabels,
@@ -105,6 +105,7 @@ export function cvJson(lang: Locale, site: URL | undefined) {
       company: c.company,
       location: c.location,
       url: c.url ?? null,
+      backers: (c.backers ?? []).map((b) => ({ name: b.name, label: backerLabel(b) })),
       blurb: c.blurb[lang],
       roles: c.roles.map((r) => ({
         role: r.role[lang],

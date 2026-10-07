@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { Locale } from '../i18n';
-import { cv } from '../data/cv';
+import { backerLabel, cv } from '../data/cv';
 import { formatPeriod, formatDuration, companyRange } from '../data/duration';
 import photo from '../assets/edmar.jpg';
 
@@ -11,6 +11,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const downloadLabel = lang === 'en' ? 'Download PDF' : 'Baixar PDF';
+const backedBy = lang === 'en' ? 'Backed by' : 'Apoiada por';
 const headings = {
   experience: lang === 'en' ? 'Experience' : 'Experiência',
   education: lang === 'en' ? 'Education' : 'Formação',
@@ -84,6 +85,14 @@ const headings = {
               ) : (
                 <span>{company.company}</span>
               )}
+              {company.backers?.map((b) => (
+                <span
+                  class="ml-2 align-middle font-sans text-xs font-normal text-muted border border-border px-2 py-0.5 rounded"
+                  title={`${backedBy} ${b.name}`}
+                >
+                  {backerLabel(b)}
+                </span>
+              ))}
             </h3>
             <p class="text-sm text-muted max-w-prose">{company.blurb[lang]}</p>
             <p class="text-sm text-muted">{total} · {company.location}</p>

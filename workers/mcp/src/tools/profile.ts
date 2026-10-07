@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { backedBy } from '../backers';
 import { getCv } from '../data';
 import { LANG_VALUES } from '../languages';
 import type { Cv } from '../types';
@@ -31,6 +32,8 @@ function cvMarkdown(cv: Cv, sections: ReadonlySet<string>): string {
     out.push('', '## Experience');
     for (const c of cv.experience) {
       out.push('', `### ${c.company}${c.url ? ` (${c.url})` : ''}`, c.blurb);
+      const backers = backedBy(c.backers);
+      if (backers) out.push(backers);
       for (const r of c.roles) {
         out.push('', `**${r.role}**, ${r.period}`);
         for (const b of r.bullets) out.push(`- ${b}`);

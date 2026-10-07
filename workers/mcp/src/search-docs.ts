@@ -1,4 +1,5 @@
 import { getCv, getPost, getProject, listPosts, listProjects, listSkills } from './data';
+import { backedBy, backerWords } from './backers';
 import { formatSkillExperience } from './i18n';
 import type { Lang } from './languages';
 import type { SearchDoc } from './search';
@@ -40,9 +41,9 @@ export function buildSearchDocs({ lang, posts, projects, cv, skills }: SearchSou
         title: `${r.role} at ${c.company}`,
         url: cv.url,
         summary: `${r.period}. ${c.blurb}`,
-        searchTitle: `${r.role} ${c.company}`,
+        searchTitle: `${r.role} ${c.company} ${backerWords(c.backers)}`,
         tags: r.stack.join(' '),
-        text: `${c.blurb}\n${r.bullets.join('\n')}`,
+        text: `${c.blurb}\n${backedBy(c.backers)}\n${r.bullets.join('\n')}`,
       })),
     ),
     ...skills.map((s) => ({
