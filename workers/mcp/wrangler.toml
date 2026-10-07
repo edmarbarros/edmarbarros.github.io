@@ -13,3 +13,9 @@ zone_name = "edmarbarros.com"
 SITE_URL = "https://edmarbarros.com"
 # Seconds a fetched JSON file stays in the Cloudflare cache.
 CACHE_TTL = "300"
+
+# Private link to the contact worker, used by the site_draft_message tool.
+# Deploy the contact worker first: this binding needs it to exist.
+[[services]]
+binding = "CONTACT"
+service = "contact"

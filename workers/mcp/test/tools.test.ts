@@ -32,7 +32,7 @@ afterEach(() => {
 });
 
 describe('tool catalogue', () => {
-  it('exposes ten read-only tools with the site_ prefix', async () => {
+  it('exposes eleven tools with the site_ prefix, ten of them read-only', async () => {
     const { tools } = await client.listTools();
     expect(tools.map((t) => t.name).sort()).toEqual(
       [
@@ -46,9 +46,10 @@ describe('tool catalogue', () => {
         'site_list_skills',
         'site_get_skill',
         'site_search',
+        'site_draft_message',
       ].sort(),
     );
-    for (const t of tools) {
+    for (const t of tools.filter((t) => t.name !== 'site_draft_message')) {
       expect(t.annotations?.readOnlyHint).toBe(true);
       expect(t.description?.length).toBeGreaterThan(20);
     }

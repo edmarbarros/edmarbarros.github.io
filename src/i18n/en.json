@@ -28,7 +28,7 @@
   },
   "mcp": {
     "title": "Chat with me via MCP",
-    "intro": "Connect an AI assistant to this site and ask it about my experience, skills, projects and writing. It answers from the same content you see here, in English or Portuguese. It is read-only and needs no sign-in.",
+    "intro": "Connect an AI assistant to this site and ask it about my experience, skills, projects and writing. It answers from the same content you see here, in English or Portuguese. It needs no sign-in and only reads this site. It can also draft a message to me, which you review and send yourself on my contact page.",
     "endpoint": "Server URL",
     "copy": "Copy",
     "copied": "Copied",

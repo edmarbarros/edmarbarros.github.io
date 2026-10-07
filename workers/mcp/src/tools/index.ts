@@ -1,5 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { Env } from '../types';
+import { registerContactTools } from './contact';
 import { registerHelpTools } from './help';
 import { registerPostTools } from './posts';
 import { registerProfileTools } from './profile';
@@ -15,4 +16,5 @@ export function registerTools(server: McpServer, env: Env, ctx?: ExecutionContex
   registerPostTools(deps);
   registerProjectTools(deps);
   registerSearchTools(deps);
+  registerContactTools(deps);
 }
