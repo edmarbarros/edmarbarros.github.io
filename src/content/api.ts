@@ -1,7 +1,15 @@
 import type { Locale } from '../i18n';
 import { cv, type Bilingual } from '../data/cv';
 import { formatPeriod, monthIndex } from '../data/duration';
-import { skillGroupLabels, skillLevelLabels, skills, type Skill } from '../data/skills';
+import {
+  evidenceLabels,
+  evidenceRuleText,
+  evidenceTier,
+  skillGroupLabels,
+  skillLevelLabels,
+  skills,
+  type Skill,
+} from '../data/skills';
 import { postSlug, postUrl, projectSlug, type PostEntry, type ProjectEntry } from './helpers';
 
 /** Build a JSON response for a static endpoint. */
@@ -130,6 +138,15 @@ export function cvJson(lang: Locale, site: URL | undefined) {
   };
 }
 
+/** How many of a role's achievements to show as context for a skill. */
+const MAX_HIGHLIGHTS = 3;
+
+/** CV bullets read 'Headline: detail'. The headline is the outcome. */
+const headline = (bullet: string) => {
+  const cut = bullet.indexOf(': ');
+  return cut > 0 && cut < 100 ? bullet.slice(0, cut) : bullet;
+};
+
 /** Roles whose tech list names this skill, with the union of months across them. */
 function skillEvidence(skill: Skill, lang: Locale) {
   if (skill.matches.length === 0) return null;
@@ -146,6 +163,7 @@ function skillEvidence(skill: Skill, lang: Locale) {
           startMonth: r.startMonth,
           endMonth: r.endMonth,
           used,
+          highlights: r.bullets[lang].slice(0, MAX_HIGHLIGHTS).map(headline),
         },
       ];
     }),
@@ -174,6 +192,11 @@ function skillEvidence(skill: Skill, lang: Locale) {
 
 export function skillSummaryJson(skill: Skill, lang: Locale, site: URL | undefined) {
   const evidence = skillEvidence(skill, lang);
+  const tier = evidenceTier({
+    years: evidence?.years ?? null,
+    roles: evidence?.roles_count ?? 0,
+    proofCount: skill.proof.length,
+  });
   return {
     id: skill.id,
     name: skill.name,
@@ -191,6 +214,10 @@ export function skillSummaryJson(skill: Skill, lang: Locale, site: URL | undefin
     proof: skill.proof.map((p) => p[lang]),
     // Listed on the CV but with no role or achievement attached to it yet.
     listed_only: !evidence && skill.proof.length === 0,
+    evidence: {
+      tier,
+      label: evidenceLabels[tier][lang],
+    },
     api: absoluteUrl(`/api/${lang}/skills/${skill.id}.json`, site),
   };
 }
@@ -200,6 +227,10 @@ export function skillFullJson(skill: Skill, lang: Locale, site: URL | undefined)
   return {
     ...skillSummaryJson(skill, lang, site),
     roles: evidence?.roles ?? [],
+    highlights_note:
+      lang === 'en'
+        ? 'Headline achievements from the same roles. They are not specific to this skill.'
+        : 'Principais conquistas dos mesmos cargos. Não são específicas desta habilidade.',
     basis: evidence?.basis ?? null,
   };
 }
@@ -209,10 +240,11 @@ export function skillsListJson(lang: Locale, site: URL | undefined) {
   return {
     lang,
     count: items.length,
-    note:
+    note: `${
       lang === 'en'
         ? 'Years and roles are computed from the CV. A level appears only once it has been stated, so a missing level means not stated, not low.'
-        : 'Anos e cargos são calculados a partir do CV. O nível só aparece depois de informado, então nível ausente significa não informado, não baixo.',
+        : 'Anos e cargos são calculados a partir do CV. O nível só aparece depois de informado, então nível ausente significa não informado, não baixo.'
+    } ${evidenceRuleText[lang]}`,
     items,
   };
 }

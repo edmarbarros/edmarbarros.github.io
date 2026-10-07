@@ -75,6 +75,7 @@ export function formatList(lang: Lang, items: string[]): string {
 
 interface SkillLabels {
   level: string;
+  evidence: string;
   levelNotStated: string;
   experience: string;
   viaAchievements: string;
@@ -94,6 +95,7 @@ interface SkillLabels {
 export const SKILL_LABELS: Record<Lang, SkillLabels> = {
   [LANGUAGES.EN]: {
     level: 'Level',
+    evidence: 'Evidence',
     levelNotStated:
       'not stated. A missing level means it has not been self-assessed, not that it is low.',
     experience: 'Experience',
@@ -111,6 +113,7 @@ export const SKILL_LABELS: Record<Lang, SkillLabels> = {
   },
   [LANGUAGES.PT]: {
     level: 'Nível',
+    evidence: 'Evidência',
     levelNotStated:
       'não informado. Nível ausente significa que ainda não foi autoavaliado, não que seja baixo.',
     experience: 'Experiência',

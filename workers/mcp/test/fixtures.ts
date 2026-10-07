@@ -144,6 +144,7 @@ const skill = (over: Record<string, unknown>) => ({
   proof_count: 0,
   proof: [] as string[],
   listed_only: false,
+  evidence: { tier: 'none', label: 'No evidence attached yet' },
   api: 'https://site.test/api/en/skills/x.json',
   ...over,
 });
@@ -157,6 +158,7 @@ const skillRoles = {
       startMonth: '2026-05',
       endMonth: '2026-10',
       used: ['PostgreSQL'],
+      highlights: ['Opened self-serve revenue'],
     },
     {
       company: 'Citruslabs',
@@ -165,6 +167,18 @@ const skillRoles = {
       startMonth: '2019-01',
       endMonth: '2021-09',
       used: ['MySQL'],
+      highlights: ['Cut customer onboarding from 2 weeks to 1 day (93%)'],
+    },
+  ],
+  postgresql: [
+    {
+      company: 'Quander',
+      role: 'Senior Software Engineer',
+      period: 'May 2026 – Oct 2026',
+      startMonth: '2026-05',
+      endMonth: '2026-10',
+      used: ['PostgreSQL'],
+      highlights: ['Opened self-serve revenue', 'Launched a new ad channel'],
     },
   ],
 } as Record<string, unknown[]>;
@@ -184,6 +198,7 @@ export const skillsEn = [
       'Redesigned the MySQL data model, cutting onboarding from 2 weeks to 1 day.',
       'Built a BigQuery pipeline.',
     ],
+    evidence: { tier: 'extensive', label: 'Extensive evidence' },
   }),
   skill({
     id: 'postgresql',
@@ -194,6 +209,7 @@ export const skillsEn = [
     first_used: '2021-09',
     last_used: '2026-10',
     roles_count: 4,
+    evidence: { tier: 'extensive', label: 'Extensive evidence' },
   }),
   skill({
     id: 'kubernetes',
@@ -210,6 +226,7 @@ export const skillsEn = [
     roles_count: 1,
     proof_count: 1,
     proof: ['Owned the Kubernetes infrastructure through Terraform and Helm.'],
+    evidence: { tier: 'solid', label: 'Solid evidence' },
   }),
   skill({
     id: 'docker',
@@ -222,6 +239,7 @@ export const skillsEn = [
     first_used: '2019-01',
     last_used: '2026-10',
     roles_count: 5,
+    evidence: { tier: 'extensive', label: 'Extensive evidence' },
   }),
   skill({
     id: 'java',
@@ -238,6 +256,7 @@ export const skillsEn = [
     aliases: ['system design'],
     proof_count: 1,
     proof: ['Led the migration to event-driven microservices on Kafka.'],
+    evidence: { tier: 'achievements', label: 'Shown through achievements' },
   }),
 ];
 
@@ -253,6 +272,7 @@ export const skillsPt = [
     roles_count: 6,
     proof_count: 1,
     proof: ['Redesenhei o modelo de dados MySQL.'],
+    evidence: { tier: 'extensive', label: 'Evidência extensa' },
   }),
 ];
 
@@ -285,6 +305,10 @@ export function routes(): Record<string, unknown> {
         ...sk,
         roles: skillRoles[sk.id as string] ?? [],
         basis: skillRoles[sk.id as string] ? 'A lower bound.' : null,
+        highlights_note:
+          lang === 'en'
+            ? 'Headline achievements from the same roles. They are not specific to this skill.'
+            : 'Principais conquistas dos mesmos cargos. Não são específicas desta habilidade.',
       };
     }
   }
