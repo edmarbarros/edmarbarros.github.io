@@ -37,6 +37,7 @@ describe('/mcp endpoint', () => {
     const body = (await res.json()) as any;
     expect(body.result.serverInfo.name).toBe('edmarbarros-site');
     expect(body.result.capabilities.tools).toBeDefined();
+    expect(body.result.capabilities.prompts).toBeDefined();
     expect(res.headers.get('mcp-session-id')).toBeNull();
   });
 
@@ -44,6 +45,16 @@ describe('/mcp endpoint', () => {
     const res = await worker.fetch(rpc({ jsonrpc: '2.0', id: 2, method: 'tools/list' }), env);
     const body = (await res.json()) as any;
     expect(body.result.tools).toHaveLength(9);
+  });
+
+  it('lists the prompts over plain JSON', async () => {
+    const res = await worker.fetch(rpc({ jsonrpc: '2.0', id: 5, method: 'prompts/list' }), env);
+    const body = (await res.json()) as any;
+    expect(body.result.prompts.map((p: any) => p.name).sort()).toEqual([
+      'fit',
+      'overview',
+      'skill_check',
+    ]);
   });
 
   it('calls a tool end to end', async () => {
