@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { checkRateLimit } from '../src/rate-limit';
+import { checkLimit, checkRateLimit } from '../src/rate-limit';
 
 function fakeKV(initial: Record<string, string> = {}) {
   const store = new Map<string, string>(Object.entries(initial));
@@ -44,5 +44,15 @@ describe('checkRateLimit', () => {
     await checkRateLimit(kv as any, '1.2.3.4');
     const keys = [...kv.store.keys()];
     expect(keys).toContainEqual(expect.stringMatching(/^contact:1\.2\.3\.4$/));
+  });
+});
+
+describe('checkLimit', () => {
+  it('uses the given maximum and key', async () => {
+    const kv = fakeKV();
+    for (let i = 0; i < 2; i++)
+      expect((await checkLimit(kv as any, 'k', 2, 60)).allowed).toBe(true);
+    expect((await checkLimit(kv as any, 'k', 2, 60)).allowed).toBe(false);
+    expect((await checkLimit(kv as any, 'other', 2, 60)).allowed).toBe(true);
   });
 });
