@@ -1,4 +1,16 @@
+# edmarbarros.com
+#
+# Everyone is welcome to read the pages, including search engines and AI crawlers.
+# The two rules below keep non-page URLs out of crawls.
+
 User-agent: *
 Allow: /
+
+# The JSON export under /api/ feeds the MCP server and other tools. The same content is on the
+# pages above, so keeping the raw files out of crawls stops duplicates in search results.
+Disallow: /api/
+
+# One-time links from an AI assistant's message draft, such as /contact?draft=<token>.
+Disallow: /*?draft=
 
 Sitemap: https://edmarbarros.com/sitemap-index.xml
