@@ -47,11 +47,7 @@ export const CASES: RetrievalCase[] = [
 ];
 
 export const NEGATIVE_CASES: NegativeCase[] = [
-  {
-    lang: 'en',
-    query: 'rust',
-    known: "terms longer than 2 characters match inside words, so 'rust' finds 'trust'",
-  },
+  { lang: 'en', query: 'rust' },
   { lang: 'en', query: 'golang' },
   { lang: 'en', query: 'swift' },
   { lang: 'en', query: 'salesforce' },

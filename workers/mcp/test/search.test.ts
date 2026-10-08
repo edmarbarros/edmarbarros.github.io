@@ -74,11 +74,13 @@ describe('search', () => {
     it('match whole words only, so ai does not find email or maintain', () => {
       expect(search(shortDocs, 'ai', 10).map((h) => h.title)).toEqual(['Agents']);
     });
-    it('still match inside longer words for three letters and up, so sql finds PostgreSQL', () => {
-      const docs = [
-        doc({ title: 'Pg', searchTitle: 'Other', text: 'Ran PostgreSQL in production.' }),
-      ];
-      expect(search(docs, 'sql', 10)).toHaveLength(1);
+    it('longer terms match from the start of a word, so migrat finds migration', () => {
+      const docs = [doc({ title: 'M', searchTitle: 'Other', text: 'Led the migration to Kafka.' })];
+      expect(search(docs, 'migrat', 10)).toHaveLength(1);
+    });
+    it('longer terms do not match inside a word, so rust does not find trust', () => {
+      const docs = [doc({ title: 'T', searchTitle: 'Other', text: 'Ad data they can trust.' })];
+      expect(search(docs, 'rust', 10)).toEqual([]);
     });
     it('cut the snippet at the whole word', () => {
       const [hit] = search(shortDocs, 'yc', 1);

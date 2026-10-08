@@ -52,14 +52,19 @@ export function tokenize(query: string): string[] {
 const WHOLE_WORD_MAX_LENGTH = 2;
 const isWordChar = /[\p{L}\p{N}]/u;
 
-/** Index of the next occurrence of `term` in `haystack` at or after `from`, or -1. */
+/**
+ * Index of the next occurrence of `term` in `haystack` at or after `from`, or -1.
+ * A match must start a word, so 'rust' does not find 'trust'; it may end mid-word, so 'migrat' finds 'migration'.
+ */
 function indexOfTerm(haystack: string, term: string, from = 0): number {
+  const wholeWord = term.length <= WHOLE_WORD_MAX_LENGTH;
   let i = haystack.indexOf(term, from);
-  if (term.length > WHOLE_WORD_MAX_LENGTH) return i;
   while (i !== -1) {
     const before = haystack[i - 1];
     const after = haystack[i + term.length];
-    if (!(before && isWordChar.test(before)) && !(after && isWordChar.test(after))) return i;
+    const startsWord = !(before && isWordChar.test(before));
+    const endsWord = !wholeWord || !(after && isWordChar.test(after));
+    if (startsWord && endsWord) return i;
     i = haystack.indexOf(term, i + 1);
   }
   return -1;
