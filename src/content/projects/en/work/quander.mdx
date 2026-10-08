@@ -1,45 +1,72 @@
 ---
-title: "Quander (Hypesonic) - Senior Software Engineer"
+title: 'Quander (Hypesonic) - Senior Software Engineer'
 kind: work
 company: Quander
 role: Senior Software Engineer
-period: "May 2026 - Oct 2026"
+period: 'May 2026 - Oct 2026'
 location: Remote
-summary: "Worked on the ad platform behind Hypesonic, Quander's AI growth product: richer Meta ad data, agent skills over it, direct publishing and a TikTok integration, plus a designed architecture for adding new ad channels cheaply."
+summary: "Built the agent work and the ad platform around it at Hypesonic, Quander's AI growth product: the Sonic agent's tracing, sessions and tools, a rebuilt Meta sync, the ad launcher, self-serve billing, observability and a video editor."
 stack:
-  - Node.js
   - TypeScript
-  - PostgreSQL
+  - Node.js
+  - Next.js
   - LLM APIs
   - AI Agents
+  - LangGraph
+  - Vercel Eve
+  - Langfuse
+  - OpenTelemetry
+  - Gemini
+  - Whisper
+  - Remotion
+  - PostgreSQL
+  - Prisma
+  - BullMQ
+  - Docker
+  - Railway
+  - Vercel
   - Stripe
   - Meta Marketing API
   - TikTok Ads API
   - PostHog
   - Grafana
-link: "https://hypesonic.com/"
+link: 'https://hypesonic.com/'
 order: 110
 featured: true
 ---
 
 ## Problem
 
-Hypesonic is Quander's AI growth platform. It runs marketing and distribution continuously: testing creative, targeting audiences and optimizing ad spend. To do that well it needs rich and reliable ad-performance data, a way to publish generated creatives without leaving the product, and ad channels that are cheap to add. Meta was the first paid channel, and B2B customers were still billed manually.
+Hypesonic is Quander's AI growth platform. Its customers needed an in-product agent that answers from their real ad performance, ad data they can trust, a way to publish without leaving the product, and a way to pay for it. Meta was the first paid channel, and B2B customers were still billed manually.
 
 ## What I built
 
-- **Richer Meta ad data.** Improved the Meta Ad sync to collect more insights and demographic data, giving the platform deeper context on how each ad performs. Also reduced sync error rates, closed data gaps and improved sync ETA estimates.
-- **Agent skills over ad data.** Added skills that let the AI agent navigate a user's Meta ads data, so its decisions rest on real performance context.
-- **Direct publishing to Meta.** Integrated the Meta Ad Publisher so users create and manage Campaigns, Ad Sets and Ads and publish their generated assets directly from the product.
-- **TikTok for Business.** Developed the TikTok Business integration for TikTok Ads sync and publish, giving customers a second paid channel alongside Meta.
-- **Ad integration architecture.** Designed a refactor to reduce the friction of adding a new ad integration, using the Port, Adapter, Registry and Host patterns. The design is done but has not been implemented.
-- **Observability package.** Built and wrapped observability in a single package that plugs into every area of the codebase and keeps the underlying tools easy to replace. PostHog and Grafana sit behind it.
-- **Self-serve billing.** Built the full subscription and payment flow on Stripe, so customers can sign up and pay on their own.
+**The agent**
+
+- **Observable.** Added Langfuse tracing for the Sonic in-product agent and moved its prompts into Langfuse, so runs could be inspected and prompts managed outside the code.
+- **Sessions that survive.** Sessions recover after a reboot and rehydrate on cold start. I fixed retry, stale-response and attachment problems so the agent kept its context.
+- **Tools.** The agent can read a user's Meta performance data, search TikTok ads live, and search ads by demographics and creative dimensions.
+- **A sourcing agent.** An agent in the background workers collects ads into a global library. A declare-scope tool bounds what it collects. Media is re-hosted on S3 and analyzed with Gemini.
+- **LLM-written reports.** The weekly performance report is narrated by an LLM through a provider abstraction, with a validator and prompts. Each result is saved with its validator warnings.
+- **Metered usage.** Agent token use is priced and debited atomically, and shown in the credit history.
+
+**Ad data and publishing**
+
+- **Meta sync rebuilt.** A per-ad model cut Meta API cost about 25x. The sync adds daily demographics, runs that checkpoint and resume after a pause, deploy or crash, and an ETA that only falls.
+- **Meta Ad Launcher.** A step-by-step wizard for batch publishing with multiple ad sets, copy variants, dynamic creative, publishing into existing campaigns, and fix-and-relaunch. It replaced the first launcher.
+- **TikTok and Instagram.** The TikTok advertiser connection and ad sync landed behind a kill switch, and publishing to TikTok was in progress. Instagram-native creatives are ingested through the Instagram media object.
+
+**Platform**
+
+- **Self-serve billing.** Stripe subscriptions, a paywall with plan changes and past-due recovery, credit top-ups that expire, and storage limits driven by the plan.
+- **Observability.** A shared logger and an OpenTelemetry bootstrap with trace propagation, and RED, LLM, ffmpeg and data-sync metrics. Also a shared PostHog package.
+- **Video editor.** A video editor area with its editing engine as a workspace package, Whisper transcription, caption templates, brand-aware direction and cost telemetry.
+- **Accounts.** An organization switcher, members and invites, and permission enforcement on content routes.
 
 ## Outcomes
 
 - Opened a self-serve revenue stream. Before this, B2B customers were billed manually.
-- Gave customers a second paid ad channel with TikTok sync and publish.
-- Gave the AI agent richer ad-performance context, from deeper Meta insights and demographic data.
-- Designed a port, adapter, registry and host architecture to make new ad integrations cheaper to add. It has not been implemented yet.
-- Restored domain trust by getting hypesonic.com cleared from security vendor blocklists, which had been hurting traffic and signups.
+- Agent runs are traceable, and sessions survive reboots and cold starts.
+- Meta API cost per sync is about 25x lower.
+- Got hypesonic.com cleared from security vendor blocklists, which had been hurting traffic and signups.
+- Designed, but did not implement, a Port, Adapter, Registry and Host architecture to make new ad integrations cheaper to add.
