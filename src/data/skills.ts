@@ -41,7 +41,16 @@ export const skills: Skill[] = [
     id: 'sql',
     name: 'SQL',
     group: 'data',
-    aliases: ['relational databases', 'data modeling', 'queries', 'database'],
+    aliases: [
+      'relational databases',
+      'data modeling',
+      'queries',
+      'database',
+      'bancos de dados',
+      'banco de dados',
+      'modelagem de dados',
+      'consultas',
+    ],
     matches: ['PostgreSQL', 'MySQL', 'BigQuery'],
     proof: [
       {
@@ -92,7 +101,7 @@ export const skills: Skill[] = [
     id: 'bigquery',
     name: 'BigQuery',
     group: 'data',
-    aliases: ['data warehouse', 'analytics'],
+    aliases: ['data warehouse', 'analytics', 'armazém de dados', 'análise de dados'],
     matches: ['BigQuery'],
     proof: [
       {
@@ -105,7 +114,15 @@ export const skills: Skill[] = [
     id: 'kafka',
     name: 'Kafka',
     group: 'data',
-    aliases: ['event-driven', 'event driven', 'streaming', 'messaging'],
+    aliases: [
+      'event-driven',
+      'event driven',
+      'streaming',
+      'messaging',
+      'orientado a eventos',
+      'arquitetura orientada a eventos',
+      'mensageria',
+    ],
     matches: ['Kafka'],
     proof: [
       {
@@ -118,7 +135,7 @@ export const skills: Skill[] = [
     id: 'elasticsearch',
     name: 'Elasticsearch',
     group: 'data',
-    aliases: ['elastic', 'search'],
+    aliases: ['elastic', 'search', 'busca'],
     matches: ['Elasticsearch'],
     proof: [
       {
@@ -131,7 +148,7 @@ export const skills: Skill[] = [
     id: 'redis',
     name: 'Redis',
     group: 'data',
-    aliases: ['cache', 'caching'],
+    aliases: ['cache', 'caching', 'armazenamento em cache'],
     matches: ['Redis'],
     proof: [],
   },
@@ -139,7 +156,7 @@ export const skills: Skill[] = [
     id: 'mongodb',
     name: 'MongoDB',
     group: 'data',
-    aliases: ['nosql', 'document database'],
+    aliases: ['nosql', 'document database', 'banco de dados de documentos'],
     matches: ['MongoDB'],
     proof: [],
   },
@@ -182,7 +199,7 @@ export const skills: Skill[] = [
     id: 'kubernetes',
     name: 'Kubernetes',
     group: 'cloud',
-    aliases: ['k8s', 'helm', 'containers', 'orchestration'],
+    aliases: ['k8s', 'helm', 'containers', 'orchestration', 'contêineres', 'orquestração'],
     matches: ['Kubernetes', 'Helm'],
     proof: [
       {
@@ -195,7 +212,7 @@ export const skills: Skill[] = [
     id: 'terraform',
     name: 'Terraform',
     group: 'cloud',
-    aliases: ['infrastructure as code', 'iac'],
+    aliases: ['infrastructure as code', 'iac', 'infraestrutura como código'],
     matches: ['Terraform'],
     proof: [
       {
@@ -208,7 +225,7 @@ export const skills: Skill[] = [
     id: 'docker',
     name: 'Docker',
     group: 'cloud',
-    aliases: ['containers', 'images'],
+    aliases: ['containers', 'images', 'contêineres', 'imagens'],
     matches: ['Docker'],
     proof: [
       {
@@ -229,6 +246,9 @@ export const skills: Skill[] = [
       'circleci',
       'jenkins',
       'deployment',
+      'integração contínua',
+      'entrega contínua',
+      'implantação',
     ],
     matches: ['CircleCI', 'GitHub Actions'],
     proof: [
@@ -255,7 +275,7 @@ export const skills: Skill[] = [
     id: 'nodejs',
     name: 'Node.js',
     group: 'languages',
-    aliases: ['node', 'nodejs', 'backend', 'javascript'],
+    aliases: ['node', 'nodejs', 'backend', 'javascript', 'back-end'],
     matches: ['Node.js'],
     proof: [],
   },
@@ -271,7 +291,7 @@ export const skills: Skill[] = [
     id: 'react',
     name: 'React',
     group: 'languages',
-    aliases: ['frontend', 'front-end'],
+    aliases: ['frontend', 'front-end', 'front end'],
     matches: ['React', 'Next.js'],
     proof: [],
   },
@@ -316,6 +336,13 @@ export const skills: Skill[] = [
       'api design',
       'solutions architect',
       'distributed systems',
+      'design de sistemas',
+      'arquitetura de software',
+      'microsserviços',
+      'monolito',
+      'design de apis',
+      'arquiteto de soluções',
+      'sistemas distribuídos',
     ],
     matches: [],
     proof: [
@@ -341,7 +368,19 @@ export const skills: Skill[] = [
     id: 'leadership',
     name: 'Technical leadership',
     group: 'practices',
-    aliases: ['tech lead', 'mentoring', 'mentorship', 'team lead', 'management'],
+    aliases: [
+      'tech lead',
+      'mentoring',
+      'mentorship',
+      'team lead',
+      'management',
+      'liderança',
+      'líder técnico',
+      'liderança técnica',
+      'mentoria',
+      'gestão',
+      'gestão de equipe',
+    ],
     matches: [],
     proof: [
       {
@@ -362,7 +401,18 @@ export const skills: Skill[] = [
     id: 'observability',
     name: 'Observability',
     group: 'practices',
-    aliases: ['monitoring', 'metrics', 'logging', 'tracing', 'dashboards'],
+    aliases: [
+      'monitoring',
+      'metrics',
+      'logging',
+      'tracing',
+      'dashboards',
+      'monitoramento',
+      'métricas',
+      'logs',
+      'rastreamento',
+      'painéis',
+    ],
     matches: ['PostHog', 'Grafana', 'OpenTelemetry', 'Langfuse'],
     proof: [
       {
@@ -379,7 +429,18 @@ export const skills: Skill[] = [
     id: 'payments',
     name: 'Payments and billing',
     group: 'practices',
-    aliases: ['stripe', 'subscriptions', 'billing', 'payment gateways', 'pos'],
+    aliases: [
+      'stripe',
+      'subscriptions',
+      'billing',
+      'payment gateways',
+      'pos',
+      'pagamentos',
+      'cobrança',
+      'assinaturas',
+      'faturamento',
+      'gateways de pagamento',
+    ],
     matches: ['Stripe'],
     proof: [
       {
@@ -413,6 +474,14 @@ export const skills: Skill[] = [
       'prompts',
       'generative ai',
       'machine learning',
+      'agentes',
+      'agentes de ia',
+      'sistemas agênticos',
+      'ferramentas',
+      'orquestração',
+      'ia generativa',
+      'inteligência artificial',
+      'aprendizado de máquina',
     ],
     matches: ['LLM APIs', 'AI Agents', 'LangGraph', 'Vercel Eve', 'Langfuse'],
     proof: [

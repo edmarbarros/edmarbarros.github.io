@@ -39,8 +39,11 @@ export const CASES: RetrievalCase[] = [
     lang: 'pt',
     query: 'liderança técnica',
     expect: ['Technical leadership'],
-    known: 'skill names and aliases are English-only, so Portuguese terms never match them',
   },
+  { lang: 'pt', query: 'pagamentos', expect: ['Payments and billing'] },
+  { lang: 'pt', query: 'monitoramento', expect: ['Observability'] },
+  { lang: 'pt', query: 'microsserviços', expect: ['Backend architecture', 'Vendoo'] },
+  { lang: 'pt', query: 'infraestrutura como código', expect: ['Terraform'] },
 ];
 
 export const NEGATIVE_CASES: NegativeCase[] = [
