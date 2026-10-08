@@ -2,7 +2,7 @@
   "siteName": "Edmar Barros",
   "tagline": "Staff Software Engineer",
   "home": {
-    "intro": "Construo sistemas de backend e dados e, mais recentemente, agentes de IA: as ferramentas, o tracing e a cobrança por trás de um agente dentro do produto. Este site também é um servidor MCP público, então você pode perguntar a um assistente de IA sobre o meu trabalho. No blog, escrevo sobre o que construo e aprendo."
+    "intro": "Construo sistemas robustos e escaláveis e, mais recentemente, agentes de IA: ferramentas, tracing e cobrança por trás de agents dentro do produto. Este site também é um servidor MCP público. Você pode perguntar a um assistente de IA sobre o meu trabalho. No blog, escrevo sobre o que construo e aprendo."
   },
   "nav": {
     "home": "Início",
