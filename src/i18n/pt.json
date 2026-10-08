@@ -48,6 +48,7 @@
     "cursor": "Adicione isto em ~/.cursor/mcp.json:",
     "vscode": "Adicione isto em .vscode/mcp.json:",
     "other": "Qualquer cliente com suporte a MCP remoto via streamable HTTP pode usar a mesma URL.",
-    "readMore": "Leia como eu construí"
+    "readMore": "Leia como eu construí",
+    "forAgents": "Para agentes"
   }
 }

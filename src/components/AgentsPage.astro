@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../config';
+
+interface Props {
+  lang: 'en' | 'pt';
+}
+const { lang } = Astro.props;
+
+const evalsUrl = 'https://github.com/edmarbarros/edmarbarros.github.io/tree/main/workers/mcp/evals';
+const endpoint = SITE_CONFIG.mcpEndpoint;
+const postHref = lang === 'pt' ? '/pt/blog/site-como-mcp' : '/blog/site-as-mcp';
+
+const tools = [
+  ['site_help', { en: 'What can be asked, with example questions.', pt: 'O que dá para perguntar, com exemplos.' }],
+  ['site_get_profile', { en: 'Who I am, in one call.', pt: 'Quem eu sou, em uma chamada.' }],
+  ['site_get_cv', { en: 'The full CV, with optional filters.', pt: 'O CV completo, com filtros opcionais.' }],
+  ['site_list_skills / site_get_skill', { en: 'Skills, and the evidence behind each one.', pt: 'Habilidades e as evidências de cada uma.' }],
+  ['site_list_projects / site_get_project', { en: 'Project write-ups.', pt: 'Projetos detalhados.' }],
+  ['site_list_posts / site_get_post', { en: 'Blog posts, as markdown.', pt: 'Posts do blog, em markdown.' }],
+  ['site_search', { en: 'Ranked full-text search across all of the above.', pt: 'Busca textual ranqueada em tudo isso.' }],
+  ['site_draft_message', { en: 'Drafts a message to me. A person reviews it and sends it on the contact page.', pt: 'Rascunha uma mensagem para mim. Uma pessoa revisa e envia na página de contato.' }],
+] as const;
+
+const copy = {
+  en: {
+    title: 'For agents',
+    description: 'How AI agents can use this site: the MCP server, its tools, the JSON export, and how its search is tested.',
+    h1: 'For agents',
+    intro: 'This site is built to be read by AI assistants as well as people. Everything below is public and needs no sign-in.',
+    connectH: 'Connect',
+    connect: 'A remote MCP server over streamable HTTP:',
+    more: 'The home page has copy-paste setup for common clients.',
+    toolsH: 'Tools',
+    toolsNote: 'All tools are read-only except one, and that one only drafts.',
+    designH: 'Design choices',
+    design: [
+      'Stateless: every request builds a fresh server and answers with plain JSON. No sessions, no streaming.',
+      'Read-only: the tools read a static JSON export of this site. Nothing an assistant does can change it.',
+      'A human stays in the loop: site_draft_message returns a link. The person reads the draft, passes a Turnstile check and sends it.',
+      'Same content as the site, in English and Portuguese, so an assistant answers from my words and not from what a model remembers.',
+    ],
+    dataH: 'Without MCP',
+    data: ['Index of the JSON export:', 'Plain-text summary for LLMs:'],
+    evalH: 'How the search is tested',
+    evalP: 'The search is tested without any model. A set of real questions is run against the exact content the server serves, and each one must put the right result in the top 3. Questions about technologies I have not used must return nothing.',
+    evalGaps: 'The eval also keeps a list of gaps it knows about, and fails when one is fixed so the note gets removed. Today there are two: Portuguese terms do not match the English skill names, and short words can match inside longer ones.',
+    evalLink: 'Read the cases and the code',
+    post: 'How it was built',
+  },
+  pt: {
+    title: 'Para agentes',
+    description: 'Como agentes de IA podem usar este site: o servidor MCP, as ferramentas, a exportação em JSON e como a busca é testada.',
+    h1: 'Para agentes',
+    intro: 'Este site foi feito para ser lido por assistentes de IA e por pessoas. Tudo abaixo é público e não exige login.',
+    connectH: 'Conectar',
+    connect: 'Um servidor MCP remoto via streamable HTTP:',
+    more: 'A página inicial tem a configuração para copiar e colar nos clientes mais comuns.',
+    toolsH: 'Ferramentas',
+    toolsNote: 'Todas as ferramentas são somente leitura, exceto uma, que só rascunha.',
+    designH: 'Decisões de design',
+    design: [
+      'Sem estado: cada requisição cria um servidor novo e responde com JSON simples. Sem sessões, sem streaming.',
+      'Somente leitura: as ferramentas leem uma exportação estática em JSON deste site. Nada que um assistente faça altera o site.',
+      'Uma pessoa continua no controle: site_draft_message devolve um link. A pessoa lê o rascunho, passa pela verificação do Turnstile e envia.',
+      'O mesmo conteúdo do site, em português e inglês, para o assistente responder com as minhas palavras e não com o que um modelo lembra.',
+    ],
+    dataH: 'Sem MCP',
+    data: ['Índice da exportação em JSON:', 'Resumo em texto para LLMs:'],
+    evalH: 'Como a busca é testada',
+    evalP: 'A busca é testada sem nenhum modelo. Um conjunto de perguntas reais roda contra o conteúdo exato que o servidor entrega, e cada uma precisa colocar o resultado certo entre os 3 primeiros. Perguntas sobre tecnologias que eu não usei devem retornar nada.',
+    evalGaps: 'O teste também guarda uma lista de falhas conhecidas e quebra quando uma é corrigida, para a nota ser removida. Hoje são duas: termos em português não casam com os nomes das habilidades, que estão em inglês, e palavras curtas podem casar dentro de palavras maiores.',
+    evalLink: 'Ver os casos e o código',
+    post: 'Como foi construído',
+  },
+}[lang];
+---
+
+<BaseLayout
+  title={copy.title}
+  lang={lang}
+  description={copy.description}
+  altLangHref={lang === 'pt' ? '/agents' : '/pt/agentes'}
+>
+  <article class="max-w-prose space-y-10">
+    <header class="space-y-3">
+      <h1 class="font-serif text-4xl">{copy.h1}</h1>
+      <p>{copy.intro}</p>
+    </header>
+
+    <section class="space-y-3" aria-labelledby="connect">
+      <h2 id="connect" class="font-serif text-2xl">{copy.connectH}</h2>
+      <p>{copy.connect}</p>
+      <p><code class="font-mono text-sm">{endpoint}</code></p>
+      <p class="text-sm text-muted">
+        <a href={lang === 'pt' ? '/pt/#mcp' : '/#mcp'}>{copy.more}</a>
+      </p>
+    </section>
+
+    <section class="space-y-3" aria-labelledby="tools">
+      <h2 id="tools" class="font-serif text-2xl">{copy.toolsH}</h2>
+      <p class="text-sm text-muted">{copy.toolsNote}</p>
+      <ul class="space-y-2">
+        {tools.map(([name, text]) => (
+          <li><code class="font-mono text-sm">{name}</code> - {text[lang]}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="space-y-3" aria-labelledby="design">
+      <h2 id="design" class="font-serif text-2xl">{copy.designH}</h2>
+      <ul class="list-disc space-y-2 pl-5">
+        {copy.design.map((d) => <li>{d}</li>)}
+      </ul>
+      <p><a href={postHref}>{copy.post}</a></p>
+    </section>
+
+    <section class="space-y-3" aria-labelledby="data">
+      <h2 id="data" class="font-serif text-2xl">{copy.dataH}</h2>
+      <ul class="space-y-2">
+        <li>{copy.data[0]} <a href="/api/index.json">/api/index.json</a></li>
+        <li>{copy.data[1]} <a href="/llms.txt">/llms.txt</a></li>
+      </ul>
+    </section>
+
+    <section class="space-y-3" aria-labelledby="evals">
+      <h2 id="evals" class="font-serif text-2xl">{copy.evalH}</h2>
+      <p>{copy.evalP}</p>
+      <p>{copy.evalGaps}</p>
+      <p><a href={evalsUrl} rel="noopener">{copy.evalLink}</a></p>
+    </section>
+  </article>
+</BaseLayout>
