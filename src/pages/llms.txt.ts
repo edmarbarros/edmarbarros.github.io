@@ -47,6 +47,7 @@ export async function GET({ site }: APIContext) {
     '',
     `- [MCP server](${SITE_CONFIG.mcpEndpoint}): a remote MCP server that answers from this site. It reads the CV, skills with evidence, projects and posts, and can search them. It also drafts a message to him that the person reviews and sends on the contact page. No sign-in is needed.`,
     `- [How to connect](${url('/#mcp')}): setup steps for Claude, ChatGPT, Cursor, VS Code and other clients.`,
+    `- [For agents](${url('/agents')}): the tools, the design choices, the JSON export and how the search is tested.`,
     '',
     '## Optional',
     '',
