@@ -272,7 +272,7 @@ export const skills: Skill[] = [
     name: 'React',
     group: 'languages',
     aliases: ['frontend', 'front-end'],
-    matches: ['React'],
+    matches: ['React', 'Next.js'],
     proof: [],
   },
   {
@@ -363,15 +363,15 @@ export const skills: Skill[] = [
     name: 'Observability',
     group: 'practices',
     aliases: ['monitoring', 'metrics', 'logging', 'tracing', 'dashboards'],
-    matches: ['PostHog', 'Grafana'],
+    matches: ['PostHog', 'Grafana', 'OpenTelemetry', 'Langfuse'],
     proof: [
       {
         en: 'Built the observability stack at Vendoo that caught performance bottlenecks before they reached users.',
         pt: 'Construí a stack de observabilidade na Vendoo que detectava gargalos de desempenho antes de afetarem usuários.',
       },
       {
-        en: 'Added PostHog session recording and feature flags plus Grafana metrics and dashboards at Quander.',
-        pt: 'Adicionei gravação de sessões e feature flags com PostHog, além de métricas e dashboards no Grafana, na Quander.',
+        en: 'Built a shared logger and an OpenTelemetry bootstrap with trace propagation and RED, LLM, ffmpeg and data-sync metrics at Quander, plus PostHog and Grafana dashboards.',
+        pt: 'Construí um logger compartilhado e um bootstrap de OpenTelemetry com propagação de traces e métricas RED, de LLM, de ffmpeg e de sincronização de dados na Quander, além de dashboards PostHog e Grafana.',
       },
     ],
   },
@@ -400,12 +400,33 @@ export const skills: Skill[] = [
     id: 'ai-agents',
     name: 'LLM and AI agents',
     group: 'practices',
-    aliases: ['llm', 'ai', 'agents', 'agent skills', 'generative ai', 'machine learning'],
-    matches: ['LLM APIs', 'AI Agents'],
+    aliases: [
+      'llm',
+      'ai',
+      'agents',
+      'agentic systems',
+      'agent skills',
+      'tool use',
+      'orchestration',
+      'langgraph',
+      'langfuse',
+      'prompts',
+      'generative ai',
+      'machine learning',
+    ],
+    matches: ['LLM APIs', 'AI Agents', 'LangGraph', 'Vercel Eve', 'Langfuse'],
     proof: [
       {
         en: "Added agent tools and skills at Quander that let the AI agent read and navigate a user's Meta ads performance data.",
         pt: 'Adicionei ferramentas e skills de agente na Quander que permitem ao agente de IA ler e navegar pelos dados de desempenho de anúncios da Meta de um usuário.',
+      },
+      {
+        en: 'Added Langfuse tracing and prompt management for the Sonic agent at Quander, and made its sessions recover after reboots and cold starts.',
+        pt: 'Adicionei tracing e gestão de prompts no Langfuse para o agente Sonic na Quander, e fiz as sessões dele se recuperarem após reboots e cold starts.',
+      },
+      {
+        en: 'Gave the agent tools for live TikTok ad search and for searching ads by demographics and creative dimensions, and built a sourcing agent that fills a global ad library.',
+        pt: 'Dei ao agente ferramentas para busca ao vivo de anúncios do TikTok e para buscar anúncios por dados demográficos e dimensões criativas, e construí um agente de coleta que alimenta uma biblioteca global de anúncios.',
       },
     ],
   },

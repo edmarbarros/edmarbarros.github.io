@@ -1,45 +1,72 @@
 ---
-title: "Quander (Hypesonic) - Senior Software Engineer"
+title: 'Quander (Hypesonic) - Senior Software Engineer'
 kind: work
 company: Quander
 role: Senior Software Engineer
-period: "Mai 2026 - Out 2026"
+period: 'Mai 2026 - Out 2026'
 location: Remoto
-summary: "Atuei na plataforma de anúncios da Hypesonic, produto de crescimento com IA da Quander: dados mais ricos da Meta, skills de agente sobre eles, publicação direta e integração com o TikTok, além de uma arquitetura desenhada para adicionar novos canais com baixo custo."
+summary: 'Construí o trabalho com agentes e a plataforma de anúncios ao redor dele na Hypesonic, produto de crescimento com IA da Quander: tracing, sessões e ferramentas do agente Sonic, a sincronização da Meta reconstruída, o lançador de anúncios, cobrança self-service, observabilidade e um editor de vídeo.'
 stack:
-  - Node.js
   - TypeScript
-  - PostgreSQL
+  - Node.js
+  - Next.js
   - LLM APIs
   - AI Agents
+  - LangGraph
+  - Vercel Eve
+  - Langfuse
+  - OpenTelemetry
+  - Gemini
+  - Whisper
+  - Remotion
+  - PostgreSQL
+  - Prisma
+  - BullMQ
+  - Docker
+  - Railway
+  - Vercel
   - Stripe
   - Meta Marketing API
   - TikTok Ads API
   - PostHog
   - Grafana
-link: "https://hypesonic.com/"
+link: 'https://hypesonic.com/'
 order: 110
 featured: true
 ---
 
 ## Problema
 
-A Hypesonic é a plataforma de crescimento com IA da Quander. Ela executa marketing e distribuição de forma contínua: testa criativos, segmenta públicos e otimiza o investimento em anúncios. Para isso, precisa de dados de desempenho ricos e confiáveis, de uma forma de publicar criativos gerados sem sair do produto e de canais de anúncio baratos de adicionar. A Meta era o primeiro canal pago, e os clientes B2B ainda eram cobrados manualmente.
+A Hypesonic é a plataforma de crescimento com IA da Quander. Os clientes precisavam de um agente no produto que respondesse a partir do desempenho real dos anúncios, de dados de anúncios em que pudessem confiar, de uma forma de publicar sem sair do produto e de uma forma de pagar por ele. A Meta era o primeiro canal pago, e os clientes B2B ainda eram cobrados manualmente.
 
 ## O que construí
 
-- **Dados mais ricos da Meta.** Melhorei o Meta Ad Sync para coletar mais insights e dados demográficos, dando à plataforma contexto mais profundo sobre o desempenho de cada anúncio. Também reduzi a taxa de erros do sync, corrigi lacunas de dados e melhorei a estimativa de ETA.
-- **Skills de agente sobre os dados de anúncios.** Adicionei skills que permitem ao agente de IA navegar pelos dados de anúncios da Meta de um usuário, para que suas decisões se baseiem em contexto real de desempenho.
-- **Publicação direta na Meta.** Integrei o Meta Ad Publisher para que usuários criem e gerenciem Campanhas, Conjuntos de Anúncios e Anúncios e publiquem seus ativos gerados direto do produto.
-- **TikTok for Business.** Desenvolvi a integração com o TikTok Business para sincronizar e publicar anúncios no TikTok, dando aos clientes um segundo canal pago além da Meta.
-- **Arquitetura de integrações de anúncios.** Desenhei um refactor para reduzir o atrito de adicionar uma nova integração de anúncios, usando os padrões Port, Adapter, Registry e Host. O desenho está pronto, mas não foi implementado.
-- **Pacote de observabilidade.** Construí e encapsulei a observabilidade em um único pacote que se integra a todas as áreas do código e mantém as ferramentas por trás fáceis de substituir. PostHog e Grafana ficam atrás dele.
-- **Cobrança self-service.** Construí todo o fluxo de assinatura e pagamento no Stripe, para que clientes se cadastrem e paguem sozinhos.
+**O agente**
+
+- **Observável.** Adicionei tracing do Langfuse ao agente Sonic do produto e movi seus prompts para o Langfuse, para que as execuções pudessem ser inspecionadas e os prompts gerenciados fora do código.
+- **Sessões que sobrevivem.** As sessões se recuperam após um reboot e se reidratam em cold start. Corrigi problemas de retry, respostas obsoletas e anexos para que o agente mantivesse o contexto.
+- **Ferramentas.** O agente lê os dados de desempenho da Meta de um usuário, busca anúncios do TikTok ao vivo e busca anúncios por dados demográficos e dimensões criativas.
+- **Um agente de coleta.** Um agente nos workers em segundo plano reúne anúncios em uma biblioteca global. Uma ferramenta de declaração de escopo limita o que ele coleta. A mídia é re-hospedada no S3 e analisada com o Gemini.
+- **Relatórios escritos por LLM.** O relatório semanal de desempenho é narrado por um LLM por meio de uma abstração de provedor, com um validador e prompts. Cada resultado é salvo com seus avisos do validador.
+- **Uso medido.** O uso de tokens do agente é precificado e debitado de forma atômica, e aparece no histórico de créditos.
+
+**Dados de anúncios e publicação**
+
+- **Sincronização da Meta reconstruída.** Um modelo por anúncio reduziu o custo da API da Meta em cerca de 25x. A sincronização traz dados demográficos diários, execuções com checkpoint que retomam após uma pausa, deploy ou falha, e uma estimativa de tempo que só diminui.
+- **Meta Ad Launcher.** Um wizard passo a passo para publicação em lote com vários conjuntos de anúncios, variações de texto, criativo dinâmico, publicação em campanhas existentes e corrigir e relançar. Ele substituiu o primeiro lançador.
+- **TikTok e Instagram.** A conexão de anunciante do TikTok e a sincronização de anúncios entraram atrás de uma chave de desligamento, e a publicação no TikTok estava em andamento. Criativos nativos do Instagram são ingeridos pelo objeto de mídia do Instagram.
+
+**Plataforma**
+
+- **Cobrança self-service.** Assinaturas no Stripe, um paywall com troca de plano e recuperação de pagamento em atraso, recargas de créditos que expiram e limites de armazenamento definidos pelo plano.
+- **Observabilidade.** Um logger compartilhado e um bootstrap de OpenTelemetry com propagação de traces, e métricas RED, de LLM, de ffmpeg e de sincronização de dados. Também um pacote compartilhado do PostHog.
+- **Editor de vídeo.** Uma área de editor de vídeo com seu motor de edição como um pacote do workspace, transcrição Whisper, templates de legendas, direção ciente da marca e telemetria de custo.
+- **Contas.** Um seletor de organização, membros e convites, e aplicação de permissões nas rotas de conteúdo.
 
 ## Resultados
 
 - Abri uma fonte de receita self-service. Antes disso, clientes B2B eram cobrados manualmente.
-- Dei aos clientes um segundo canal pago de anúncios, com sincronização e publicação no TikTok.
-- Dei ao agente de IA mais contexto de desempenho, com insights e dados demográficos mais profundos da Meta.
-- Desenhei uma arquitetura de port, adapter, registry e host para tornar novas integrações de anúncios mais baratas de adicionar. Ela ainda não foi implementada.
-- Restaurei a confiança do domínio ao remover o hypesonic.com de listas de bloqueio de fornecedores de segurança, que prejudicavam tráfego e cadastros.
+- As execuções do agente são rastreáveis, e as sessões sobrevivem a reboots e cold starts.
+- O custo da API da Meta por sincronização é cerca de 25x menor.
+- Removi o hypesonic.com de listas de bloqueio de fornecedores de segurança, que prejudicavam tráfego e cadastros.
+- Desenhei, mas não implementei, uma arquitetura de Port, Adapter, Registry e Host para tornar novas integrações de anúncios mais baratas de adicionar.
