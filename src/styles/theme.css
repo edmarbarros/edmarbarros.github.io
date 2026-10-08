@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @import "@fontsource-variable/inter";
-@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/sora";
 @import "@fontsource-variable/jetbrains-mono";
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
@@ -14,7 +14,8 @@
   --color-accent: var(--accent);
 
   --font-sans: "Inter Variable", system-ui, sans-serif;
-  --font-serif: "Fraunces Variable", Georgia, serif;
+  /* The display face used for headings. Kept as font-serif so existing classes still work. */
+  --font-serif: "Sora Variable", system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
 
   --container-prose: 42rem;
@@ -22,19 +23,22 @@
 }
 
 :root {
-  --bg: #fafaf7;
-  --text: #1a1a1a;
-  --muted: #6b6b6b;
-  --border: #e8e6df;
-  --accent: #b4472e;
+  /* Brand: blaze #FF5A1F, ink #0E0F12, paper #F4F5F2. Blaze is only 2.9:1 on paper,
+     so light mode links use a darker blaze; the true brand colour is --brand. */
+  --brand: #ff5a1f;
+  --bg: #f4f5f2;
+  --text: #0e0f12;
+  --muted: #55585f;
+  --border: #d4d6da;
+  --accent: #c2410c;
 }
 
 :root[data-theme="dark"] {
-  --bg: #121212;
-  --text: #ececec;
-  --muted: #8a8a8a;
-  --border: #2a2a2a;
-  --accent: #e06c4e;
+  --bg: #0e0f12;
+  --text: #f4f5f2;
+  --muted: #9aa0aa;
+  --border: #2a2c31;
+  --accent: #ff5a1f;
 }
 
 @layer base {
@@ -65,7 +69,7 @@
   }
 
   ::selection {
-    background-color: var(--accent);
-    color: var(--bg);
+    background-color: var(--brand);
+    color: #0e0f12;
   }
 }

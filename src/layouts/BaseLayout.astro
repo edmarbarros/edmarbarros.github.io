@@ -1,7 +1,7 @@
 ---
 import '../styles/theme.css';
 import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
-import frauncesLatinWoff2 from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
+import soraLatinWoff2 from '@fontsource-variable/sora/files/sora-latin-wght-normal.woff2?url';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import Analytics from '../components/Analytics.astro';
@@ -58,11 +58,11 @@ const resolvedOgImage = ogImage
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="preload" href={interLatinWoff2} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={frauncesLatinWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={soraLatinWoff2} as="font" type="font/woff2" crossorigin />
     <title>{siteTitle}</title>
     {description && <meta name="description" content={description} />}
     <meta name="author" content={cv.identity.name} />
-    <meta name="theme-color" content="#b4472e" />
+    <meta name="theme-color" content="#0e0f12" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
 
@@ -70,7 +70,7 @@ const resolvedOgImage = ogImage
     <link rel="alternate" hreflang="pt" href={ptHref} />
     <link rel="alternate" hreflang="x-default" href={enHref} />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <meta property="og:site_name" content={t.siteName} />
