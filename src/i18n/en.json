@@ -2,7 +2,7 @@
   "siteName": "Edmar Barros",
   "tagline": "Staff Software Engineer",
   "home": {
-    "intro": "I build backend and data systems, and lately AI agents: the tools, tracing and billing behind an in-product agent. This site is also a public MCP server, so you can ask an AI assistant about my work. On the blog I write up what I build and learn."
+    "intro": "I build robust and scalable systems, and lately AI agents: tools, tracing and billing behind an in-product agent. This site is also a public MCP server, so you can ask an AI assistant about my work. On the blog I write up what I build and learn."
   },
   "nav": {
     "home": "Home",
