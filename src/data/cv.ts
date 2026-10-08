@@ -137,6 +137,7 @@ export const cv: CV = {
               'Ad publishing: Built the Meta Ad Launcher, a step-by-step wizard for batch publishing with copy variants, dynamic creative and fix-and-relaunch, plus the TikTok advertiser connection and ad sync.',
               'Observability: Built a shared logger and an OpenTelemetry bootstrap with trace propagation, RED, LLM, ffmpeg and data-sync metrics, and a shared PostHog package.',
               'Video editor: Built the video editor and its engine as a workspace package, with Whisper transcription, caption templates and cost telemetry.',
+              'Closing the loop with users: Joined beta tester calls and walked through onboarding in the platform to see where users struggled, asked what they expected, and guided them to features that covered what they called missing. Also joined twice-weekly calls with an agency using the platform and turned its feedback into fixes and features.',
             ],
             pt: [
               'Agente observável: Adicionei tracing do Langfuse ao agente Sonic do produto e movi seus prompts para o Langfuse, para que as execuções pudessem ser inspecionadas e os prompts gerenciados fora do código.',
@@ -149,6 +150,7 @@ export const cv: CV = {
               'Publicação de anúncios: Construí o Meta Ad Launcher, um wizard passo a passo para publicação em lote com variações de texto, criativo dinâmico e corrigir e relançar, além da conexão de anunciante do TikTok e da sincronização de anúncios.',
               'Observabilidade: Construí um logger compartilhado e um bootstrap de OpenTelemetry com propagação de traces, métricas RED, de LLM, de ffmpeg e de sincronização de dados, e um pacote compartilhado do PostHog.',
               'Editor de vídeo: Construí o editor de vídeo e seu motor como um pacote do workspace, com transcrição Whisper, templates de legendas e telemetria de custo.',
+              'Fechando o ciclo com usuários: Participei de calls com beta testers e percorri o onboarding na plataforma para ver onde os usuários tinham dificuldade, perguntei o que esperavam e os guiei para funcionalidades que cobriam o que diziam faltar. Também participei de calls duas vezes por semana com uma agência que usava a plataforma e transformei o feedback em correções e funcionalidades.',
             ],
           },
           stack: ['TypeScript', 'Node.js', 'Next.js', 'LLM APIs', 'AI Agents', 'LangGraph', 'Vercel Eve', 'Langfuse', 'OpenTelemetry', 'Gemini', 'Whisper', 'Remotion', 'PostgreSQL', 'Prisma', 'BullMQ', 'Docker', 'Railway', 'Vercel', 'Stripe', 'Meta Marketing API', 'TikTok Ads API', 'PostHog', 'Grafana'],
@@ -179,6 +181,7 @@ export const cv: CV = {
               'Halved new-engineer ramp-up (6 to 3 weeks): Launched internal Tech Talks (10+ sessions) and a structured 1:1 mentorship framework to close system knowledge gaps.',
               'Faster, lighter releases: Re-engineered build and deployment pipelines (GitHub Actions, CircleCI), shrinking Docker images by 70% (1 GB to 300 MB) and shortening deployment cycles.',
               'Infrastructure ownership: Owned GCP/Kubernetes infrastructure via Terraform and Helm (cluster provisioning, service mesh, environment promotion) and built the observability stack that caught performance bottlenecks before they reached users.',
+              'Learning from users directly: Joined customer success calls to understand user issues, then collected metrics and logs in real time to diagnose and fix them.',
             ],
             pt: [
               'Redução de 41% no custo do Elasticsearch: Reestruturei um cluster Elasticsearch desbalanceado (shards superdimensionados, versão desatualizada, sem políticas de ciclo de vida de índices) e documentei um roadmap para economias adicionais.',
@@ -186,6 +189,7 @@ export const cv: CV = {
               'Ramp-up de novos engenheiros pela metade (de 6 para 3 semanas): Criei Tech Talks internos (mais de 10 sessões) e um framework estruturado de mentoria 1:1 para fechar lacunas de conhecimento do sistema.',
               'Releases mais rápidos e leves: Reestruturei os pipelines de build e deploy (GitHub Actions, CircleCI), reduzindo as imagens Docker em 70% (de 1 GB para 300 MB) e encurtando os ciclos de deploy.',
               'Responsável pela infraestrutura: Gerenciei a infraestrutura GCP/Kubernetes via Terraform e Helm (provisionamento de clusters, service mesh, promoção entre ambientes) e construí a stack de observabilidade que detectava gargalos de desempenho antes de afetarem usuários.',
+              'Aprendendo direto com usuários: Participei de calls com o time de customer success para entender os problemas dos usuários e coletei métricas e logs em tempo real para diagnosticá-los e corrigi-los.',
             ],
           },
           stack: ['React', 'Node.js', 'TypeScript', 'Kafka', 'PostgreSQL', 'GCP', 'BigQuery', 'Elasticsearch', 'Terraform', 'Docker', 'Kubernetes', 'Helm', 'CircleCI', 'GitHub Actions'],
