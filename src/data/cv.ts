@@ -95,7 +95,7 @@ export const cv: CV = {
       pt: 'Staff Software Engineer',
     },
     location: { en: 'Brazil · Remote', pt: 'Brasil · Remoto' },
-    email: 'hello[at]edmarbarros[.]com',
+    email: 'hello[@]edmarbarros[.]com',
     linkedin: 'https://linkedin.com/in/edmarbarros/',
     github: 'https://github.com/edmarbarros',
     twitter: '@edmarbarros_',
