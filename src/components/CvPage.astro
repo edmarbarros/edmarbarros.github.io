@@ -20,6 +20,10 @@ const headings = {
   socialSkills: lang === 'en' ? 'Social skills' : 'Habilidades interpessoais',
   interests: lang === 'en' ? 'Interests' : 'Interesses',
 };
+const toggleLabels = {
+  more: lang === 'en' ? 'Show more' : 'Mostrar mais',
+  less: lang === 'en' ? 'Show less' : 'Mostrar menos',
+};
 ---
 
 <article class="space-y-12">
@@ -73,7 +77,7 @@ const headings = {
 
   <section class="space-y-10">
     <h2 class="font-serif text-2xl border-b border-border pb-2">{headings.experience}</h2>
-    {cv.experience.map((company) => {
+    {cv.experience.map((company, ci) => {
       const range = companyRange(company.roles);
       const total = formatDuration(range.start, range.end, lang);
       return (
@@ -98,7 +102,7 @@ const headings = {
             <p class="text-sm text-muted">{total} · {company.location}</p>
           </header>
           <ol class="space-y-6 border-l border-border pl-6 ml-1">
-            {company.roles.map((role) => (
+            {company.roles.map((role, ri) => (
               <li class="space-y-3">
                 <header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <h4 class="font-serif text-lg">{role.role[lang]}</h4>
@@ -106,9 +110,27 @@ const headings = {
                     {formatPeriod(role.startMonth, role.endMonth, lang)} · {formatDuration(role.startMonth, role.endMonth, lang)}
                   </p>
                 </header>
-                <ul class="list-disc list-outside ml-5 space-y-2 max-w-prose leading-relaxed">
-                  {role.bullets[lang].map((b) => <li>{b}</li>)}
-                </ul>
+                <div class="role-body">
+                  <div class="role-clip" id={`role-${ci}-${ri}`} data-role-clip>
+                    <ul class="list-disc list-outside ml-5 space-y-2 max-w-prose leading-relaxed">
+                      {role.bullets[lang].map((b) => <li>{b}</li>)}
+                    </ul>
+                  </div>
+                  <button
+                    type="button"
+                    class="role-toggle"
+                    hidden
+                    aria-expanded="false"
+                    aria-controls={`role-${ci}-${ri}`}
+                    data-more={toggleLabels.more}
+                    data-less={toggleLabels.less}
+                  >
+                    <span data-label>{toggleLabels.more}</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                </div>
                 {role.stack.length > 0 && (
                   <ul class="flex flex-wrap gap-2 pt-1">
                     {role.stack.map((s) => (
@@ -184,3 +206,85 @@ const headings = {
     <p>{cv.interests[lang]}</p>
   </section>
 </article>
+
+<style>
+  .role-clip {
+    position: relative;
+    overflow: hidden;
+  }
+  .role-clip.is-animated {
+    transition: max-height 0.35s ease;
+  }
+  .role-clip.is-collapsed::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 4.5rem;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    pointer-events: none;
+  }
+  .role-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .role-toggle[hidden] {
+    display: none;
+  }
+  .role-toggle:hover,
+  .role-toggle:focus-visible {
+    color: var(--accent);
+  }
+  .role-toggle svg {
+    transition: transform 0.25s ease;
+  }
+  .role-toggle[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .role-clip.is-animated,
+    .role-toggle svg {
+      transition: none;
+    }
+  }
+  @media print {
+    .role-clip {
+      max-height: none !important;
+    }
+    .role-clip.is-collapsed::after,
+    .role-toggle {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const COLLAPSED_PX = 150;
+  const SLACK_PX = 60;
+
+  document.querySelectorAll<HTMLElement>('[data-role-clip]').forEach((clip) => {
+    const button = clip.parentElement?.querySelector<HTMLButtonElement>('.role-toggle');
+    const label = button?.querySelector<HTMLElement>('[data-label]');
+    if (!button || !label || clip.scrollHeight <= COLLAPSED_PX + SLACK_PX) return;
+
+    clip.classList.add('is-collapsed');
+    clip.style.maxHeight = `${COLLAPSED_PX}px`;
+    button.hidden = false;
+    requestAnimationFrame(() => clip.classList.add('is-animated'));
+
+    button.addEventListener('click', () => {
+      const expanding = button.getAttribute('aria-expanded') !== 'true';
+      button.setAttribute('aria-expanded', String(expanding));
+      label.textContent = expanding ? button.dataset.less ?? '' : button.dataset.more ?? '';
+      clip.classList.toggle('is-collapsed', !expanding);
+      clip.style.maxHeight = `${expanding ? clip.scrollHeight : COLLAPSED_PX}px`;
+    });
+  });
+</script>
