@@ -31,7 +31,7 @@
   },
   "mcp": {
     "title": "Converse comigo via MCP",
-    "intro": "Conecte um assistente de IA a este site e pergunte sobre minha experiência, habilidades, projetos e textos. Ele responde com o mesmo conteúdo que você vê aqui, em português ou inglês. Não exige login e apenas lê este site. Também pode rascunhar uma mensagem para mim, que você revisa e envia você mesmo na minha página de contato.",
+    "intro": "Conecte um assistente de IA a este site e pergunte sobre minha experiência, habilidades, projetos e textos.",
     "endpoint": "URL do servidor",
     "copy": "Copiar",
     "copied": "Copiado",
