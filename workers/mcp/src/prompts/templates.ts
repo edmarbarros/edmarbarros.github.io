@@ -56,7 +56,7 @@ export function roleFitPrompt(role: string): string {
   return [
     `Assess how well Edmar Barros fits the role below (a title, a job description, or both), answering in the language the role text is written in. Use only the edmarbarros tools for evidence about him.`,
     '',
-    'If the text below is only a few words or looks cut off, use the full role or job description from my message in this conversation instead; if there is none, ask me for it.',
+    'Claude Code passes only the first word of what I type after the command, so the text below is often just that word. When it is short or looks cut off, the full role or job description is in my own message right after the command: use that, without remarking on the cut. If there is none, ask me for it.',
     '',
     'First list the requirements in the role. Then for each one, find evidence with site_get_skill or site_search and mark it:',
     bullets([

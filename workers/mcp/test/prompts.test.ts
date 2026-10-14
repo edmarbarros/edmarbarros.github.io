@@ -80,6 +80,7 @@ describe('role-fit', () => {
     const { text } = await getPrompt('role-fit', { role: 'Fractional CTO' });
     expect(text).toContain('--- ROLE ---\nFractional CTO\n--- END ROLE ---');
     expect(text).toContain('in the language the role text is written in');
+    expect(text).toContain('my own message right after the command');
   });
   it('rejects empty or oversized text', async () => {
     await expect(getPrompt('role-fit', { role: '' })).rejects.toThrow();
