@@ -38,7 +38,7 @@ describe('buildHelp', () => {
     expect(text).toContain('# What you can ask about Edmar Barros');
     expect(text).toContain('- How much SQL experience does he have, and what proves it?');
     expect(text).toContain('`/edmarbarros:skills-check <skill>`');
-    expect(text).toContain('`/edmarbarros:role-fit <job description>`');
+    expect(text).toContain('`/edmarbarros:role-fit <role title and/or job description>`');
     expect(text).toContain('`/edmarbarros:overview`');
     for (const tool of TOOL_HELP) expect(text).toContain(`\`${tool.name}\``);
   });
@@ -98,13 +98,13 @@ describe('help prompt', () => {
     const msg = res.messages[0]!.content;
     const text = msg.type === 'text' ? msg.text : '';
     expect(text).toContain('No tool calls are needed.');
-    expect(text).toContain('--- GUIDE ---');
+    expect(text).toContain('--- GUIDE (English) ---');
+    expect(text).toContain('--- GUIDE (Brazilian Portuguese) ---');
     expect(text).toContain('/edmarbarros:role-fit');
-    expect(text).toContain('in English');
   });
-  it('switches language', async () => {
-    const res = await client.getPrompt({ name: 'help', arguments: { lang: 'pt' } });
+  it('follows the language the user writes in', async () => {
+    const res = await client.getPrompt({ name: 'help', arguments: {} });
     const msg = res.messages[0]!.content;
-    expect(msg.type === 'text' ? msg.text : '').toContain('Brazilian Portuguese');
+    expect(msg.type === 'text' ? msg.text : '').toContain('the language I am writing in');
   });
 });

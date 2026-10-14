@@ -131,10 +131,10 @@ export const PROMPT_HELP: PromptHelp[] = [
   },
   {
     name: 'role-fit',
-    usage: '<job description>',
+    usage: '<role title and/or job description>',
     summary: {
-      [EN]: 'Paste a job description. Each requirement is matched to evidence, and gaps are stated plainly.',
-      [PT]: 'Cole uma descrição de vaga. Cada requisito é relacionado a evidências, e as lacunas são ditas com clareza.',
+      [EN]: 'Paste a role title and/or job description. Each requirement is matched to evidence, and gaps are stated plainly.',
+      [PT]: 'Cole o título e/ou a descrição da vaga. Cada requisito é relacionado a evidências, e as lacunas são ditas com clareza.',
     },
   },
   {

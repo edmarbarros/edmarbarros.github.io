@@ -1,6 +1,5 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { DEFAULT_LANG, LANG_VALUES } from '../languages';
 import { helpPrompt, overviewPrompt, roleFitPrompt, skillsCheckPrompt } from './templates';
 
 /** A prompt result is a single user message that tells the assistant what to do. */
@@ -8,11 +7,6 @@ const userMessage = (description: string, text: string) => ({
   description,
   messages: [{ role: 'user' as const, content: { type: 'text' as const, text } }],
 });
-
-const langArg = z
-  .enum(LANG_VALUES)
-  .optional()
-  .describe(`Language of the answer. Default: ${DEFAULT_LANG}.`);
 
 /**
  * Ready-made starting points. Clients that support MCP prompts, such as Claude Code,
@@ -25,9 +19,9 @@ export function registerPrompts(server: McpServer): void {
       title: 'What can I ask?',
       description:
         'Shows a short guide: example questions, the guided commands and what is available.',
-      argsSchema: { lang: langArg },
+      argsSchema: {},
     },
-    ({ lang }) => userMessage('What can I ask?', helpPrompt(lang ?? DEFAULT_LANG)),
+    () => userMessage('What can I ask?', helpPrompt()),
   );
 
   server.registerPrompt(
@@ -36,9 +30,9 @@ export function registerPrompts(server: McpServer): void {
       title: 'Overview of Edmar',
       description:
         "A recruiter's first screen: who he is, his strongest skills with evidence, and his recent work.",
-      argsSchema: { lang: langArg },
+      argsSchema: {},
     },
-    ({ lang }) => userMessage('Overview of Edmar', overviewPrompt(lang ?? DEFAULT_LANG)),
+    () => userMessage('Overview of Edmar', overviewPrompt()),
   );
 
   server.registerPrompt(
@@ -49,11 +43,9 @@ export function registerPrompts(server: McpServer): void {
         'How much experience Edmar has with one skill or technology, with the proof behind it.',
       argsSchema: {
         skill: z.string().min(1).max(60).describe("Skill or technology, e.g. 'SQL' or 'Kafka'."),
-        lang: langArg,
       },
     },
-    ({ skill, lang }) =>
-      userMessage(`Skill check: ${skill}`, skillsCheckPrompt(skill, lang ?? DEFAULT_LANG)),
+    ({ skill }) => userMessage(`Skill check: ${skill}`, skillsCheckPrompt(skill)),
   );
 
   server.registerPrompt(
@@ -61,17 +53,15 @@ export function registerPrompts(server: McpServer): void {
     {
       title: 'Fit for a role',
       description:
-        'Paste a job description. Each requirement is matched to evidence on this site, with gaps stated plainly.',
+        'Free text: the role title and/or job description. Each requirement is matched to evidence on this site, with gaps stated plainly. Answers in the language of the text.',
       argsSchema: {
-        job_description: z
+        role: z
           .string()
-          .min(20)
+          .min(1)
           .max(8000)
-          .describe('The job description text to assess against.'),
-        lang: langArg,
+          .describe('The role title and/or job description to assess against.'),
       },
     },
-    ({ job_description, lang }) =>
-      userMessage('Fit for a role', roleFitPrompt(job_description, lang ?? DEFAULT_LANG)),
+    ({ role }) => userMessage('Fit for a role', roleFitPrompt(role)),
   );
 }
